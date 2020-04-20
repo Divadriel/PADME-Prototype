@@ -1,5 +1,5 @@
 # PADMEH_Prototype_v1
-Author: David REI @Divadriel
+Author: David REI
 
 ## Current features
 * Profile pane
@@ -25,4 +25,9 @@ Author: David REI @Divadriel
   * Automatic simulation of exercises, sessions
   * Manual simulation of exercises, sessions
   * Results
+
+## Dependencies
+* Java 11
+* JavaFX 11
+
   
