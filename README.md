@@ -5,7 +5,7 @@ Author: David REI @Divadriel
 * Profile pane
   * Static profile
   
-## Feautres under development
+## Features under development
 * Dynamic profile display area
 * Display area for events
 * Simulation pane
