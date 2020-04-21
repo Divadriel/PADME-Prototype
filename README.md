@@ -4,7 +4,9 @@ Author: David REI @Divadriel
 ## Current features
 * Profile pane
   * Static profile
-  * Dynamic profile display area
+  
+## Feautres under development
+* Dynamic profile display area
 * Display area for events
 * Simulation pane
   * Session configuration
@@ -25,4 +27,5 @@ Author: David REI @Divadriel
   * Automatic simulation of exercises, sessions
   * Manual simulation of exercises, sessions
   * Results
+  * Results graphs
   
