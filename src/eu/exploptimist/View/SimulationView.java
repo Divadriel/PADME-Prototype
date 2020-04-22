@@ -1,21 +1,27 @@
 package eu.exploptimist.View;
 
+import eu.exploptimist.Model.Exercise;
+import eu.exploptimist.Model.Session;
 import eu.exploptimist.Model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
-import java.util.concurrent.Flow;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimulationView extends Parent {
 
     private UserModel user;
     private DisplayActions displayActions;
+    private Session sessionOne;
+    private Session sessionTwo;
 
     public SimulationView(UserModel usr, DisplayActions dspAct){
 
@@ -41,19 +47,19 @@ public class SimulationView extends Parent {
         // row 1
         TitledPane exerciseOne = new TitledPane();
         TextField exOneNameField = new TextField();
-        Spinner<Integer> exOneLengthSpinner = new Spinner<>(1, 120, 10);
+        Spinner<Integer> exOneLengthSpinner = new Spinner<>(0, 120, 10);
         Spinner<Integer> exOneDistanceSpinner = new Spinner<>(0, 10, 1);
         generateExerciseConfigTitledPane(exerciseOne, exOneNameField,exOneLengthSpinner, exOneDistanceSpinner, 1);
         // row 2
         TitledPane exerciseTwo = new TitledPane();
         TextField exTwoNameField = new TextField();
-        Spinner<Integer> exTwoLengthSpinner = new Spinner<>(1, 120, 10);
+        Spinner<Integer> exTwoLengthSpinner = new Spinner<>(0, 120, 10);
         Spinner<Integer> exTwoDistanceSpinner = new Spinner<>(0, 10, 1);
         generateExerciseConfigTitledPane(exerciseTwo, exTwoNameField, exTwoLengthSpinner, exTwoDistanceSpinner, 2);
         // row 3
         TitledPane exerciseThree = new TitledPane();
         TextField exThreeNameField = new TextField();
-        Spinner<Integer> exThreeLengthSpinner = new Spinner<>(1, 120, 10);
+        Spinner<Integer> exThreeLengthSpinner = new Spinner<>(0, 120, 10);
         Spinner<Integer> exThreeDistanceSpinner = new Spinner<>(0, 10, 1);
         generateExerciseConfigTitledPane(exerciseThree, exThreeNameField, exThreeLengthSpinner, exThreeDistanceSpinner, 3);
         // row 4
@@ -68,10 +74,13 @@ public class SimulationView extends Parent {
         saveSessionButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // 1. create new session object, with all 3 exercises
+                // 1. create new session object, with all 3 exercises + verbose on display
+                Exercise exOne = createExercise(exOneNameField, exOneLengthSpinner, exOneDistanceSpinner);
+                Exercise exTwo = createExercise(exTwoNameField, exTwoLengthSpinner, exTwoDistanceSpinner);
+                Exercise exThree = createExercise(exThreeNameField, exThreeLengthSpinner, exThreeDistanceSpinner);
+                sessionOne = createSession(exOne, exTwo, exThree);
                 // 2. make "start session" clickable
                 startSessionButton.setDisable(false);
-                // 3. verbose on display: print exercises
             }
         });
         // handler for start session button
@@ -161,6 +170,7 @@ public class SimulationView extends Parent {
         pane.setContent(gridpane);
 
     }
+
     private TitledPane generateExerciseProgressTitledPane(int exerciseNb){
         TitledPane pane  = new TitledPane();
         pane.setText("Exercise " + exerciseNb);
@@ -200,7 +210,7 @@ public class SimulationView extends Parent {
         });
 
         // button not finished
-        Button notFinishedButton = new Button("Not Finished");
+        Button notFinishedButton = new Button("Not Completed");
         notFinishedButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -209,11 +219,26 @@ public class SimulationView extends Parent {
             }
         });
 
-        // User feedback spinner
-
         // adding to panes
         flowpane.getChildren().addAll(beginningButton, midButton, endButton, notFinishedButton);
         pane.setContent(flowpane);
         return pane;
+    }
+
+    private Exercise createExercise(TextField nameField, Spinner<Integer> lengthSpinner, Spinner<Integer> distanceSpinner){
+        Exercise exercise = new Exercise(nameField.getText(), lengthSpinner.getValue(), distanceSpinner.getValue());
+        displayActions.getMainDisplay().appendText(exercise.toString());
+        return exercise;
+    }
+
+    private Session createSession(Exercise exOne, Exercise exTwo, Exercise exThree){
+        // create session
+        List<Exercise> list = new ArrayList<Exercise>();
+        list.add(exOne);
+        list.add(exTwo);
+        list.add(exThree);
+        Session session = new Session(list, user, 3);
+        displayActions.getMainDisplay().appendText(session.toString());
+        return session;
     }
 }

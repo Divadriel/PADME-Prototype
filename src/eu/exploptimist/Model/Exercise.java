@@ -7,12 +7,12 @@ public class Exercise {
     private float distance; // in km
     private String description;
 
-    public Exercise(String name, int length, float distance, String description){
+    public Exercise(String name, int length, float distance){
         this.name = name;
         this.length = length;
         this.distance = distance;
-        this.description = description;
     }
+    /*
     public Exercise(String name, int length){
         this.name = name;
         this.length = length;
@@ -26,16 +26,18 @@ public class Exercise {
         this.description = toString();
     }
 
+     */
+
     @Override
     public String toString() {
         if(this.length == 0){
-            return "Exercise \'" + name + "\', during " + distance + " km.";
+            return "Exercise \'" + name + "\', for " + distance + " km.\n";
         }
         else if (this.distance == 0f){
-            return "Exercise \'" + name + "\', during " + length + " minutes.";
+            return "Exercise \'" + name + "\', during " + length + " minutes.\n";
         }
         else{
-            return "Exercise \'" + name + "\', during " + length + " minutes or " + distance + " km.";
+            return "Exercise \'" + name + "\', during " + length + " minutes or " + distance + " km.\n";
         }
     }
 
