@@ -35,13 +35,13 @@ public class Strings {
 
     // ASCII ART for Exercise steps
     // -- PROMOTION
-    public static final String PROM_ASCII_EX_BEG = " O\n\\|/\n/ \\\n 0 --------------- 10\n";
-    public static final String PROM_ASCII_EX_MID = "               O\n              \\|/\n              / \\\n 0 --------------- 10\n";
-    public static final String PROM_ASCII_EX_END = "                               O\n                              \\|/\n                              / \\\n 0 --------------- 10\n";
+    public static final String PROM_ASCII_EX_BEG = " O\n\\|/\n/ \\\n 0 --------------- 10\n\n";
+    public static final String PROM_ASCII_EX_MID = "               O\n              \\|/\n              / \\\n 0 --------------- 10\n\n";
+    public static final String PROM_ASCII_EX_END = "                               O\n                              \\|/\n                              / \\\n 0 --------------- 10\n\n";
     // -- PREVENTION
-    public static final String PREV_ASCII_EX_BEG = " O\n\\|/\n/ \\\n 0 ------- 10 --------\n";
-    public static final String PREV_ASCII_EX_MID = "               O\n              \\|/\n              / \\\n 0 ------- 10 --------\n";
-    public static final String PREV_ASCII_EX_END = "                               O\n                              \\|/\n                              / \\\n 0 ------- 10 --------\n";
+    public static final String PREV_ASCII_EX_BEG = " O\n\\|/\n/ \\\n 0 ------- 10 --------\n\n";
+    public static final String PREV_ASCII_EX_MID = "                  O\n                 \\|/\n                 / \\\n 0 ------- 10 --------\n\n";
+    public static final String PREV_ASCII_EX_END = "                               O\n                              \\|/\n                              / \\\n 0 ------- 10 --------\n\n";
 
     // Motivational messages -- IUI scenarios
     public static final String PROM_MESS_PROFILE_CREATED = "Thank you! Your profile is now created. Your daily experience will be greatly improved thanks to this information.\n";
