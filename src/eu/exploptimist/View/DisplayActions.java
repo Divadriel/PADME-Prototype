@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
@@ -20,6 +21,12 @@ public class DisplayActions extends Parent {
     private Button quitApp;
 
     public DisplayActions(){
+
+        TitledPane pane = new TitledPane();
+        pane.setText("Trace");
+        pane.setCollapsible(false);
+        pane.setAnimated(false);
+
         GridPane gridpane = new GridPane();
         gridpane.setVgap(5);
         gridpane.setHgap(5);
@@ -74,7 +81,8 @@ public class DisplayActions extends Parent {
         gridpane.add(mainDisplay, 0, 0);
         gridpane.add(flowPane, 0, 1);
 
-        this.getChildren().add(gridpane);
+        pane.setContent(gridpane);
+        this.getChildren().add(pane);
     }
 
     public TextArea getMainDisplay() {

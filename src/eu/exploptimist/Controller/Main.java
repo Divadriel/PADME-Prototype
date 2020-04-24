@@ -51,4 +51,8 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    private void initApp(){
+        // load all external files and parse their content
+    }
 }

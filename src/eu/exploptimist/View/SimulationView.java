@@ -226,6 +226,7 @@ public class SimulationView extends Parent {
                 else{
                     displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_END);
                 }
+
             }
         });
 
