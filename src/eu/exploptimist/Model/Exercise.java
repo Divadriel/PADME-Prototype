@@ -31,13 +31,13 @@ public class Exercise {
     @Override
     public String toString() {
         if(this.length == 0){
-            return "Exercise \'" + name + "\', for " + distance + " km.\n";
+            return "Exercise '" + name + "', for " + distance + " km.\n";
         }
         else if (this.distance == 0f){
-            return "Exercise \'" + name + "\', during " + length + " minutes.\n";
+            return "Exercise '" + name + "', for " + length + " minutes.\n";
         }
         else{
-            return "Exercise \'" + name + "\', during " + length + " minutes or " + distance + " km.\n";
+            return "Exercise '" + name + "', for " + length + " minutes or " + distance + " km.\n";
         }
     }
 
