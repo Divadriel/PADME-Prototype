@@ -6,11 +6,13 @@ public class Exercise {
     private int length; // in minutes
     private float distance; // in km
     private String description;
+    private boolean completed;
 
     public Exercise(String name, int length, float distance){
         this.name = name;
         this.length = length;
         this.distance = distance;
+        this.completed = false;
     }
     /*
     public Exercise(String name, int length){
@@ -56,4 +58,8 @@ public class Exercise {
     public void setDistance(float distance) {
         this.distance = distance;
     }
+
+    public boolean isCompleted() { return completed; }
+
+    public void setCompleted(boolean completed) { this.completed = completed; }
 }
