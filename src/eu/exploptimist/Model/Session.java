@@ -79,15 +79,13 @@ public class Session {
         this.sessionId = sessionId;
     }
 
-    public int getUserFeedback() { return userFeedback; };
+    public int getUserFeedback() { return userFeedback; }
 
     public void setUserFeedback(int userFeedback){ this.userFeedback = userFeedback; }
 
     @Override
     public String toString(){
-        String toString = "Session toString, exercise number is " + exerciseList.size() + "\n";
-
-        return toString;
+        return "Session toString to be completed, there are " + exerciseList.size() + " exercises in the session.\n";
     }
 /*
     @Override
