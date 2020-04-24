@@ -3,6 +3,7 @@ package eu.exploptimist.View;
 import eu.exploptimist.Model.Exercise;
 import eu.exploptimist.Model.Session;
 import eu.exploptimist.Model.UserModel;
+import eu.exploptimist.Model.Utils.Strings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -186,6 +187,13 @@ public class SimulationView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. displays image of exercise beginning in a dialog
                 // 2. verbose on display
+                if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                    displayActions.getMainDisplay().appendText(Strings.PROM_ASCII_EX_BEG);
+                }
+                else{
+                    displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_BEG);
+                }
+
             }
         });
 
@@ -196,6 +204,12 @@ public class SimulationView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. displays image of exercise midway in a dialog
                 // 2. verbose on display
+                if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                    displayActions.getMainDisplay().appendText(Strings.PROM_ASCII_EX_MID);
+                }
+                else{
+                    displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_MID);
+                }
             }
         });
 
@@ -206,6 +220,12 @@ public class SimulationView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. displays image of exercise end in a dialog
                 // 2. verbose on display
+                if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                    displayActions.getMainDisplay().appendText(Strings.PROM_ASCII_EX_END);
+                }
+                else{
+                    displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_END);
+                }
             }
         });
 
