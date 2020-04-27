@@ -1,5 +1,6 @@
-# PADMEH_Prototype_v1
+# PADMEH_Prototype
 Author: David REI @Divadriel
+Current version: v1.0
 
 ## Current features
 * Profile pane
