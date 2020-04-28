@@ -29,8 +29,8 @@ Current version: v1.0
   * Results graphs
 
 ## Dependencies
-* Java 11
-* JavaFX 11
+* Java 8
+* JavaFX 8 (included in Java 8 JDK)
 
  
   
