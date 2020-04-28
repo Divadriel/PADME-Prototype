@@ -9,6 +9,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -29,25 +31,45 @@ public class Main extends Application {
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);
         Group root = new Group();
-        Scene scene = new Scene(root, 1600, 800, Color.WHITE);
+        Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
 
         // config UI components
         DisplayActions mainDisplay = new DisplayActions();
         ProfileView userProfileView = new ProfileView(david, mainDisplay);
         SimulationView simulation = new SimulationView(david, mainDisplay);
 
-        // config gridpane
-        GridPane gridpane = new GridPane();
-        gridpane.setVgap(10);
-        gridpane.setHgap(20);
-        gridpane.setPadding(new Insets(10));
-        // adding components to gridpane
-        gridpane.add(userProfileView, 0, 0, 1,1);
-        gridpane.add(mainDisplay, 0, 1, 1, 1);
-        gridpane.add(simulation, 1, 0, 1, 2);
+        // config TabPane + 2 tabs: configuration and simulation
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.setPadding(new Insets(0, 0, 5, 5));
+        Tab configTab = new Tab();
+        configTab.setText("Configuration");
+        Tab simuTab = new Tab();
+        simuTab.setText("Simulation");
+        tabPane.getTabs().add(configTab);
+        tabPane.getTabs().add(simuTab);
+
+        // configTab gridpane
+        GridPane configGridpane = new GridPane();
+        configGridpane.setVgap(10);
+        configGridpane.setHgap(20);
+        configGridpane.setPadding(new Insets(10));
+        // adding components to configGridpane
+        configGridpane.add(userProfileView, 0, 0, 1,1);
+        configGridpane.add(mainDisplay, 0, 1, 1, 1);
+        configGridpane.add(simulation, 1, 0, 1, 2);
+
+        // simuTab gridpane
+        GridPane simuGridpane = new GridPane();
+        simuGridpane.setVgap(10);
+        simuGridpane.setHgap(20);
+        simuGridpane.setPadding(new Insets(10));
+
+        // fill tabs with content
+        configTab.setContent(configGridpane);
 
         // init
-        root.getChildren().add(gridpane);
+        root.getChildren().add(tabPane);
         stage.setScene(scene);
         stage.show();
     }
