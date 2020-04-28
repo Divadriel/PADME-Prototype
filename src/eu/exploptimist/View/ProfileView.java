@@ -204,6 +204,12 @@ public class ProfileView extends Parent {
                 user.setFirstName(nameField.getText());
                 user.setAge(ageSpinner.getValue());
                 displayActions.getMainDisplay().appendText("Saved!\n");
+                if(user.saveUserModelToJSON()){
+                    displayActions.getMainDisplay().appendText("Save to JSON file complete\n");
+                }
+                else {
+                    displayActions.getMainDisplay().appendText("Error while saving to JSON\n");
+                }
             }
         });
 

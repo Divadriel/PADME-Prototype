@@ -1,8 +1,16 @@
 package eu.exploptimist.Model;
 
 import eu.exploptimist.Model.Utils.Strings;
+import org.json.JSONObject;
+
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class UserModel {
+
+    // ID and user count
+    private static int userCount = 0;
+    private static int USER_ID;
 
     // static user model
     private String firstName;
@@ -13,6 +21,8 @@ public class UserModel {
     private int weight;
     private int height;
     private char gender;
+
+    // à considérer en double par la suite --> dimension continue
     private String regulatoryFocus;
     private String physicalActivityLevel;
     private String motivationLevel;
@@ -30,6 +40,9 @@ public class UserModel {
     private double kmTravelledPerExercise;
     private double kmTravelledPerSession;
 
+    // other
+    private FileWriter file;
+
     private String checkRegFocus(String regulatoryFocus){
         switch(regulatoryFocus){
             case "promotion":
@@ -45,6 +58,8 @@ public class UserModel {
 
     public UserModel(String firstName, String lastName, int age, int weight, int height, char gender,
                      String regulatoryFocus, String physicalActivityLevel, String motivationLevel){
+        userCount++;
+        USER_ID = userCount;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -56,6 +71,9 @@ public class UserModel {
         this.motivationLevel = motivationLevel;
     }
     public UserModel(String firstName){
+
+        userCount++;
+        USER_ID = userCount;
         this.firstName = firstName;
     }
 
@@ -84,6 +102,39 @@ public class UserModel {
         profile += "Chronic focus \t" + regulatoryFocus + "\n";
 
         return profile;
+    }
+
+    public boolean saveUserModelToJSON(){
+        JSONObject jsonUser = new JSONObject();
+        jsonUser.put("userID", USER_ID);
+        jsonUser.put("firstName", firstName);
+        jsonUser.put("lastName", lastName);
+        jsonUser.put("email", email);
+        jsonUser.put("password", password);
+        jsonUser.put("age", age);
+        jsonUser.put("weight", weight);
+        jsonUser.put("height", height);
+        jsonUser.put("gender", gender);
+        jsonUser.put("regulatoryFocus", regulatoryFocus);
+        jsonUser.put("physicalActivityLevel", physicalActivityLevel);
+        jsonUser.put("motivationLevel", motivationLevel);
+
+        try {
+            file = new FileWriter("D:\\Users\\reida\\Documents\\PADMEH_data\\"+firstName+lastName+USER_ID+".json", true);
+            file.write(jsonUser.toString(2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                file.flush();
+                file.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     public String getFirstName() {
@@ -261,4 +312,7 @@ public class UserModel {
     public void setKmTravelledPerSession(double kmTravelledPerSession) {
         this.kmTravelledPerSession = kmTravelledPerSession;
     }
+
+    public FileWriter getFile(){ return file; }
+
 }
