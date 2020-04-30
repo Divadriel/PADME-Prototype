@@ -1,10 +1,14 @@
 package eu.exploptimist.Model;
 
 import eu.exploptimist.Model.Utils.Strings;
+import javafx.stage.FileChooser;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -135,7 +139,7 @@ public class UserModel {
         jsonUser.put("saveTimestamp", saveTimestamp);
 
         try {
-            file = new FileWriter("D:\\Users\\reida\\Documents\\PADMEH_data\\"+firstName+age+".json", true);
+            file = new FileWriter("/Users/reida/Documents/PADMEH_data/"+firstName+age+".json", true);
             file.write(jsonUser.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
@@ -150,6 +154,28 @@ public class UserModel {
                 return false;
             }
         }
+    }
+
+    public void loadUserModelFromJSON() throws IOException{
+        // get file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose User Profile JSON");
+        //fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        File file = fileChooser.showOpenDialog(null);
+        String path = file.getAbsolutePath();
+        // extract content to String
+        String content = new String(Files.readAllBytes(Paths.get(path)));
+
+        // parse String to JSON Object
+        JSONObject jsonObject = new JSONObject(content);
+        firstName = jsonObject.getString("firstName");
+        age = jsonObject.getInt("age");
+        gender = jsonObject.getString("gender");
+        regulatoryFocus = jsonObject.getString("regulatoryFocus");
+        physicalActivityLevel = jsonObject.getString("physicalActivityLevel");
+        motivationLevel = jsonObject.getString("motivationLevel");
+
     }
 
     public String getFirstName() {
