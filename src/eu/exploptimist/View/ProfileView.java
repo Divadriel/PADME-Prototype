@@ -13,6 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
+
 public class ProfileView extends Parent {
 
     private UserModel user;
@@ -46,7 +48,7 @@ public class ProfileView extends Parent {
         // row 0, cell 0
         Label name = new Label("Name");
         // row 0, cell 1
-        TextField nameField = new TextField("David");
+        TextField nameField = new TextField("");
         nameField.setPrefWidth(120);
 
         // row 1, cell 0
@@ -197,6 +199,10 @@ public class ProfileView extends Parent {
             }
         });
         // row 6, cell 1
+        GridPane saveLoadPane = new GridPane();
+        saveLoadPane.setPadding(new Insets(5));
+        saveLoadPane.setVgap(5);
+        saveLoadPane.setHgap(5);
         Button saveButton = new Button("Save");
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -212,6 +218,61 @@ public class ProfileView extends Parent {
                 }
             }
         });
+
+        Button loadButton = new Button("Load");
+        loadButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    // load a json file to user model
+                    user.loadUserModelFromJSON();
+                    // display updated info from user model to fields
+                    nameField.setText(user.getFirstName());
+                    ageSpinner.getValueFactory().setValue(user.getAge());
+                    if(user.getGender().equals("M")){
+                        maleRB.setSelected(true);
+                    }
+                    else {
+                        femaleRB.setSelected(true);
+                    }
+                    switch (user.getMotivationLevel()){
+                        case Strings.AMOTIVATION:
+                            amotivation.setSelected(true);
+                            break;
+                        case Strings.AUTONOMOUS_MOTIV:
+                            autonomousMotiv.setSelected(true);
+                            break;
+                        case Strings.CONTROLLED_MOTIV:
+                            controlledMotiv.setSelected(true);
+                            break;
+                    }
+                    switch (user.getPhysicalActivityLevel()){
+                        case Strings.PA_NOT_ACTIVE:
+                            notActive.setSelected(true);
+                            break;
+                        case Strings.PA_ACTIVE:
+                            active.setSelected(true);
+                            break;
+                        case Strings.PA_VERY_ACTIVE:
+                            veryActive.setSelected(true);
+                            break;
+                    }
+                    if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                        promotion.setSelected(true);
+                    }
+                    else {
+                        prevention.setSelected(true);
+                    }
+                    displayActions.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+            // add to gridPane
+        saveLoadPane.addRow(0, saveButton, loadButton);
 
         // main col 1: dynamic profile
         // row 0: display of dynamic profile
@@ -237,7 +298,7 @@ public class ProfileView extends Parent {
 
         // adding to gridpanes
         staticProfilePane.addColumn(0, name, age, sex, motivationLabel, activLabel, focusLabel, displayProfile);
-        staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivBox, activBox, focusBox, saveButton);
+        staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivBox, activBox, focusBox, saveLoadPane);
         dynamicProfilePane.add(dynamicProfileDisplay, 0, 0);
         dynamicProfilePane.add(resetDynamicProfile, 0, 1);
 
