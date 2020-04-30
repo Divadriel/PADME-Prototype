@@ -5,12 +5,15 @@ import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class UserModel {
 
     // ID and user count
-    private static int userCount = 0;
-    private static int USER_ID;
+  //  private static int userCount = 0;
+//    private static int USER_ID;
 
     // static user model
     private String firstName;
@@ -58,8 +61,8 @@ public class UserModel {
 
     public UserModel(String firstName, String lastName, int age, int weight, int height, String gender,
                      String regulatoryFocus, String physicalActivityLevel, String motivationLevel){
-        userCount++;
-        USER_ID = userCount;
+     //   userCount++;
+       // USER_ID = userCount;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -72,14 +75,14 @@ public class UserModel {
     }
 
     public UserModel(){
-        userCount++;
-        USER_ID = userCount;
+    //    userCount++;
+     //   USER_ID = userCount;
     }
 
     public UserModel(String firstName){
 
-        userCount++;
-        USER_ID = userCount;
+    //    userCount++;
+    //    USER_ID = userCount;
         this.firstName = firstName;
     }
 
@@ -112,11 +115,11 @@ public class UserModel {
 
     public boolean saveUserModelToJSON(){
         JSONObject jsonUser = new JSONObject();
-        jsonUser.put("userID", USER_ID);
+    //    jsonUser.put("userID", USER_ID);
         jsonUser.put("firstName", firstName);
         //jsonUser.put("lastName", lastName);
       //  jsonUser.put("email", email);
-//        jsonUser.put("age", age);
+        jsonUser.put("age", age);
        // jsonUser.put("weight", weight);
      //   jsonUser.put("height", height);
         jsonUser.put("gender", gender);
@@ -124,8 +127,15 @@ public class UserModel {
         jsonUser.put("physicalActivityLevel", physicalActivityLevel);
         jsonUser.put("motivationLevel", motivationLevel);
 
+        // save timestamp formatter
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+        String saveTimestamp = now.format(formatter);
+        // save timestamp to then retrieve last update of user profile, while saving all updates of user profile
+        jsonUser.put("saveTimestamp", saveTimestamp);
+
         try {
-            file = new FileWriter("D:\\Users\\reida\\Documents\\PADMEH_data\\"+firstName+USER_ID+".json", true);
+            file = new FileWriter("D:\\Users\\reida\\Documents\\PADMEH_data\\"+firstName+age+".json", true);
             file.write(jsonUser.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
