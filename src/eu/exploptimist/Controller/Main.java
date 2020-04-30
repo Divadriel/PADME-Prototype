@@ -26,7 +26,7 @@ public class Main extends Application {
     public void start(Stage stage) {
 
         // config components
-        UserModel david = new UserModel("David");
+        UserModel initUser = new UserModel();
 
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);
@@ -35,8 +35,8 @@ public class Main extends Application {
 
         // config UI components
         DisplayActions mainDisplay = new DisplayActions();
-        ProfileView userProfileView = new ProfileView(david, mainDisplay);
-        SimulationView simulation = new SimulationView(david, mainDisplay);
+        ProfileView userProfileView = new ProfileView(initUser, mainDisplay);
+        SimulationView simulation = new SimulationView(initUser, mainDisplay);
 
         // config TabPane + 2 tabs: configuration and simulation
         TabPane tabPane = new TabPane();
@@ -76,5 +76,8 @@ public class Main extends Application {
 
     private void initApp(){
         // load all external files and parse their content
+        // exercises
+
+        // sessions
     }
 }
