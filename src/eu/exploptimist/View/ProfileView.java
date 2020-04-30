@@ -75,10 +75,10 @@ public class ProfileView extends Parent {
             public void changed(ObservableValue<? extends Toggle> observableValue, Toggle oldValue, Toggle newValue) {
 
                 if(newValue.equals(maleRB)){
-                    user.setGender('M');
+                    user.setGender("M");
                 }
                 else{
-                    user.setGender('F');
+                    user.setGender("F");
                 }
             }
         });

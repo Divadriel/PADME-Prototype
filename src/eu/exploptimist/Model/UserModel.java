@@ -20,7 +20,7 @@ public class UserModel {
     private int age;
     private int weight;
     private int height;
-    private char gender;
+    private String gender;
 
     // à considérer en double par la suite --> dimension continue
     private String regulatoryFocus;
@@ -56,7 +56,7 @@ public class UserModel {
         }
     }
 
-    public UserModel(String firstName, String lastName, int age, int weight, int height, char gender,
+    public UserModel(String firstName, String lastName, int age, int weight, int height, String gender,
                      String regulatoryFocus, String physicalActivityLevel, String motivationLevel){
         userCount++;
         USER_ID = userCount;
@@ -70,6 +70,12 @@ public class UserModel {
         this.physicalActivityLevel = physicalActivityLevel;
         this.motivationLevel = motivationLevel;
     }
+
+    public UserModel(){
+        userCount++;
+        USER_ID = userCount;
+    }
+
     public UserModel(String firstName){
 
         userCount++;
@@ -108,19 +114,18 @@ public class UserModel {
         JSONObject jsonUser = new JSONObject();
         jsonUser.put("userID", USER_ID);
         jsonUser.put("firstName", firstName);
-        jsonUser.put("lastName", lastName);
-        jsonUser.put("email", email);
-        jsonUser.put("password", password);
-        jsonUser.put("age", age);
-        jsonUser.put("weight", weight);
-        jsonUser.put("height", height);
+        //jsonUser.put("lastName", lastName);
+      //  jsonUser.put("email", email);
+//        jsonUser.put("age", age);
+       // jsonUser.put("weight", weight);
+     //   jsonUser.put("height", height);
         jsonUser.put("gender", gender);
         jsonUser.put("regulatoryFocus", regulatoryFocus);
         jsonUser.put("physicalActivityLevel", physicalActivityLevel);
         jsonUser.put("motivationLevel", motivationLevel);
 
         try {
-            file = new FileWriter("D:\\Users\\reida\\Documents\\PADMEH_data\\"+firstName+lastName+USER_ID+".json", true);
+            file = new FileWriter("D:\\Users\\reida\\Documents\\PADMEH_data\\"+firstName+USER_ID+".json", true);
             file.write(jsonUser.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
@@ -193,11 +198,11 @@ public class UserModel {
         this.height = height;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
