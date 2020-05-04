@@ -1,6 +1,6 @@
-package eu.exploptimist.View;
+package fr.limsi.View;
 
-import eu.exploptimist.Model.Utils.Strings;
+import fr.limsi.Model.Utils.Strings;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

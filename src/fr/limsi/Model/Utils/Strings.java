@@ -1,4 +1,4 @@
-package eu.exploptimist.Model.Utils;
+package fr.limsi.Model.Utils;
 
 public class Strings {
 

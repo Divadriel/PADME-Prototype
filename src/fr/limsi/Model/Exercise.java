@@ -1,4 +1,4 @@
-package eu.exploptimist.Model;
+package fr.limsi.Model;
 
 public class Exercise {
 

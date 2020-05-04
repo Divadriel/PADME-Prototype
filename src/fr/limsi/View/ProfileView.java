@@ -1,7 +1,7 @@
-package eu.exploptimist.View;
+package fr.limsi.View;
 
-import eu.exploptimist.Model.UserModel;
-import eu.exploptimist.Model.Utils.Strings;
+import fr.limsi.Model.UserModel;
+import fr.limsi.Model.Utils.Strings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

@@ -1,4 +1,4 @@
-package eu.exploptimist.Model;
+package fr.limsi.Model;
 
 import java.util.List;
 

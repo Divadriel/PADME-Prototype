@@ -1,9 +1,4 @@
-package eu.exploptimist.Controller;
-
-import eu.exploptimist.Model.Exercise;
-import eu.exploptimist.Model.Session;
-import eu.exploptimist.Model.UserModel;
-import eu.exploptimist.Model.Utils.Strings;
+package fr.limsi.Controller;
 
 public class Controller {
 

@@ -1,6 +1,6 @@
-package eu.exploptimist.Model;
+package fr.limsi.Model;
 
-import eu.exploptimist.Model.Utils.Strings;
+import fr.limsi.Model.Utils.Strings;
 import javafx.stage.FileChooser;
 import org.json.JSONObject;
 
@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class UserModel {
 

@@ -1,11 +1,11 @@
-package eu.exploptimist.Controller;
+package fr.limsi.Controller;
 
-import eu.exploptimist.Model.UserModel;
-import eu.exploptimist.Model.Utils.Strings;
-import eu.exploptimist.View.SessionConfigView;
-import eu.exploptimist.View.TraceView;
-import eu.exploptimist.View.ProfileView;
-import eu.exploptimist.View.SimulationView;
+import fr.limsi.Model.UserModel;
+import fr.limsi.Model.Utils.Strings;
+import fr.limsi.View.SessionConfigView;
+import fr.limsi.View.TraceView;
+import fr.limsi.View.ProfileView;
+import fr.limsi.View.SimulationView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;

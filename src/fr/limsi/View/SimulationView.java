@@ -1,9 +1,9 @@
-package eu.exploptimist.View;
+package fr.limsi.View;
 
-import eu.exploptimist.Model.Exercise;
-import eu.exploptimist.Model.Session;
-import eu.exploptimist.Model.UserModel;
-import eu.exploptimist.Model.Utils.Strings;
+import fr.limsi.Model.Exercise;
+import fr.limsi.Model.Session;
+import fr.limsi.Model.UserModel;
+import fr.limsi.Model.Utils.Strings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

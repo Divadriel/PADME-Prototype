@@ -1,6 +1,6 @@
-package eu.exploptimist.Model;
+package fr.limsi.Model;
 
-import eu.exploptimist.Model.Utils.Strings;
+import fr.limsi.Model.Utils.Strings;
 
 public class AdaptationRules {
 
