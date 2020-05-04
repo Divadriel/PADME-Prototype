@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class UserModel {
 
@@ -173,7 +174,7 @@ public class UserModel {
 
         try {
             //file = new FileWriter("/Users/reida/Documents/PADMEH_data/"+firstName+age+".json", true);
-            file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+age+".json", true);
+            file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+saveTimestamp+".json", false);
             file.write(jsonUser.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
