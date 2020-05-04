@@ -28,7 +28,7 @@ public class ProfileView extends Parent {
 
         // creation and config of titled pane
         TitledPane profilePane = new TitledPane();
-        profilePane.setText("Profile");
+        profilePane.setText("User Profile");
         profilePane.setCollapsible(false);
         profilePane.setAnimated(false);
 

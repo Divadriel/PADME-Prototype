@@ -59,7 +59,7 @@ public class Main extends Application {
         // adding components to configGridpane
         configGridpane.add(userProfileView, 0, 0, 1,1);
         configGridpane.add(configTrace, 0, 1, 1, 1);
-        configGridpane.add(sessionConfigView, 1, 0, 1, 2);
+        configGridpane.add(sessionConfigView, 1, 0, 1, 1);
 
         // simuTab gridpane
         GridPane simuGridpane = new GridPane();
