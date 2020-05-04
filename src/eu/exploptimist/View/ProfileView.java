@@ -21,10 +21,10 @@ public class ProfileView extends Parent {
     private TraceView traceView;
     private TextArea dynamicProfileDisplay;
 
-    public ProfileView(UserModel usr, TraceView dspAct){
+    public ProfileView(UserModel usr, TraceView trcView){
 
         user = usr;
-        traceView = dspAct;
+        traceView = trcView;
 
         // creation and config of titled pane
         TitledPane profilePane = new TitledPane();

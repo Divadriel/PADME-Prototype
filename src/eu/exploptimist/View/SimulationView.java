@@ -23,10 +23,10 @@ public class SimulationView extends Parent {
     private Session sessionOne;
     private Session sessionTwo;
 
-    public SimulationView(UserModel usr, TraceView dspAct){
+    public SimulationView(UserModel usr, TraceView trcView){
 
         user = usr;
-        traceView = dspAct;
+        traceView = trcView;
 
         // creation and config of titled pane
         TitledPane simulationPane = new TitledPane();
