@@ -35,17 +35,17 @@ public class UserModel {
     private String motivationLevel;
 
     // dynamic user model
-    private int startedExercises;
-    private int completedExercises;
-    private int startedSessions;
-    private int completedSessions;
-    private int totalMinutesActivity;
-    private double feedbackMean;
-    private double minutesActivityPerExerciseMean;
-    private double minutesActivityPerSessionMean;
-    private double kmTravelled;
-    private double kmTravelledPerExercise;
-    private double kmTravelledPerSession;
+    private int startedExercises = 0;
+    private int completedExercises = 0;
+    private int startedSessions = 0;
+    private int completedSessions = 0;
+    private int totalMinutesActivity = 0;
+    private double feedbackMean = 0;
+    private double minutesActivityPerExerciseMean = 0;
+    private double minutesActivityPerSessionMean = 0;
+    private double kmTravelled = 0;
+    private double kmTravelledPerExercise = 0;
+    private double kmTravelledPerSession = 0;
 
     // other
     private FileWriter file;
@@ -105,8 +105,9 @@ public class UserModel {
                 '.';
     }
 
-    public String displayProfile(){
+    public String displayStaticProfile(){
         String profile = "";
+        profile += "\n\t\tStatic profile\n\n";
         profile += "Name \t" + firstName + "\n";
         profile += "Age \t" + age + "\n";
         profile += "Gender \t" + gender + "\n";
@@ -117,8 +118,27 @@ public class UserModel {
         return profile;
     }
 
+    public String displayDynamicProfile(){
+        String profile = "";
+        profile += "\n\t\tDynamic profile\n\n";
+        profile += "Started exercises \t" + startedExercises + "\n";
+        profile += "Completed exercises \t" + completedExercises + "\n";
+        profile += "Started sessions \t" + startedSessions + "\n";
+        profile += "Completed sessions \t" + completedSessions + "\n";
+        profile += "Total minutes of activity \t" + totalMinutesActivity + "\n";
+        profile += "Mean of minutes per exercise \t" + minutesActivityPerExerciseMean + "\n";
+        profile += "Mean of minutes per session \t" + minutesActivityPerSessionMean + "\n";
+        profile += "KM travelled \t" + kmTravelled + "\n";
+        profile += "KM travelled per exercise \t" + kmTravelledPerExercise + "\n";
+        profile += "KM travelled per session \t" + kmTravelledPerSession + "\n";
+        profile += "Feedback mean \t" + feedbackMean + "\n";
+        return profile;
+    }
+
     public boolean saveUserModelToJSON(){
         JSONObject jsonUser = new JSONObject();
+
+        // save static profile
     //    jsonUser.put("userID", USER_ID);
         jsonUser.put("firstName", firstName);
         //jsonUser.put("lastName", lastName);
@@ -131,6 +151,19 @@ public class UserModel {
         jsonUser.put("physicalActivityLevel", physicalActivityLevel);
         jsonUser.put("motivationLevel", motivationLevel);
 
+        // save dynamic profile
+        jsonUser.put("startedExercises", startedExercises);
+        jsonUser.put("completedExercises", completedExercises);
+        jsonUser.put("startedSessions", startedSessions);
+        jsonUser.put("completedSessions", completedSessions);
+        jsonUser.put("totalMinutesActivity", totalMinutesActivity);
+        jsonUser.put("minutesActivityPerExerciseMean", minutesActivityPerExerciseMean);
+        jsonUser.put("minutesActivityPerSessionMean", minutesActivityPerSessionMean);
+        jsonUser.put("kmTravelled", kmTravelled);
+        jsonUser.put("kmTravelledPerExercise", kmTravelledPerExercise);
+        jsonUser.put("kmTravelledPerSession", kmTravelledPerSession);
+        jsonUser.put("feedbackMean", feedbackMean);
+
         // save timestamp formatter
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
@@ -139,7 +172,8 @@ public class UserModel {
         jsonUser.put("saveTimestamp", saveTimestamp);
 
         try {
-            file = new FileWriter("/Users/reida/Documents/PADMEH_data/"+firstName+age+".json", true);
+            //file = new FileWriter("/Users/reida/Documents/PADMEH_data/"+firstName+age+".json", true);
+            file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+age+".json", true);
             file.write(jsonUser.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
@@ -169,12 +203,26 @@ public class UserModel {
 
         // parse String to JSON Object
         JSONObject jsonObject = new JSONObject(content);
+        // load static profile
         firstName = jsonObject.getString("firstName");
         age = jsonObject.getInt("age");
         gender = jsonObject.getString("gender");
         regulatoryFocus = jsonObject.getString("regulatoryFocus");
         physicalActivityLevel = jsonObject.getString("physicalActivityLevel");
         motivationLevel = jsonObject.getString("motivationLevel");
+
+        // load dynamic profile
+        startedExercises = jsonObject.getInt("startedExercises");
+        completedExercises = jsonObject.getInt("completedExercises");
+        startedSessions = jsonObject.getInt("startedSessions");
+        completedSessions = jsonObject.getInt("completedSessions");
+        totalMinutesActivity = jsonObject.getInt("totalMinutesActivity");
+        minutesActivityPerExerciseMean = jsonObject.getInt("minutesActivityPerExerciseMean");
+        minutesActivityPerSessionMean = jsonObject.getInt("minutesActivityPerSessionMean");
+        kmTravelled = jsonObject.getDouble("kmTravelled");
+        kmTravelledPerExercise = jsonObject.getDouble("kmTravelledPerExercise");
+        kmTravelledPerSession = jsonObject.getDouble("kmTravelledPerSession");
+        feedbackMean = jsonObject.getDouble("feedbackMean");
 
     }
 
