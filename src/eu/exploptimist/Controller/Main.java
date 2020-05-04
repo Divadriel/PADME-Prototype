@@ -2,6 +2,7 @@ package eu.exploptimist.Controller;
 
 import eu.exploptimist.Model.UserModel;
 import eu.exploptimist.Model.Utils.Strings;
+import eu.exploptimist.View.SessionConfigView;
 import eu.exploptimist.View.TraceView;
 import eu.exploptimist.View.ProfileView;
 import eu.exploptimist.View.SimulationView;
@@ -36,6 +37,7 @@ public class Main extends Application {
         // config UI components
         TraceView configTrace = new TraceView("Configuration Trace");
         ProfileView userProfileView = new ProfileView(initUser, configTrace);
+        SessionConfigView sessionConfigView = new SessionConfigView(initUser, configTrace);
         SimulationView simulation = new SimulationView(initUser, configTrace);
 
         // config TabPane + 2 tabs: configuration and simulation
@@ -57,16 +59,19 @@ public class Main extends Application {
         // adding components to configGridpane
         configGridpane.add(userProfileView, 0, 0, 1,1);
         configGridpane.add(configTrace, 0, 1, 1, 1);
-        configGridpane.add(simulation, 1, 0, 1, 2);
+        configGridpane.add(sessionConfigView, 1, 0, 1, 2);
 
         // simuTab gridpane
         GridPane simuGridpane = new GridPane();
         simuGridpane.setVgap(10);
         simuGridpane.setHgap(20);
         simuGridpane.setPadding(new Insets(10));
+        // adding components to simuGridPane
+        simuGridpane.add(simulation, 0, 0);
 
         // fill tabs with content
         configTab.setContent(configGridpane);
+        simuTab.setContent(simuGridpane);
 
         // init
         root.getChildren().add(tabPane);
