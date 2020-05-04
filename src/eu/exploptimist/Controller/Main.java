@@ -2,7 +2,7 @@ package eu.exploptimist.Controller;
 
 import eu.exploptimist.Model.UserModel;
 import eu.exploptimist.Model.Utils.Strings;
-import eu.exploptimist.View.DisplayActions;
+import eu.exploptimist.View.TraceView;
 import eu.exploptimist.View.ProfileView;
 import eu.exploptimist.View.SimulationView;
 import javafx.application.Application;
@@ -34,7 +34,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
 
         // config UI components
-        DisplayActions mainDisplay = new DisplayActions();
+        TraceView mainDisplay = new TraceView();
         ProfileView userProfileView = new ProfileView(initUser, mainDisplay);
         SimulationView simulation = new SimulationView(initUser, mainDisplay);
 

@@ -7,7 +7,6 @@ import eu.exploptimist.Model.Utils.Strings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -20,14 +19,14 @@ import java.util.List;
 public class SimulationView extends Parent {
 
     private UserModel user;
-    private DisplayActions displayActions;
+    private TraceView traceView;
     private Session sessionOne;
     private Session sessionTwo;
 
-    public SimulationView(UserModel usr, DisplayActions dspAct){
+    public SimulationView(UserModel usr, TraceView dspAct){
 
         user = usr;
-        displayActions = dspAct;
+        traceView = dspAct;
 
         // creation and config of titled pane
         TitledPane simulationPane = new TitledPane();
@@ -188,10 +187,10 @@ public class SimulationView extends Parent {
                 // 1. displays image of exercise beginning in a dialog
                 // 2. verbose on display
                 if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
-                    displayActions.getMainDisplay().appendText(Strings.PROM_ASCII_EX_BEG);
+                    traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_BEG);
                 }
                 else{
-                    displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_BEG);
+                    traceView.getMainDisplay().appendText(Strings.PREV_ASCII_EX_BEG);
                 }
 
             }
@@ -205,10 +204,10 @@ public class SimulationView extends Parent {
                 // 1. displays image of exercise midway in a dialog
                 // 2. verbose on display
                 if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
-                    displayActions.getMainDisplay().appendText(Strings.PROM_ASCII_EX_MID);
+                    traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_MID);
                 }
                 else{
-                    displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_MID);
+                    traceView.getMainDisplay().appendText(Strings.PREV_ASCII_EX_MID);
                 }
             }
         });
@@ -221,10 +220,10 @@ public class SimulationView extends Parent {
                 // 1. displays image of exercise end in a dialog
                 // 2. verbose on display
                 if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
-                    displayActions.getMainDisplay().appendText(Strings.PROM_ASCII_EX_END);
+                    traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_END);
                 }
                 else{
-                    displayActions.getMainDisplay().appendText(Strings.PREV_ASCII_EX_END);
+                    traceView.getMainDisplay().appendText(Strings.PREV_ASCII_EX_END);
                 }
 
             }
@@ -248,7 +247,7 @@ public class SimulationView extends Parent {
 
     private Exercise createExercise(TextField nameField, Spinner<Integer> lengthSpinner, Spinner<Integer> distanceSpinner){
         Exercise exercise = new Exercise(nameField.getText(), lengthSpinner.getValue(), distanceSpinner.getValue());
-        displayActions.getMainDisplay().appendText(exercise.toString());
+        traceView.getMainDisplay().appendText(exercise.toString());
         return exercise;
     }
 
@@ -259,7 +258,7 @@ public class SimulationView extends Parent {
         list.add(exTwo);
         list.add(exThree);
         Session session = new Session(list, user, 3);
-        displayActions.getMainDisplay().appendText(session.toString());
+        traceView.getMainDisplay().appendText(session.toString());
         return session;
     }
 }

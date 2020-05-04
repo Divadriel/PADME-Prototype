@@ -12,7 +12,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
-public class DisplayActions extends Parent {
+public class TraceView extends Parent {
 
     private TextArea mainDisplay;
     private Button resetButton;
@@ -20,7 +20,7 @@ public class DisplayActions extends Parent {
     private Button exportButton;
     private Button quitApp;
 
-    public DisplayActions(){
+    public TraceView(){
 
         TitledPane pane = new TitledPane();
         pane.setText("Trace");

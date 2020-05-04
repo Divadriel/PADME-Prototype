@@ -18,13 +18,13 @@ import java.io.IOException;
 public class ProfileView extends Parent {
 
     private UserModel user;
-    private DisplayActions displayActions;
+    private TraceView traceView;
     private TextArea dynamicProfileDisplay;
 
-    public ProfileView(UserModel usr, DisplayActions dspAct){
+    public ProfileView(UserModel usr, TraceView dspAct){
 
         user = usr;
-        displayActions = dspAct;
+        traceView = dspAct;
 
         // creation and config of titled pane
         TitledPane profilePane = new TitledPane();
@@ -195,8 +195,8 @@ public class ProfileView extends Parent {
         displayProfile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                displayActions.getMainDisplay().appendText(user.displayStaticProfile());
-                displayActions.getMainDisplay().appendText(user.displayDynamicProfile());
+                traceView.getMainDisplay().appendText(user.displayStaticProfile());
+                traceView.getMainDisplay().appendText(user.displayDynamicProfile());
             }
         });
         // row 6, cell 1
@@ -210,12 +210,12 @@ public class ProfileView extends Parent {
             public void handle(ActionEvent event) {
                 user.setFirstName(nameField.getText());
                 user.setAge(ageSpinner.getValue());
-                displayActions.getMainDisplay().appendText("Saved!\n");
+                traceView.getMainDisplay().appendText("Saved!\n");
                 if(user.saveUserModelToJSON()){
-                    displayActions.getMainDisplay().appendText("Save to JSON file complete\n");
+                    traceView.getMainDisplay().appendText("Save to JSON file complete\n");
                 }
                 else {
-                    displayActions.getMainDisplay().appendText("Error while saving to JSON\n");
+                    traceView.getMainDisplay().appendText("Error while saving to JSON\n");
                 }
             }
         });
@@ -264,7 +264,7 @@ public class ProfileView extends Parent {
                     else {
                         prevention.setSelected(true);
                     }
-                    displayActions.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
+                    traceView.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
 
                 } catch (IOException e) {
                     e.printStackTrace();
