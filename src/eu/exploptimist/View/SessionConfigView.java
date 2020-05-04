@@ -64,7 +64,7 @@ public class SessionConfigView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. create Exercise object with current fields values and add it to exercise ListArray
                 // 2. verbose on config trace
-                // 3. save in JSON file
+                // -- NO CHANGE IN JSON --
             }
         });
         Button removeExerciseButton = new Button("Remove");
@@ -74,6 +74,14 @@ public class SessionConfigView extends Parent {
                 // 1. remove exercise from ListArray with INDEX as argument
                 // 2. verbose on config trace
                 // -- NO CHANGE IN JSON --
+            }
+        });
+        Button saveExercisesButton = new Button("Save");
+        saveExercisesButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // 1. save in JSON file
+                // 2. verbose on config trace
             }
         });
         Button loadExercisesButton = new Button("Load");
@@ -92,7 +100,7 @@ public class SessionConfigView extends Parent {
                 // 1. display current content of exercises ListArray with INDEX for each exercises (for remove purposes)
             }
         });
-        buttonsFlowPane.getChildren().addAll(addExerciseButton, removeExerciseButton, loadExercisesButton, displayExercisesButton);
+        buttonsFlowPane.getChildren().addAll(addExerciseButton, removeExerciseButton, saveExercisesButton, loadExercisesButton, displayExercisesButton);
 
         exerciseContentPane.addRow(0, nameLabel, nameField);
         exerciseContentPane.addRow(1, lengthLabel, lengthSpinner, minText);

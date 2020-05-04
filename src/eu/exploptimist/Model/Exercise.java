@@ -6,13 +6,13 @@ public class Exercise {
     private int length; // in minutes
     private float distance; // in km
     private String description;
-    private boolean completed;
+    private double completed; // percents of completion - range 0-100
 
     public Exercise(String name, int length, float distance){
         this.name = name;
         this.length = length;
         this.distance = distance;
-        this.completed = false;
+        this.completed = 0;
     }
     /*
     public Exercise(String name, int length){
@@ -59,7 +59,7 @@ public class Exercise {
         this.distance = distance;
     }
 
-    public boolean isCompleted() { return completed; }
+    public double getCompleted() { return completed; }
 
-    public void setCompleted(boolean completed) { this.completed = completed; }
+    public void setCompleted(double completed) { this.completed = completed; }
 }
