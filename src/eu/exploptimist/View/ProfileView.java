@@ -198,7 +198,6 @@ public class ProfileView extends Parent {
             @Override
             public void handle(ActionEvent event) {
                 traceView.getMainDisplay().appendText(user.displayStaticProfile());
-                //traceView.getMainDisplay().appendText(user.displayDynamicProfile());
                 dynamicProfileDisplay.appendText(user.displayDynamicProfile());
             }
         });
@@ -287,7 +286,7 @@ public class ProfileView extends Parent {
         dynamicProfileDisplay = new TextArea();
         dynamicProfileDisplay.setEditable(false);
         dynamicProfileDisplay.setPrefRowCount(15);
-        dynamicProfileDisplay.setPrefColumnCount(15);
+        dynamicProfileDisplay.setPrefColumnCount(20);
 
         // row 1: reset button
         Button resetDynamicProfile = new Button("Reset");
