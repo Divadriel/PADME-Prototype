@@ -20,10 +20,10 @@ public class TraceView extends Parent {
     private Button exportButton;
     private Button quitApp;
 
-    public TraceView(){
+    public TraceView(String name){
 
         TitledPane pane = new TitledPane();
-        pane.setText("Trace");
+        pane.setText(name);
         pane.setCollapsible(false);
         pane.setAnimated(false);
 

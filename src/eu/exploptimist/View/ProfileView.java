@@ -44,7 +44,9 @@ public class ProfileView extends Parent {
         staticProfilePane.setVgap(10);
         staticProfilePane.setPadding(new Insets(5));
 
-
+        // row 00: column titles
+        Label staticName = new Label("\t\tStatic Profile");
+        Label dynamicName = new Label("\t\tDynamic Profile");
         // row 0, cell 0
         Label name = new Label("Name");
         // row 0, cell 1
@@ -196,7 +198,8 @@ public class ProfileView extends Parent {
             @Override
             public void handle(ActionEvent event) {
                 traceView.getMainDisplay().appendText(user.displayStaticProfile());
-                traceView.getMainDisplay().appendText(user.displayDynamicProfile());
+                //traceView.getMainDisplay().appendText(user.displayDynamicProfile());
+                dynamicProfileDisplay.appendText(user.displayDynamicProfile());
             }
         });
         // row 6, cell 1
@@ -283,8 +286,6 @@ public class ProfileView extends Parent {
         dynamicProfilePane.setPadding(new Insets(5));
         dynamicProfileDisplay = new TextArea();
         dynamicProfileDisplay.setEditable(false);
-        dynamicProfileDisplay.appendText(Strings.APP_TITLE + Strings.APP_VERSION + "\n");
-        dynamicProfileDisplay.appendText("Dynamic Profile \n");
         dynamicProfileDisplay.setPrefRowCount(15);
         dynamicProfileDisplay.setPrefColumnCount(15);
 
@@ -293,15 +294,17 @@ public class ProfileView extends Parent {
         resetDynamicProfile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                dynamicProfileDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\nDynamic Profile \n");
+                dynamicProfileDisplay.setText("");
             }
         });
 
         // adding to gridpanes
+        staticProfilePane.add(staticName, 0, 0, 2, 1);
         staticProfilePane.addColumn(0, name, age, sex, motivationLabel, activLabel, focusLabel, displayProfile);
         staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivBox, activBox, focusBox, saveLoadPane);
-        dynamicProfilePane.add(dynamicProfileDisplay, 0, 0);
-        dynamicProfilePane.add(resetDynamicProfile, 0, 1);
+        dynamicProfilePane.add(dynamicName, 0, 0);
+        dynamicProfilePane.add(dynamicProfileDisplay, 0, 1);
+        dynamicProfilePane.add(resetDynamicProfile, 0, 2);
 
         content.add(staticProfilePane, 0, 0);
         content.add(dynamicProfilePane, 1, 0);

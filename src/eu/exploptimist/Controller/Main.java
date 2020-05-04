@@ -34,9 +34,9 @@ public class Main extends Application {
         Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
 
         // config UI components
-        TraceView mainDisplay = new TraceView();
-        ProfileView userProfileView = new ProfileView(initUser, mainDisplay);
-        SimulationView simulation = new SimulationView(initUser, mainDisplay);
+        TraceView configTrace = new TraceView("Configuration Trace");
+        ProfileView userProfileView = new ProfileView(initUser, configTrace);
+        SimulationView simulation = new SimulationView(initUser, configTrace);
 
         // config TabPane + 2 tabs: configuration and simulation
         TabPane tabPane = new TabPane();
@@ -56,7 +56,7 @@ public class Main extends Application {
         configGridpane.setPadding(new Insets(10));
         // adding components to configGridpane
         configGridpane.add(userProfileView, 0, 0, 1,1);
-        configGridpane.add(mainDisplay, 0, 1, 1, 1);
+        configGridpane.add(configTrace, 0, 1, 1, 1);
         configGridpane.add(simulation, 1, 0, 1, 2);
 
         // simuTab gridpane
