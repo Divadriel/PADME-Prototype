@@ -195,7 +195,8 @@ public class ProfileView extends Parent {
         displayProfile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                displayActions.getMainDisplay().appendText(user.displayProfile());
+                displayActions.getMainDisplay().appendText(user.displayStaticProfile());
+                displayActions.getMainDisplay().appendText(user.displayDynamicProfile());
             }
         });
         // row 6, cell 1
