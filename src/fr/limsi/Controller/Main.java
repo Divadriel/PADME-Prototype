@@ -15,6 +15,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 public class Main extends Application {
 
@@ -27,7 +28,8 @@ public class Main extends Application {
     public void start(Stage stage) {
 
         // config components
-        UserModel initUser = new UserModel();
+        JSONObject jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
+        UserModel initUser = new UserModel(jsonMETAObject);
 
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);

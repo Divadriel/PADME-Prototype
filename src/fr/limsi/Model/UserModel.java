@@ -1,7 +1,9 @@
 package fr.limsi.Model;
 
 import fr.limsi.Model.Utils.Strings;
+import fr.limsi.Model.Utils.Utils;
 import javafx.stage.FileChooser;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -50,6 +52,11 @@ public class UserModel {
     // other
     private FileWriter file;
 
+    // jsonMETAObject is all data for a single user : user records, exercises records, sessions records, etc...
+    private JSONObject jsonMETAObject;
+    // jsonUserArray is the collection of user records (no exercise nor session, just user)
+    private JSONArray jsonUserArray = new JSONArray();
+
     private String checkRegFocus(String regulatoryFocus){
         switch(regulatoryFocus){
             case "promotion":
@@ -78,9 +85,10 @@ public class UserModel {
         this.motivationLevel = motivationLevel;
     }
 
-    public UserModel(){
+    public UserModel(JSONObject jsonMETAObject){
     //    userCount++;
      //   USER_ID = userCount;
+        this.jsonMETAObject = jsonMETAObject;
     }
 
     public UserModel(String firstName){
@@ -136,45 +144,51 @@ public class UserModel {
     }
 
     public boolean saveUserModelToJSON(){
-        JSONObject jsonUser = new JSONObject();
+        JSONObject jsonUserObject = new JSONObject();
 
         // save static profile
     //    jsonUser.put("userID", USER_ID);
-        jsonUser.put("firstName", firstName);
+        jsonUserObject.put("firstName", firstName);
         //jsonUser.put("lastName", lastName);
       //  jsonUser.put("email", email);
-        jsonUser.put("age", age);
+        jsonUserObject.put("age", age);
        // jsonUser.put("weight", weight);
      //   jsonUser.put("height", height);
-        jsonUser.put("gender", gender);
-        jsonUser.put("regulatoryFocus", regulatoryFocus);
-        jsonUser.put("physicalActivityLevel", physicalActivityLevel);
-        jsonUser.put("motivationLevel", motivationLevel);
+        jsonUserObject.put("gender", gender);
+        jsonUserObject.put("regulatoryFocus", regulatoryFocus);
+        jsonUserObject.put("physicalActivityLevel", physicalActivityLevel);
+        jsonUserObject.put("motivationLevel", motivationLevel);
 
         // save dynamic profile
-        jsonUser.put("startedExercises", startedExercises);
-        jsonUser.put("completedExercises", completedExercises);
-        jsonUser.put("startedSessions", startedSessions);
-        jsonUser.put("completedSessions", completedSessions);
-        jsonUser.put("totalMinutesActivity", totalMinutesActivity);
-        jsonUser.put("minutesActivityPerExerciseMean", minutesActivityPerExerciseMean);
-        jsonUser.put("minutesActivityPerSessionMean", minutesActivityPerSessionMean);
-        jsonUser.put("kmTravelled", kmTravelled);
-        jsonUser.put("kmTravelledPerExercise", kmTravelledPerExercise);
-        jsonUser.put("kmTravelledPerSession", kmTravelledPerSession);
-        jsonUser.put("feedbackMean", feedbackMean);
+        jsonUserObject.put("startedExercises", startedExercises);
+        jsonUserObject.put("completedExercises", completedExercises);
+        jsonUserObject.put("startedSessions", startedSessions);
+        jsonUserObject.put("completedSessions", completedSessions);
+        jsonUserObject.put("totalMinutesActivity", totalMinutesActivity);
+        jsonUserObject.put("minutesActivityPerExerciseMean", minutesActivityPerExerciseMean);
+        jsonUserObject.put("minutesActivityPerSessionMean", minutesActivityPerSessionMean);
+        jsonUserObject.put("kmTravelled", kmTravelled);
+        jsonUserObject.put("kmTravelledPerExercise", kmTravelledPerExercise);
+        jsonUserObject.put("kmTravelledPerSession", kmTravelledPerSession);
+        jsonUserObject.put("feedbackMean", feedbackMean);
 
         // save timestamp formatter
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-        String saveTimestamp = now.format(formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"); // for JSON file data
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
         // save timestamp to then retrieve last update of user profile, while saving all updates of user profile
-        jsonUser.put("saveTimestamp", saveTimestamp);
+        jsonUserObject.put("saveTimestamp", now.format(formatter));
 
+        // bundle jsonUser to jsonUserArray
+        jsonUserArray.put(jsonUserObject);
+        // put to jsonMETAObject with key "user"
+        jsonMETAObject.put("user", jsonUserArray);
+        //jsonMETAObject.put(this.getClass().getName(), jsonUserArray);
+
+        // save jsonMETAObject to a daily file (all changes from a same day on a same file)
         try {
-            //file = new FileWriter("/Users/reida/Documents/PADMEH_data/"+firstName+age+".json", true);
-            file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+saveTimestamp+".json", false);
-            file.write(jsonUser.toString(2));
+            file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+now.format(formatterDate)+".json", false);
+            file.write(jsonMETAObject.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -191,18 +205,21 @@ public class UserModel {
     }
 
     public void loadUserModelFromJSON() throws IOException{
-        // get file
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose User Profile JSON");
-        //fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        File file = fileChooser.showOpenDialog(null);
-        String path = file.getAbsolutePath();
-        // extract content to String
-        String content = new String(Files.readAllBytes(Paths.get(path)));
 
-        // parse String to JSON Object
-        JSONObject jsonObject = new JSONObject(content);
+        String content = Utils.getJSONContentFromFile();
+        // parse String to JSONObject
+        JSONObject temp = new JSONObject(content);
+
+        // get only user records from "user" key
+        jsonUserArray = null; // reset current array of user records (1st line) to load those from the file (2nd line)
+        jsonUserArray = temp.getJSONArray("user");
+        // load only last index
+        JSONObject jsonObject = jsonUserArray.getJSONObject((jsonUserArray.length() -1));
+
+        // update jsonMETAObject
+        jsonMETAObject.remove("user"); // delete current data for key "user"
+        jsonMETAObject.put("user", jsonUserArray);
+
         // load static profile
         firstName = jsonObject.getString("firstName");
         age = jsonObject.getInt("age");
