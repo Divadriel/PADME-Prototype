@@ -181,9 +181,8 @@ public class UserModel {
 
         // bundle jsonUser to jsonUserArray
         jsonUserArray.put(jsonUserObject);
-        // put to jsonMETAObject with key "user"
-        jsonMETAObject.put("user", jsonUserArray);
-        //jsonMETAObject.put(this.getClass().getName(), jsonUserArray);
+        // put to jsonMETAObject with class name as key
+        jsonMETAObject.put(this.getClass().getSimpleName(), jsonUserArray);
 
         // save jsonMETAObject to a daily file (all changes from a same day on a same file)
         try {
@@ -210,9 +209,9 @@ public class UserModel {
         // parse String to JSONObject
         JSONObject temp = new JSONObject(content);
 
-        // get only user records from "user" key
+        // get only user records from "UserModel" as key
         jsonUserArray = null; // reset current array of user records (1st line) to load those from the file (2nd line)
-        jsonUserArray = temp.getJSONArray("user");
+        jsonUserArray = temp.getJSONArray(this.getClass().getSimpleName());
         // load only last index
         JSONObject jsonObject = jsonUserArray.getJSONObject((jsonUserArray.length() -1));
 
@@ -240,7 +239,6 @@ public class UserModel {
         kmTravelledPerExercise = jsonObject.getDouble("kmTravelledPerExercise");
         kmTravelledPerSession = jsonObject.getDouble("kmTravelledPerSession");
         feedbackMean = jsonObject.getDouble("feedbackMean");
-
     }
 
     public String getFirstName() {
