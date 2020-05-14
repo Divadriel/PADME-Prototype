@@ -186,7 +186,7 @@ public class SimulationView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. displays image of exercise beginning in a dialog
                 // 2. verbose on display
-                if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                if(user.getRegulatoryFocus() <= 50){ // PROMOTION
                     traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_BEG);
                 }
                 else{
@@ -203,7 +203,7 @@ public class SimulationView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. displays image of exercise midway in a dialog
                 // 2. verbose on display
-                if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                if(user.getRegulatoryFocus() <= 50){ // PROMOTION
                     traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_MID);
                 }
                 else{
@@ -219,7 +219,7 @@ public class SimulationView extends Parent {
             public void handle(ActionEvent event) {
                 // 1. displays image of exercise end in a dialog
                 // 2. verbose on display
-                if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
+                if(user.getRegulatoryFocus() <= 50){ // PROMOTION
                     traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_END);
                 }
                 else{
