@@ -31,10 +31,10 @@ public class UserModel {
     private int height;
     private String gender;
 
-    // à considérer en double par la suite --> dimension continue
-    private String regulatoryFocus;
-    private String physicalActivityLevel;
-    private String motivationLevel;
+    // for each, range from 1 to 100
+    private int regulatoryFocus;
+    private int physicalActivityLevel;
+    private int motivationLevel;
 
     // dynamic user model
     private int startedExercises = 0;
@@ -57,21 +57,8 @@ public class UserModel {
     // jsonUserArray is the collection of user records (no exercise nor session, just user)
     private JSONArray jsonUserArray = new JSONArray();
 
-    private String checkRegFocus(String regulatoryFocus){
-        switch(regulatoryFocus){
-            case "promotion":
-            case "Promotion":
-                return Strings.PROMOTION;
-            case "prevention":
-            case "Prevention":
-                return Strings.PREVENTION;
-            default:
-                return Strings.UNKNOWN;
-        }
-    }
-
     public UserModel(String firstName, String lastName, int age, int weight, int height, String gender,
-                     String regulatoryFocus, String physicalActivityLevel, String motivationLevel){
+                     int regulatoryFocus, int physicalActivityLevel, int motivationLevel){
      //   userCount++;
        // USER_ID = userCount;
         this.firstName = firstName;
@@ -80,7 +67,7 @@ public class UserModel {
         this.weight = weight;
         this.height = height;
         this.gender = gender;
-        this.regulatoryFocus = checkRegFocus(regulatoryFocus);
+        this.regulatoryFocus = regulatoryFocus;
         this.physicalActivityLevel = physicalActivityLevel;
         this.motivationLevel = motivationLevel;
     }
@@ -186,7 +173,8 @@ public class UserModel {
 
         // save jsonMETAObject to a daily file (all changes from a same day on a same file)
         try {
-            file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+now.format(formatterDate)+".json", false);
+            //file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+now.format(formatterDate)+".json", false);
+            file = new FileWriter("D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+firstName+"_"+now.format(formatterDate)+".json", false);
             file.write(jsonMETAObject.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
@@ -223,9 +211,9 @@ public class UserModel {
         firstName = jsonObject.getString("firstName");
         age = jsonObject.getInt("age");
         gender = jsonObject.getString("gender");
-        regulatoryFocus = jsonObject.getString("regulatoryFocus");
-        physicalActivityLevel = jsonObject.getString("physicalActivityLevel");
-        motivationLevel = jsonObject.getString("motivationLevel");
+        regulatoryFocus = jsonObject.getInt("regulatoryFocus");
+        physicalActivityLevel = jsonObject.getInt("physicalActivityLevel");
+        motivationLevel = jsonObject.getInt("motivationLevel");
 
         // load dynamic profile
         startedExercises = jsonObject.getInt("startedExercises");
@@ -305,28 +293,38 @@ public class UserModel {
         this.gender = gender;
     }
 
-    public String getRegulatoryFocus() {
+    public int getRegulatoryFocus() {
         return regulatoryFocus;
     }
 
-    public void setRegulatoryFocus(String regulatoryFocus) {
+    public void setRegulatoryFocus(int regulatoryFocus) {
         this.regulatoryFocus = regulatoryFocus;
     }
 
-    public String getPhysicalActivityLevel() {
+    public int getPhysicalActivityLevel() {
         return physicalActivityLevel;
     }
 
-    public void setPhysicalActivityLevel(String physicalActivityLevel) {
-        this.physicalActivityLevel = physicalActivityLevel;
+    public void setPhysicalActivityLevel(int physicalActivityLevel) {
+        if (physicalActivityLevel > 100){
+            this.physicalActivityLevel = 100;
+        }
+        else{
+            this.physicalActivityLevel = physicalActivityLevel;
+        }
     }
 
-    public String getMotivationLevel() {
+    public int getMotivationLevel() {
         return motivationLevel;
     }
 
-    public void setMotivationLevel(String motivationLevel) {
-        this.motivationLevel = motivationLevel;
+    public void setMotivationLevel(int motivationLevel) {
+        if(motivationLevel > 100){
+            this.motivationLevel = 100;
+        }
+        else{
+            this.motivationLevel = motivationLevel;
+        }
     }
 
     public int getStartedExercises() {
