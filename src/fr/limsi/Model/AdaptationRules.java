@@ -1,7 +1,5 @@
 package fr.limsi.Model;
 
-import fr.limsi.Model.Utils.Strings;
-
 public class AdaptationRules {
 
     private UserModel user;
