@@ -3,52 +3,37 @@ package fr.limsi.Model;
 public class Exercise {
 
     private String name;
-    private int length; // in minutes
+    private int duration; // in minutes
     private float distance; // in km
     private String description;
     private double completed; // percents of completion - range 0-100
 
-    public Exercise(String name, int length, float distance){
+    public Exercise(String name, int duration, float distance){
         this.name = name;
-        this.length = length;
+        this.duration = duration;
         this.distance = distance;
         this.completed = 0;
     }
-    /*
-    public Exercise(String name, int length){
-        this.name = name;
-        this.length = length;
-        this.distance = 0f;
-        this.description = toString();
-    }
-    public Exercise(String name, float distance){
-        this.name = name;
-        this.distance = distance;
-        this.length = 0;
-        this.description = toString();
-    }
-
-     */
 
     @Override
     public String toString() {
-        if(this.length == 0){
+        if(this.duration == 0){
             return "Exercise '" + name + "', for " + distance + " km.\n";
         }
         else if (this.distance == 0f){
-            return "Exercise '" + name + "', for " + length + " minutes.\n";
+            return "Exercise '" + name + "', for " + duration + " minutes.\n";
         }
         else{
-            return "Exercise '" + name + "', for " + length + " minutes or " + distance + " km.\n";
+            return "Exercise '" + name + "', for " + duration + " minutes or " + distance + " km.\n";
         }
     }
 
-    public int getLength() {
-        return length;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setLength(int length) {
-        this.length = length;
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public float getDistance() {
