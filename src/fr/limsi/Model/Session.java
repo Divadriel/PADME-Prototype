@@ -9,49 +9,28 @@ public class Session {
     private int sessionId;
     private AdaptationRules userAdaptationRules;
     private int userFeedback;
-/*
-    public Session(int sessionId, int exerciseNb, Exercise exerciseList[], UserModel user){
-        this.exerciseList = exerciseList;
-        this.sessionId = sessionId;
-        this.exerciseNb = exerciseNb;
-        this.userAdaptationRules = new AdaptationRules(user);
-        computeAdaptationRules();
-    }
-    public Session(int sessionId, int exerciseNb, UserModel user){
-        this.sessionId = sessionId;
-        this.exerciseNb = exerciseNb;
-        this.exerciseList = new Exercise[this.exerciseNb];
-        this.userAdaptationRules = new AdaptationRules(user);
-        computeAdaptationRules();
-    }
 
-    public Session(int sessionId, Exercise exerciseList[], UserModel user){
-        this.sessionId = sessionId;
-        this.exerciseList = exerciseList;
-        this.exerciseNb = exerciseList.length;
-        this.userAdaptationRules = new AdaptationRules(user);
-        computeAdaptationRules();
-    }
-*/
     public Session(List<Exercise> exerciseList, UserModel user, int userFeedback){
       //  this.exerciseNb = exerciseNb;
         this.exerciseList = exerciseList;
         this.userFeedback = userFeedback;
         // use user to init adapt rules
     }
-
+/*
     public void computeAdaptationRules(){
         float distancePAMultiplier = userAdaptationRules.distancePAMultiplier();
         float lengthPAMultiplier = userAdaptationRules.lengthPAMultiplier();
         for(Exercise exercise : this.exerciseList){
-            if(exercise.getLength() != 0){
-                exercise.setLength((int)(exercise.getLength() * lengthPAMultiplier));
+            if(exercise.getDuration() != 0){
+                exercise.setDuration((int)(exercise.getDuration() * lengthPAMultiplier));
             }
             if(exercise.getDistance() != 0){
                 exercise.setDistance((int)(exercise.getDistance() * distancePAMultiplier));
             }
         }
     }
+
+ */
 
     public List<Exercise> getExerciseList() {
         return exerciseList;
