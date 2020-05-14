@@ -2,14 +2,17 @@
 Author: David REI @Divadriel
 Current version: v1.0
 
+Link to trello board:
+https://trello.com/b/07sG5bgv
+(only members can access it)
+
 ## Current features
-* Profile pane
-  * Static profile
-  * Dynamic profile display area
-* Display area for events
+* Configuration tab
+  * User Profile pane: static and dynamic profile, load from and save to json files, display to trace
+  * Configuration trace: display of any event happening in the configuration tab
+  * Session configuration pane: exercise configuration
 * Simulation pane
   * Session configuration
-  * Session progress
 
 ## Coming features
 * Adaptation rules pane
@@ -31,6 +34,17 @@ Current version: v1.0
 ## Dependencies
 * Java 8
 * JavaFX 8 (included in Java 8 JDK)
+
+## Cloning or importing project to IDE
+_Instructions for Intellij IDEA_
+1. Import or clone the project
+2. Open "Run" menu, "Edit configurations"
+3. Button "+" top left of the screen, "Add New Configuration"
+4. Select "Application", then give it a name (className is OK)
+5. On the filed "Main class", select "Main"
+6. Apply, then OK to close the window
+
+Steps should be more or less the same for any other IDE. The main idea here is to configure the IDE to recognize the project as an actual application, to trigger JavaFX while running it.
 
  
   
