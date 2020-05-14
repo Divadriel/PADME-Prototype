@@ -32,7 +32,7 @@ public class SessionConfigView extends Parent {
         content.setVgap(5);
         content.setPadding(new Insets(5));
 
-        // col 0: exercise TitledPane
+        // col 0, row 0: exercise TitledPane
         TitledPane exercisePane = new TitledPane();
         exercisePane.setText("Exercise Configuration");
         GridPane exerciseContentPane = new GridPane();
@@ -40,7 +40,7 @@ public class SessionConfigView extends Parent {
         exerciseContentPane.setVgap(5);
 
         Label nameLabel = new Label("Name");
-        Label lengthLabel = new Label("Length");
+        Label lengthLabel = new Label("Duration");
         Label distanceLabel = new Label("Distance");
         Text minText = new Text("minutes");
         Text kmText = new Text("km");
@@ -109,12 +109,31 @@ public class SessionConfigView extends Parent {
 
         exercisePane.setContent(exerciseContentPane);
 
-        // col 1: session TitledPane
+
+        // col 1, row 0: session TitledPane
+        TitledPane sessionPane = new TitledPane();
+        sessionPane.setText("Session Configuration");
+        GridPane sessionContentPane = new GridPane();
+        sessionContentPane.setHgap(5);
+        sessionContentPane.setVgap(5);
+
+
+
+        // col 0 and 1, full row 1: adaptation rules TitledPane
+        TitledPane adaptRulesPane = new TitledPane();
+        adaptRulesPane.setText("Adaptation Rules Configuration");
+        GridPane adaptRulesContentPane = new GridPane();
+        adaptRulesContentPane.setHgap(5);
+        adaptRulesContentPane.setVgap(5);
+
+        //
+
 
 
         // add to content GridPane
         content.addColumn(0, exercisePane);
-
+        content.addColumn(1, sessionPane);
+        content.add(adaptRulesPane, 0, 1, 2, 1);
         // add to global TitledPane
         sessionConfigPane.setContent(content);
         this.getChildren().add(sessionConfigPane);
