@@ -69,7 +69,7 @@ public class ProfileView extends Parent {
         RadioButton maleRB = new RadioButton("Male");
         maleRB.setToggleGroup(sexGroup);
         maleRB.setFocusTraversable(false);
-        //maleRB.setSelected(true);
+
         RadioButton femaleRB = new RadioButton("Female");
         femaleRB.setToggleGroup(sexGroup);
         femaleRB.setFocusTraversable(false);
@@ -92,105 +92,22 @@ public class ProfileView extends Parent {
         // row 3, cell 0
         Label motivationLabel = new Label("Motivation");
         // row 3, cell 1
-        VBox motivBox = new VBox();
-        //motivBox.setSpacing(10);
-        ToggleGroup motivationGroup = new ToggleGroup();
-        RadioButton amotivation = new RadioButton(Strings.AMOTIVATION);
-        amotivation.setFocusTraversable(false);
-        amotivation.setToggleGroup(motivationGroup);
-        RadioButton controlledMotiv = new RadioButton(Strings.CONTROLLED_MOTIV);
-        controlledMotiv.setFocusTraversable(false);
-        controlledMotiv.setToggleGroup(motivationGroup);
-        //controlledMotiv.setSelected(true);
-        RadioButton autonomousMotiv = new RadioButton(Strings.AUTONOMOUS_MOTIV);
-        autonomousMotiv.setFocusTraversable(false);
-        autonomousMotiv.setToggleGroup(motivationGroup);
-
-            // listener to motivationGroup
-        motivationGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observableValue, Toggle oldValue, Toggle newValue) {
-                if(newValue.equals(amotivation)){
-                    user.setMotivationLevel(Strings.AMOTIVATION);
-                }
-                else if(newValue.equals(controlledMotiv)){
-                    user.setMotivationLevel(Strings.CONTROLLED_MOTIV);
-                }
-                else {
-                    user.setMotivationLevel(Strings.AUTONOMOUS_MOTIV);
-                }
-            }
-        });
-            // adding button to VBox
-        motivBox.getChildren().addAll(amotivation, controlledMotiv, autonomousMotiv);
+        Spinner<Integer> motivationSpinner = new Spinner<>(1, 100, 50);
+        motivationSpinner.setEditable(true);
 
         // row 4, cell 0
-        Label activLabel = new Label("Physical Activity");
-        activLabel.setPadding(new Insets(5));
+        Label PALabel = new Label("Physical Activity");
+        PALabel.setPadding(new Insets(5));
         // row 4, cell 1
-        VBox activBox = new VBox();
-        //activBox.setSpacing(10);
-        ToggleGroup activGroup = new ToggleGroup();
-        RadioButton notActive = new RadioButton(Strings.PA_NOT_ACTIVE);
-        notActive.setToggleGroup(activGroup);
-        notActive.setFocusTraversable(false);
-        RadioButton active = new RadioButton(Strings.PA_ACTIVE);
-        active.setToggleGroup(activGroup);
-        active.setFocusTraversable(false);
-       // active.setSelected(true);
-        RadioButton veryActive = new RadioButton(Strings.PA_VERY_ACTIVE);
-        veryActive.setToggleGroup(activGroup);
-        veryActive.setFocusTraversable(false);
-
-            // listener to activGroup
-        activGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observableValue, Toggle oldValue, Toggle newValue) {
-
-                if(newValue.equals(notActive)){
-                    user.setPhysicalActivityLevel(Strings.PA_NOT_ACTIVE);
-                }
-                else if(newValue.equals(active)){
-                    user.setPhysicalActivityLevel(Strings.PA_ACTIVE);
-                }
-                else{
-                    user.setPhysicalActivityLevel(Strings.PA_VERY_ACTIVE);
-                }
-
-            }
-        });
-            // adding to VBox
-        activBox.getChildren().addAll(notActive, active, veryActive);
+        Spinner<Integer> PASpinner = new Spinner<>(1, 100, 50);
+        PASpinner.setEditable(true);
 
         // row 5, cell 0
-        Label focusLabel = new Label("Chronic focus");
-        focusLabel.setPadding(new Insets(5));
+        Label RFLabel = new Label("Chronic focus");
+        RFLabel.setPadding(new Insets(5));
         // row 5, cell 1
-        VBox focusBox = new VBox();
-        //focusBox.setSpacing(10);
-        ToggleGroup focusGroup = new ToggleGroup();
-        RadioButton promotion = new RadioButton(Strings.PROMOTION);
-        promotion.setToggleGroup(focusGroup);
-        promotion.setFocusTraversable(false);
-        //promotion.setSelected(true);
-        RadioButton prevention = new RadioButton(Strings.PREVENTION);
-        prevention.setToggleGroup(focusGroup);
-        prevention.setFocusTraversable(false);
-
-            // listener to focusGroup
-        focusGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observableValue, Toggle oldValue, Toggle newValue) {
-                if(newValue.equals(promotion)){
-                    user.setRegulatoryFocus(Strings.PROMOTION);
-                }
-                else{
-                    user.setRegulatoryFocus(Strings.PREVENTION);
-                }
-            }
-        });
-            // adding to VBox
-        focusBox.getChildren().addAll(promotion, prevention);
+        Spinner<Integer> RFSpinner = new Spinner<>(1, 100, 50);
+        RFSpinner.setEditable(true);
 
         // row 6, cell 0
         Button displayProfile = new Button("Display Profile");
@@ -212,6 +129,9 @@ public class ProfileView extends Parent {
             public void handle(ActionEvent event) {
                 user.setFirstName(nameField.getText());
                 user.setAge(ageSpinner.getValue());
+                user.setMotivationLevel(motivationSpinner.getValue());
+                user.setPhysicalActivityLevel(PASpinner.getValue());
+                user.setRegulatoryFocus(RFSpinner.getValue());
                 traceView.getMainDisplay().appendText("Saved!\n");
                 if(user.saveUserModelToJSON()){
                     traceView.getMainDisplay().appendText("Save to JSON file complete\n");
@@ -238,34 +158,10 @@ public class ProfileView extends Parent {
                     else {
                         femaleRB.setSelected(true);
                     }
-                    switch (user.getMotivationLevel()){
-                        case Strings.AMOTIVATION:
-                            amotivation.setSelected(true);
-                            break;
-                        case Strings.AUTONOMOUS_MOTIV:
-                            autonomousMotiv.setSelected(true);
-                            break;
-                        case Strings.CONTROLLED_MOTIV:
-                            controlledMotiv.setSelected(true);
-                            break;
-                    }
-                    switch (user.getPhysicalActivityLevel()){
-                        case Strings.PA_NOT_ACTIVE:
-                            notActive.setSelected(true);
-                            break;
-                        case Strings.PA_ACTIVE:
-                            active.setSelected(true);
-                            break;
-                        case Strings.PA_VERY_ACTIVE:
-                            veryActive.setSelected(true);
-                            break;
-                    }
-                    if(user.getRegulatoryFocus().equals(Strings.PROMOTION)){
-                        promotion.setSelected(true);
-                    }
-                    else {
-                        prevention.setSelected(true);
-                    }
+                    motivationSpinner.getValueFactory().setValue(user.getMotivationLevel());
+                    PASpinner.getValueFactory().setValue(user.getPhysicalActivityLevel());
+                    RFSpinner.getValueFactory().setValue(user.getRegulatoryFocus());
+
                     traceView.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
 
                 } catch (IOException e) {
@@ -299,8 +195,8 @@ public class ProfileView extends Parent {
 
         // adding to gridpanes
         staticProfilePane.add(staticName, 0, 0, 2, 1);
-        staticProfilePane.addColumn(0, name, age, sex, motivationLabel, activLabel, focusLabel, displayProfile);
-        staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivBox, activBox, focusBox, saveLoadPane);
+        staticProfilePane.addColumn(0, name, age, sex, motivationLabel, PALabel, RFLabel, displayProfile);
+        staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivationSpinner, PASpinner, RFSpinner, saveLoadPane);
         dynamicProfilePane.add(dynamicName, 0, 0);
         dynamicProfilePane.add(dynamicProfileDisplay, 0, 1);
         dynamicProfilePane.add(resetDynamicProfile, 0, 2);
