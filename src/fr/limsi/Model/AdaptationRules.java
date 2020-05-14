@@ -12,6 +12,7 @@ public class AdaptationRules {
 
 
     // compute rules to have an adaptation
+    /*
     public float lengthPAMultiplier(){
         if(user.getPhysicalActivityLevel() == Strings.PA_NOT_ACTIVE){
             return 0.8f;
@@ -30,6 +31,8 @@ public class AdaptationRules {
         }
         return 1.0f;
     }
+
+     */
 
     public UserModel getUser() {
         return user;
