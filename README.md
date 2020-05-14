@@ -41,8 +41,9 @@ _Instructions for Intellij IDEA_
 2. Open "Run" menu, "Edit configurations"
 3. Button "+" top left of the screen, "Add New Configuration"
 4. Select "Application", then give it a name (className is OK)
-5. On the filed "Main class", select "Main"
-6. Apply, then OK to close the window
+5. Next to the field name, check "Allow parallel run" in order to be able to run several times at once the application
+6. On the filed "Main class", select "Main"
+7. Apply, then OK to close the window
 
 Steps should be more or less the same for any other IDE. The main idea here is to configure the IDE to recognize the project as an actual application, to trigger JavaFX while running it.
 
