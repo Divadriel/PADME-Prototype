@@ -1,16 +1,16 @@
 package fr.limsi.Model;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Session {
 
-    private List<Exercise> exerciseList;
+    private ArrayList<Exercise> exerciseList;
     //private int exerciseNb;
     private int sessionId;
     private AdaptationRules userAdaptationRules;
     private int userFeedback;
 
-    public Session(List<Exercise> exerciseList, UserModel user, int userFeedback){
+    public Session(ArrayList<Exercise> exerciseList, UserModel user, int userFeedback){
       //  this.exerciseNb = exerciseNb;
         this.exerciseList = exerciseList;
         this.userFeedback = userFeedback;
@@ -32,11 +32,11 @@ public class Session {
 
  */
 
-    public List<Exercise> getExerciseList() {
+    public ArrayList<Exercise> getExerciseList() {
         return exerciseList;
     }
 
-    public void setExerciseList(List<Exercise> exerciseList) {
+    public void setExerciseList(ArrayList<Exercise> exerciseList) {
         this.exerciseList = exerciseList;
     }
 /*
