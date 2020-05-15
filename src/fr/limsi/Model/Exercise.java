@@ -3,12 +3,12 @@ package fr.limsi.Model;
 public class Exercise {
 
     private String name;
-    private int duration; // in minutes
-    private float distance; // in km
+    private double duration; // in minutes
+    private double distance; // in km
     private String description;
     private double completed; // percents of completion - range 0-100
 
-    public Exercise(String name, int duration, float distance){
+    public Exercise(String name, double duration, double distance){
         this.name = name;
         this.duration = duration;
         this.distance = distance;
@@ -20,7 +20,7 @@ public class Exercise {
         if(this.duration == 0){
             return "Exercise '" + name + "', for " + distance + " km.\n";
         }
-        else if (this.distance == 0f){
+        else if (this.distance == 0){
             return "Exercise '" + name + "', for " + duration + " minutes.\n";
         }
         else{
@@ -28,19 +28,19 @@ public class Exercise {
         }
     }
 
-    public int getDuration() {
+    public double getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(double duration) {
         this.duration = duration;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
