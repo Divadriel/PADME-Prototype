@@ -1,5 +1,8 @@
 package fr.limsi.Controller;
 
+import fr.limsi.Model.AdaptationRules;
+import fr.limsi.Model.Exercise;
+import fr.limsi.Model.Session;
 import fr.limsi.Model.UserModel;
 import fr.limsi.Model.Utils.Strings;
 import fr.limsi.View.SessionConfigView;
@@ -17,6 +20,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main extends Application {
 
 
@@ -31,6 +37,13 @@ public class Main extends Application {
         JSONObject jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
         UserModel initUser = new UserModel(jsonMETAObject);
 
+        ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+        exerciseList.add(new Exercise("init", 0, 0));
+        ArrayList<Session> sessionList = new ArrayList<Session>();
+        sessionList.add(new Session(exerciseList, initUser,0));
+
+        AdaptationRules adaptationRules = new AdaptationRules(initUser, sessionList.get(0));
+
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);
         Group root = new Group();
@@ -39,7 +52,7 @@ public class Main extends Application {
         // config UI components
         TraceView configTrace = new TraceView("Configuration Trace");
         ProfileView userProfileView = new ProfileView(initUser, configTrace);
-        SessionConfigView sessionConfigView = new SessionConfigView(initUser, configTrace);
+        SessionConfigView sessionConfigView = new SessionConfigView(initUser, configTrace, adaptationRules);
         SimulationView simulation = new SimulationView(initUser, configTrace);
 
         // config TabPane + 2 tabs: configuration and simulation
