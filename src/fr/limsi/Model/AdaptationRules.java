@@ -1,18 +1,31 @@
 package fr.limsi.Model;
 
+import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.fathzer.soft.javaluator.StaticVariableSet;
 import fr.limsi.Model.Utils.Utils;
 
 public class AdaptationRules {
 
     private UserModel user;
+    private Session session;
+    private StaticVariableSet<Double> adaptationVariables;
 
-    public AdaptationRules(UserModel user){
+    public AdaptationRules(UserModel user, Session session){
+
         this.user = user;
+        this.session = session;
+        adaptationVariables = new StaticVariableSet<Double>();
+        adaptationVariables.set("initVal", this.session.getExerciseList().get(0).getDuration());
     }
 
 
-    public double defineRuleForExerciseDurationAdaptation(){
-        return 0;
+    public double defineRuleForExerciseDurationAdaptation(String expression, Exercise exercise){
+
+        DoubleEvaluator evaluator = new DoubleEvaluator();
+        StaticVariableSet<Double> variables = new StaticVariableSet<Double>();
+        variables.set("initVal", exercise.getDuration());
+        variables.set("nivAP", (double)(user.getPhysicalActivityLevel()));
+        return evaluator.evaluate(expression, variables);
     }
 
     public double adaptExerciseDuration(double initialValue){

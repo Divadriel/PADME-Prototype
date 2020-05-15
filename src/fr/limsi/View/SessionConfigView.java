@@ -1,5 +1,6 @@
 package fr.limsi.View;
 
+import fr.limsi.Model.AdaptationRules;
 import fr.limsi.Model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,15 +11,19 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
+import javax.swing.*;
+
 public class SessionConfigView extends Parent {
 
     private UserModel user;
     private TraceView traceView;
+    private AdaptationRules adaptationRules;
 
-    public SessionConfigView(UserModel usr, TraceView trcView){
+    public SessionConfigView(UserModel usr, TraceView trcView, AdaptationRules adaptRules){
 
         user = usr;
         traceView = trcView;
+        adaptationRules = adaptRules;
 
         // creation and config of titled pane
         TitledPane sessionConfigPane = new TitledPane();
@@ -126,9 +131,24 @@ public class SessionConfigView extends Parent {
         adaptRulesContentPane.setHgap(5);
         adaptRulesContentPane.setVgap(5);
 
-        //
+        // content of adaptation rules titled pane
+        Label exerciseDurationRule = new Label("Exercise duration rule");
+        TextField exerciseDurationRuleField = new TextField("0");
+        Button exerciseDurationRuleButton = new Button("Apply");
+        Label exerciseDistanceRule = new Label("Exercise distance rule");
+        TextField exerciseDistanceRuleField = new TextField("0");
+        Button exerciseDistanceRuleButton = new Button("Apply");
 
+        exerciseDurationRuleButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
 
+            }
+        });
+
+        adaptRulesContentPane.addRow(0, exerciseDurationRule, exerciseDurationRuleField, exerciseDurationRuleButton);
+        adaptRulesContentPane.addRow(1, exerciseDistanceRule, exerciseDistanceRuleField, exerciseDistanceRuleButton);
+        adaptRulesPane.setContent(adaptRulesContentPane);
 
         // add to content GridPane
         content.addColumn(0, exercisePane);
