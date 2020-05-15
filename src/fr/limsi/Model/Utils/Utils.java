@@ -20,4 +20,13 @@ public class Utils {
         // extract content to String and return it
         return new String(Files.readAllBytes(Paths.get(path)));
     }
+
+    public static double setDurationToClosestUpperFiveMinutes(double duration){
+        if(duration % 5 == 0){
+            return duration;
+        }
+        else{
+            return (Math.floor(duration / 5) + 1) * 5;
+        }
+    }
 }
