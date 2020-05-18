@@ -1,17 +1,20 @@
 package fr.limsi.Model;
 
+import fr.limsi.Model.Utils.Utils;
+
 import java.util.ArrayList;
 
 public class Session {
 
+    private final long sessionID;
     private ArrayList<Exercise> exerciseList;
     //private int exerciseNb;
-    private int sessionId;
     private AdaptationRules userAdaptationRules;
     private int userFeedback;
 
     public Session(ArrayList<Exercise> exerciseList, UserModel user, int userFeedback){
       //  this.exerciseNb = exerciseNb;
+        this.sessionID = Utils.calculateUniqueID();
         this.exerciseList = exerciseList;
         this.userFeedback = userFeedback;
         // use user to init adapt rules
@@ -50,12 +53,8 @@ public class Session {
 
  */
 
-    public int getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
+    public long getSessionID() {
+        return sessionID;
     }
 
     public int getUserFeedback() { return userFeedback; }

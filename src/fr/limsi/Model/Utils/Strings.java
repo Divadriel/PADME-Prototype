@@ -55,7 +55,8 @@ public class Strings {
     public static final String PREV_MESS_EX_END = "Come on! You need to complete one more exercise only!\n";
     public static final String PREV_MESS_SESSION_END = "Congratulations! By continuing like this, you will preserve your health!\n";
 
-
+    // SYSTEM STRINGS
+    public static final String PATH_TO_INIT_JSON = "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\init.json";
 
 
 }

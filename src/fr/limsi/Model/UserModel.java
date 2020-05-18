@@ -12,9 +12,8 @@ import java.time.format.DateTimeFormatter;
 
 public class UserModel {
 
-    // ID and user count
-  //  private static int userCount = 0;
-//    private static int USER_ID;
+    // userID
+    private long userID;
 
     // static user model
     private String firstName;
@@ -54,8 +53,7 @@ public class UserModel {
 
     public UserModel(String firstName, String lastName, int age, int weight, int height, String gender,
                      int regulatoryFocus, int physicalActivityLevel, int motivationLevel){
-     //   userCount++;
-       // USER_ID = userCount;
+        this.userID = Utils.calculateUniqueID();
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -68,15 +66,12 @@ public class UserModel {
     }
 
     public UserModel(JSONObject jsonMETAObject){
-    //    userCount++;
-     //   USER_ID = userCount;
+        this.userID = Utils.calculateUniqueID();
         this.jsonMETAObject = jsonMETAObject;
     }
 
     public UserModel(String firstName){
-
-    //    userCount++;
-    //    USER_ID = userCount;
+        this.userID = Utils.calculateUniqueID();
         this.firstName = firstName;
     }
 
@@ -98,6 +93,7 @@ public class UserModel {
     public String displayStaticProfile(){
         String profile = "";
         profile += "\n\t\tStatic profile\n\n";
+        profile += "User ID \t" + userID + "\n";
         profile += "Name \t" + firstName + "\n";
         profile += "Age \t" + age + "\n";
         profile += "Gender \t" + gender + "\n";
@@ -131,6 +127,7 @@ public class UserModel {
         // save static profile
     //    jsonUser.put("userID", USER_ID);
         jsonUserObject.put("firstName", firstName);
+        jsonUserObject.put("userID", userID);
         //jsonUser.put("lastName", lastName);
       //  jsonUser.put("email", email);
         jsonUserObject.put("age", age);
@@ -186,22 +183,21 @@ public class UserModel {
         }
     }
 
-    public void loadUserModelFromJSON() throws IOException{
-
-        String content = Utils.getJSONContentFromFile();
+    public void parseUserModelFromString(String content){
         // parse String to JSONObject
         JSONObject temp = new JSONObject(content);
 
         // get only user records from "UserModel" as key
-        jsonUserArray = null; // reset current array of user records (1st line) to load those from the file (2nd line)
-        jsonUserArray = temp.getJSONArray(this.getClass().getSimpleName());
+        jsonUserArray = null; // reset current array of user records (1st line)
+        jsonUserArray = temp.getJSONArray(this.getClass().getSimpleName()); // to load those from the file (2nd line)
         // load only last index
         JSONObject jsonObject = jsonUserArray.getJSONObject((jsonUserArray.length() -1));
 
         // update jsonMETAObject
-        jsonMETAObject.remove("user"); // delete current data for key "user"
-        jsonMETAObject.put("user", jsonUserArray);
+        jsonMETAObject.remove(this.getClass().getSimpleName()); // delete current data for key "UserModel"
+        jsonMETAObject.put(this.getClass().getSimpleName(), jsonUserArray);
 
+        userID = jsonObject.getLong("userID");
         // load static profile
         firstName = jsonObject.getString("firstName");
         age = jsonObject.getInt("age");
@@ -223,6 +219,15 @@ public class UserModel {
         kmTravelledPerSession = jsonObject.getDouble("kmTravelledPerSession");
         feedbackMean = jsonObject.getDouble("feedbackMean");
     }
+
+    public void loadUserModelFromJSON() throws IOException{
+        String content = Utils.getJSONContentFromFile();
+        parseUserModelFromString(content);
+    }
+
+    public long getUserID() { return userID; }
+
+    public void setUserID(long userID){ this.userID = userID; }
 
     public String getFirstName() {
         return firstName;

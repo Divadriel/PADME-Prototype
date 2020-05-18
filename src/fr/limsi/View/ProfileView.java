@@ -1,6 +1,7 @@
 package fr.limsi.View;
 
 import fr.limsi.Model.UserModel;
+import fr.limsi.Model.Utils.Utils;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

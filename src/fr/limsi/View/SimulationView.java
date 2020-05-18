@@ -253,7 +253,7 @@ public class SimulationView extends Parent {
 
     private Session createSession(Exercise exOne, Exercise exTwo, Exercise exThree){
         // create session
-        List<Exercise> list = new ArrayList<Exercise>();
+        ArrayList<Exercise> list = new ArrayList<Exercise>();
         list.add(exOne);
         list.add(exTwo);
         list.add(exThree);

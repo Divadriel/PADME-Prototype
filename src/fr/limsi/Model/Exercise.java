@@ -1,7 +1,10 @@
 package fr.limsi.Model;
 
+import fr.limsi.Model.Utils.Utils;
+
 public class Exercise {
 
+    private final long exerciseID;
     private String name;
     private double duration; // in minutes
     private double distance; // in km
@@ -9,6 +12,7 @@ public class Exercise {
     private double completed; // percents of completion - range 0-100
 
     public Exercise(String name, double duration, double distance){
+        this.exerciseID = Utils.calculateUniqueID();
         this.name = name;
         this.duration = duration;
         this.distance = distance;
@@ -17,16 +21,17 @@ public class Exercise {
 
     @Override
     public String toString() {
-        if(this.duration == 0){
-            return "Exercise '" + name + "', for " + distance + " km.\n";
-        }
-        else if (this.distance == 0){
-            return "Exercise '" + name + "', for " + duration + " minutes.\n";
-        }
-        else{
-            return "Exercise '" + name + "', for " + duration + " minutes or " + distance + " km.\n";
-        }
+        String exercise = "";
+        exercise += "Exercise ID \t" + exerciseID;
+        exercise += "\nName \t" + name;
+        exercise += "\nDuration \t" + duration;
+        exercise += "\nDistance \t" + distance;
+        exercise += "\nCompleted \t" + completed;
+
+        return exercise;
     }
+
+    public long getExerciseID() { return exerciseID; }
 
     public double getDuration() {
         return duration;

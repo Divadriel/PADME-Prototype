@@ -1,9 +1,6 @@
 package fr.limsi.Controller;
 
-import fr.limsi.Model.AdaptationRules;
-import fr.limsi.Model.Exercise;
-import fr.limsi.Model.Session;
-import fr.limsi.Model.UserModel;
+import fr.limsi.Model.*;
 import fr.limsi.Model.Utils.Strings;
 import fr.limsi.View.SessionConfigView;
 import fr.limsi.View.TraceView;
@@ -12,6 +9,7 @@ import fr.limsi.View.SimulationView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -20,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +30,22 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
 
         // config components
-        JSONObject jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
-        UserModel initUser = new UserModel(jsonMETAObject);
+        Programme programme = new Programme();
 
-        ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-        exerciseList.add(new Exercise("init", 0, 0));
-        ArrayList<Session> sessionList = new ArrayList<Session>();
-        sessionList.add(new Session(exerciseList, initUser,0));
+        // config components
+       // JSONObject jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
+       // UserModel initUser = new UserModel(jsonMETAObject);
 
-        AdaptationRules adaptationRules = new AdaptationRules(initUser, sessionList.get(0));
+        //ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+        //exerciseList.add(new Exercise("init", 0, 0));
+        //ArrayList<Session> sessionList = new ArrayList<Session>();
+        //sessionList.add(new Session(exerciseList, initUser,0));
+        //programme.getSessionArrayList().add(new Session(exerciseList, programme.getUser(),0));
+
+        AdaptationRules adaptationRules = new AdaptationRules(programme.getUser(), programme.getSessionArrayList().get(0));
 
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);
@@ -51,9 +54,9 @@ public class Main extends Application {
 
         // config UI components
         TraceView configTrace = new TraceView("Configuration Trace");
-        ProfileView userProfileView = new ProfileView(initUser, configTrace);
-        SessionConfigView sessionConfigView = new SessionConfigView(initUser, configTrace, adaptationRules);
-        SimulationView simulation = new SimulationView(initUser, configTrace);
+        ProfileView userProfileView = new ProfileView(programme.getUser(), configTrace);
+        SessionConfigView sessionConfigView = new SessionConfigView(programme.getUser(), configTrace, adaptationRules);
+        SimulationView simulation = new SimulationView(programme.getUser(), configTrace);
 
         // config TabPane + 2 tabs: configuration and simulation
         TabPane tabPane = new TabPane();
