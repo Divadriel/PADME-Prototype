@@ -23,11 +23,11 @@ public class Exercise {
     public String toString() {
         String exercise = "";
         exercise += "Exercise ID \t" + exerciseID;
-        exercise += "\nName \t" + name;
-        exercise += "\nDuration \t" + duration;
-        exercise += "\nDistance \t" + distance;
-        exercise += "\nCompleted \t" + completed;
-
+        exercise += "\n\tName \t" + name;
+        exercise += "\n\tDuration \t" + duration;
+        exercise += "\n\tDistance \t" + distance;
+        exercise += "\n\tCompleted \t" + completed;
+        exercise += "\n";
         return exercise;
     }
 

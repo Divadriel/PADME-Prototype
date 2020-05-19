@@ -32,8 +32,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        TraceView configTrace = new TraceView("Configuration Trace");
         // config components
-        Programme programme = new Programme();
+        Programme programme = new Programme(configTrace);
 
         // config components
        // JSONObject jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
@@ -53,7 +54,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
 
         // config UI components
-        TraceView configTrace = new TraceView("Configuration Trace");
+        //TraceView configTrace = new TraceView("Configuration Trace");
         ProfileView userProfileView = new ProfileView(programme.getUser(), configTrace);
         SessionConfigView sessionConfigView = new SessionConfigView(programme.getUser(), configTrace, adaptationRules);
         SimulationView simulation = new SimulationView(programme.getUser(), configTrace);

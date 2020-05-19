@@ -61,7 +61,19 @@ public class Session {
 
     public void setUserFeedback(int userFeedback){ this.userFeedback = userFeedback; }
 
-
+    @Override
+    public String toString(){
+        String session = "";
+        session += "Session ID \t" + sessionID + "\n";
+        session += "UserFeedback \t" + userFeedback + "\n";
+        session += "Exercise List \n";
+        for (int i = 0; i < exerciseList.size(); i++){
+            session += "\t";
+            session += exerciseList.get(i).toString();
+        }
+        session += "\n";
+        return session;
+    }
 /*
     @Override
     public String toString() {

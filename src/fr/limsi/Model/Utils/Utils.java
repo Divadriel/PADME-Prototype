@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class Utils {
 
@@ -37,6 +38,14 @@ public class Utils {
 
     public static long calculateUniqueID(){
         //return (long) (10000000000.0 * ((System.currentTimeMillis() / 10000000000.0) - (Math.floor(System.currentTimeMillis() / 10000000000.0)))); // 10 digits
-        return System.currentTimeMillis(); // 13 digits
+        return System.currentTimeMillis(); // 13 digits, in 2020
+    }
+
+    public static String arrayListToString(ArrayList<?> arrayList){
+        String result = "";
+        for(int i = 0; i < arrayList.size(); i++){
+            result += arrayList.get(i).toString() + "\n";
+        }
+        return result;
     }
 }
