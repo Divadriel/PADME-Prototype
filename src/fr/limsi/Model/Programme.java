@@ -1,10 +1,14 @@
 package fr.limsi.Model;
 
+import fr.limsi.Model.Utils.Strings;
 import fr.limsi.Model.Utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Programme {
@@ -72,6 +76,44 @@ public class Programme {
 
     public void setExerciseArrayList(ArrayList<Exercise> exerciseArrayList) {
         this.exerciseArrayList = exerciseArrayList;
+    }
+
+    public void resetExerciseArrayList(){
+        this.exerciseArrayList = null;
+        exerciseArrayList = new ArrayList<Exercise>();
+    }
+
+    public boolean saveExerciseArrayListToJSON(String path) throws IOException {
+
+        // update Exercise ArrayList from JSON
+        JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(path)))); // whole object
+        object.remove(Exercise.class.getSimpleName()); // remove array corresponding to "Exercise" key
+        JSONArray jsonArray = new JSONArray();
+        for(int i = 0; i < exerciseArrayList.size(); i++){
+            jsonArray.put(exerciseArrayList.get(i).saveExerciseToJSONObject());
+        }
+        object.put(Exercise.class.getSimpleName(), jsonArray); // put "Exercise" key with arrayList / JSONArray as value
+        // update jsonMETAObject with ExerciseList
+        jsonMETAObject.put(Exercise.class.getSimpleName(), jsonArray);
+
+        // save object again to file -- rewriting it completely (append false)
+        FileWriter file = null;
+        try {
+            file = new FileWriter(path, false);
+            file.write(object.toString(2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                file.flush();
+                file.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     public ArrayList<Session> getSessionArrayList() {

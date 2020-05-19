@@ -1,7 +1,10 @@
 package fr.limsi.View;
 
 import fr.limsi.Model.AdaptationRules;
+import fr.limsi.Model.Exercise;
+import fr.limsi.Model.Programme;
 import fr.limsi.Model.UserModel;
+import fr.limsi.Model.Utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,6 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class SessionConfigView extends Parent {
 
@@ -19,11 +24,11 @@ public class SessionConfigView extends Parent {
     private TraceView traceView;
     private AdaptationRules adaptationRules;
 
-    public SessionConfigView(UserModel usr, TraceView trcView, AdaptationRules adaptRules){
+    public SessionConfigView(Programme programme, TraceView trcView){
 
-        user = usr;
+        user = programme.getUser();
         traceView = trcView;
-        adaptationRules = adaptRules;
+        adaptationRules = programme.getAdaptationRules();
 
         // creation and config of titled pane
         TitledPane sessionConfigPane = new TitledPane();
@@ -51,9 +56,9 @@ public class SessionConfigView extends Parent {
         Text kmText = new Text("km");
 
         TextField nameField = new TextField();
-        Spinner<Integer> lengthSpinner = new Spinner<>(0, 120, 10);
+        Spinner<Integer> durationSpinner = new Spinner<>(0, 120, 10);
         Spinner<Integer> distanceSpinner = new Spinner<>(0, 10, 1);
-        lengthSpinner.setEditable(true);
+        durationSpinner.setEditable(true);
         distanceSpinner.setEditable(true);
         nameField.setPrefWidth(150);
 
@@ -68,25 +73,38 @@ public class SessionConfigView extends Parent {
             @Override
             public void handle(ActionEvent event) {
                 // 1. create Exercise object with current fields values and add it to exercise ListArray
+                Exercise exercise = new Exercise(nameField.getText(),durationSpinner.getValue(), distanceSpinner.getValue());
+                programme.getExerciseArrayList().add(exercise);
                 // 2. verbose on config trace
+                traceView.getMainDisplay().appendText("Exercise "+ nameField.getText() +" added to exerciseArrayList.\n");
                 // -- NO CHANGE IN JSON --
             }
         });
-        Button removeExerciseButton = new Button("Remove");
-        removeExerciseButton.setOnAction(new EventHandler<ActionEvent>() {
+        Button resetExerciseListButton = new Button("Reset List");
+        resetExerciseListButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // 1. remove exercise from ListArray with INDEX as argument
+                // 1. reset Exercise ArrayList (null assignment then new object creation)
+                programme.resetExerciseArrayList();
                 // 2. verbose on config trace
+                traceView.getMainDisplay().appendText("exerciseArrayList reset.\n");
                 // -- NO CHANGE IN JSON --
             }
         });
-        Button saveExercisesButton = new Button("Save");
-        saveExercisesButton.setOnAction(new EventHandler<ActionEvent>() {
+        Button saveExerciseListButton = new Button("Save");
+        saveExerciseListButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 // 1. save in JSON file
+                try {
+                    programme.saveExerciseArrayListToJSON(Utils.getUserSaveFilePath(programme.getUser().getFirstName()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    traceView.getMainDisplay().appendText("Error while saving exerciseArrayList to JSON.\n");
+                    return;
+                }
                 // 2. verbose on config trace
+                traceView.getMainDisplay().appendText("exerciseArrayList saved to JSON.\n");
             }
         });
         Button loadExercisesButton = new Button("Load");
@@ -102,13 +120,14 @@ public class SessionConfigView extends Parent {
         displayExercisesButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // 1. display current content of exercises ListArray with INDEX for each exercises (for remove purposes)
+                // 1. display current content of exerciseListArray
+                traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getExerciseArrayList()));
             }
         });
-        buttonsFlowPane.getChildren().addAll(addExerciseButton, removeExerciseButton, saveExercisesButton, loadExercisesButton, displayExercisesButton);
+        buttonsFlowPane.getChildren().addAll(addExerciseButton, resetExerciseListButton, saveExerciseListButton, loadExercisesButton, displayExercisesButton);
 
         exerciseContentPane.addRow(0, nameLabel, nameField);
-        exerciseContentPane.addRow(1, lengthLabel, lengthSpinner, minText);
+        exerciseContentPane.addRow(1, lengthLabel, durationSpinner, minText);
         exerciseContentPane.addRow(2, distanceLabel, distanceSpinner, kmText);
         exerciseContentPane.add(buttonsFlowPane, 0, 3, 3, 1);
 
@@ -135,14 +154,22 @@ public class SessionConfigView extends Parent {
         Label exerciseDurationRule = new Label("Exercise duration rule");
         TextField exerciseDurationRuleField = new TextField("0");
         Button exerciseDurationRuleButton = new Button("Apply");
+        exerciseDurationRuleButton.setDisable(true);
         Label exerciseDistanceRule = new Label("Exercise distance rule");
         TextField exerciseDistanceRuleField = new TextField("0");
         Button exerciseDistanceRuleButton = new Button("Apply");
+        exerciseDistanceRuleButton.setDisable(true);
 
         exerciseDurationRuleButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                // later
+            }
+        });
+        exerciseDistanceRuleButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // later
             }
         });
 

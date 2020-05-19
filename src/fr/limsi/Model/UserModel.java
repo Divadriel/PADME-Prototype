@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -58,6 +60,11 @@ public class UserModel {
         this.jsonMETAObject = jsonMETAObject;
     }
 
+    public UserModel(){
+        this.userID = Utils.calculateUniqueID();
+        this.jsonMETAObject = new JSONObject();
+    }
+
     @Override
     public String toString() {
         return "User Details: " + '\n' +
@@ -91,7 +98,7 @@ public class UserModel {
 
     public String displayDynamicProfile(){
         String profile = "";
-        profile += "\n\t\tDynamic profile\n\n";
+        profile += "\t\tDynamic profile\n\n";
         profile += "Started exercises \t" + startedExercises + "\n";
         profile += "Completed exercises \t" + completedExercises + "\n";
         profile += "Started sessions \t" + startedSessions + "\n";
@@ -106,11 +113,10 @@ public class UserModel {
         return profile;
     }
 
-    public boolean saveUserModelToJSON(){
+    public boolean saveUserModelToJSON() throws IOException {
         JSONObject jsonUserObject = new JSONObject();
 
         // save static profile
-    //    jsonUser.put("userID", USER_ID);
         jsonUserObject.put("firstName", firstName);
         jsonUserObject.put("userID", userID);
         //jsonUser.put("lastName", lastName);
@@ -141,19 +147,27 @@ public class UserModel {
         // save timestamp formatter
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"); // for JSON file data
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
         // save timestamp to then retrieve last update of user profile, while saving all updates of user profile
         jsonUserObject.put("saveTimestamp", now.format(formatter));
 
         // bundle jsonUser to jsonUserArray
         jsonUserArray.put(jsonUserObject);
+
+
+
         // put to jsonMETAObject with class name as key
         jsonMETAObject.put(this.getClass().getSimpleName(), jsonUserArray);
 
-        // save jsonMETAObject to a daily file (all changes from a same day on a same file)
+        // save object to a daily file (all changes from a same day on a same file)
         try {
             //file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+now.format(formatterDate)+".json", false);
-            file = new FileWriter("D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+firstName+"_"+now.format(formatterDate)+".json", false);
+            //file = new FileWriter("D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+firstName+"_"+now.format(formatterDate)+".json", false);
+            file = new FileWriter(Utils.getUserSaveFilePath(firstName), false);
+/*
+            JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(Utils.getUserSaveFilePath(firstName))))); // whole object
+            object.remove(this.getClass().getSimpleName()); // remove array corresponding to "UserModel" key
+            object.put(this.getClass().getSimpleName(), jsonUserArray);
+*/
             file.write(jsonMETAObject.toString(2));
         } catch (IOException e) {
             e.printStackTrace();

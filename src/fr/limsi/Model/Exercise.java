@@ -1,6 +1,7 @@
 package fr.limsi.Model;
 
 import fr.limsi.Model.Utils.Utils;
+import org.json.JSONObject;
 
 public class Exercise {
 
@@ -14,9 +15,18 @@ public class Exercise {
     public Exercise(String name, double duration, double distance){
         this.exerciseID = Utils.calculateUniqueID();
         this.name = name;
-        this.duration = duration;
+        this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
         this.distance = distance;
         this.completed = 0;
+    }
+
+    public JSONObject saveExerciseToJSONObject (){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", name);
+        jsonObject.put("duration", duration);
+        jsonObject.put("distance", distance);
+        jsonObject.put("completed", completed);
+        return jsonObject;
     }
 
     @Override

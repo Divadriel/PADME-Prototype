@@ -1,5 +1,6 @@
 package fr.limsi.View;
 
+import fr.limsi.Model.Programme;
 import fr.limsi.Model.UserModel;
 import fr.limsi.Model.Utils.Utils;
 import javafx.beans.value.ChangeListener;
@@ -29,9 +30,9 @@ public class ProfileView extends Parent {
     private Spinner<Integer> promotionSpinner;
     private Spinner<Integer> preventionSpinner;
 
-    public ProfileView(UserModel usr, TraceView trcView){
+    public ProfileView(Programme programme, TraceView trcView){
 
-        user = usr;
+        user = programme.getUser();
         traceView = trcView;
 
         // creation and config of titled pane
@@ -130,7 +131,7 @@ public class ProfileView extends Parent {
             @Override
             public void handle(ActionEvent event) {
                 traceView.getMainDisplay().appendText(user.displayStaticProfile());
-                dynamicProfileDisplay.appendText(user.displayDynamicProfile());
+                dynamicProfileDisplay.setText(user.displayDynamicProfile());
             }
         });
         // row 7, cell 1
@@ -142,17 +143,19 @@ public class ProfileView extends Parent {
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                user.setFirstName(nameField.getText());
-                user.setAge(ageSpinner.getValue());
-                user.setMotivationLevel(motivationSpinner.getValue());
-                user.setPhysicalActivityLevel(PASpinner.getValue());
-                user.setPromotion(promotionSpinner.getValue());
-                user.setPrevention(preventionSpinner.getValue());
-                traceView.getMainDisplay().appendText("Saved!\n");
-                if(user.saveUserModelToJSON()){
-                    traceView.getMainDisplay().appendText("Save to JSON file complete\n");
-                }
-                else {
+                programme.getUser().setFirstName(nameField.getText());
+                programme.getUser().setAge(ageSpinner.getValue());
+                programme.getUser().setMotivationLevel(motivationSpinner.getValue());
+                programme.getUser().setPhysicalActivityLevel(PASpinner.getValue());
+                programme.getUser().setPromotion(promotionSpinner.getValue());
+                programme.getUser().setPrevention(preventionSpinner.getValue());
+                traceView.getMainDisplay().appendText("Updated UserModel.\n" + programme.getUser().getFirstName());
+                try {
+                    if(programme.getUser().saveUserModelToJSON()){
+                        traceView.getMainDisplay().appendText("Save to JSON file complete\n");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                     traceView.getMainDisplay().appendText("Error while saving to JSON\n");
                 }
             }
@@ -167,13 +170,27 @@ public class ProfileView extends Parent {
                     user.loadUserModelFromJSON();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return;
                 }
                 updateUserTextFields();
             }
         });
 
+        Button newButton = new Button("New");
+        newButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // reset user to start from scratch a new one
+                user = null;
+                programme.setUser(null);
+                user = new UserModel();
+                programme.setUser(user);
+                clearUserTextFields();
+            }
+        });
+
             // add to gridPane
-        saveLoadPane.addRow(0, saveButton, loadButton);
+        saveLoadPane.addRow(0, saveButton, loadButton, newButton);
 
         // main col 1: dynamic profile
         // row 0: display of dynamic profile
@@ -227,6 +244,16 @@ public class ProfileView extends Parent {
         preventionSpinner.getValueFactory().setValue(user.getPrevention());
 
         traceView.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
+    }
+
+    private void clearUserTextFields(){
+        nameField.setText("");
+        ageSpinner.getValueFactory().setValue(20);
+        motivationSpinner.getValueFactory().setValue(0);
+        PASpinner.getValueFactory().setValue(0);
+        promotionSpinner.getValueFactory().setValue(0);
+        preventionSpinner.getValueFactory().setValue(0);
+        traceView.getMainDisplay().setText("Cleared all fields.\n");
     }
 
     public TextArea getDynamicProfileDisplay() {

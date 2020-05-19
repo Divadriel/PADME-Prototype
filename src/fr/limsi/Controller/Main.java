@@ -36,8 +36,8 @@ public class Main extends Application {
 
         // config UI components
         TraceView configTrace = new TraceView("Configuration Trace");
-        ProfileView userProfileView = new ProfileView(programme.getUser(), configTrace);
-        SessionConfigView sessionConfigView = new SessionConfigView(programme.getUser(), configTrace, programme.getAdaptationRules());
+        ProfileView userProfileView = new ProfileView(programme, configTrace);
+        SessionConfigView sessionConfigView = new SessionConfigView(programme, configTrace);
         SimulationView simulation = new SimulationView(programme.getUser(), configTrace);
 
         // update text fields in profile view with data loaded from creating a new Programme object (init.json)

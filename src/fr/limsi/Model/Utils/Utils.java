@@ -1,11 +1,15 @@
 package fr.limsi.Model.Utils;
 
 import javafx.stage.FileChooser;
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Utils {
@@ -44,5 +48,12 @@ public class Utils {
             result += arrayList.get(i).toString() + "\n";
         }
         return result;
+    }
+
+    public static String getUserSaveFilePath(String userFirstName){
+        // save timestamp formatter
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
+        return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userFirstName+"_"+now.format(formatterDate)+".json";
     }
 }

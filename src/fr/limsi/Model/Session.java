@@ -1,6 +1,8 @@
 package fr.limsi.Model;
 
 import fr.limsi.Model.Utils.Utils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,15 @@ public class Session {
         this.exerciseList = exerciseList;
         this.userFeedback = userFeedback;
         this.userID = userID;
+    }
+
+    public JSONObject saveSessionToJSONObject(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sessionID", sessionID);
+        jsonObject.put("userFeedback", userFeedback);
+        jsonObject.put("userID", userID);
+        jsonObject.put("ExerciseList", new JSONArray(exerciseList));
+        return jsonObject;
     }
 
     public ArrayList<Exercise> getExerciseList() {
@@ -54,15 +65,4 @@ public class Session {
         session += "\n";
         return session;
     }
-/*
-    @Override
-    public String toString() {
-        String toString = "User: " + this.userAdaptationRules.getUser().getFirstName() + "\nSession " + sessionId
-                + ", number of exercises: " + exerciseNb + "\nExercises: \n";
-        for(int i = 0; i < this.exerciseList.size(); i++){
-            toString += this.exerciseList[i].toString() + "\n";
-        }
-        return toString;
-    }
- */
 }
