@@ -25,17 +25,17 @@ public class Utils {
         return new String(Files.readAllBytes(Paths.get(Strings.PATH_TO_INIT_JSON)));
     }
 
-    public static double setDurationToClosestUpperFiveMinutes(double duration){
-        if(duration % 5 == 0){
+    public static double setDurationToClosestUpperNMinutes(double duration, int N){
+        if (duration % N == 0){
             return duration;
         }
         else{
-            return (Math.floor(duration / 5) + 1) * 5;
+            return (Math.floor(duration / N) + 1) * N;
         }
     }
 
     public static long calculateUniqueID(){
-        return System.currentTimeMillis(); // 13 digits, in 2020
+        return System.currentTimeMillis(); // 13 digits
     }
 
     public static String arrayListToString(ArrayList<?> arrayList){

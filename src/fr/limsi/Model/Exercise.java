@@ -22,7 +22,7 @@ public class Exercise {
     @Override
     public String toString() {
         String exercise = "";
-        exercise += "Exercise ID \t" + exerciseID;
+        exercise += "\tExercise ID \t" + exerciseID;
         exercise += "\n\tName \t" + name;
         exercise += "\n\tDuration \t" + duration;
         exercise += "\n\tDistance \t" + distance;

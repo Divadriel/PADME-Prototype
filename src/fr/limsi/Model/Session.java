@@ -49,7 +49,6 @@ public class Session {
         session += "UserFeedback \t" + userFeedback + "\n";
         session += "Exercise List \n";
         for (int i = 0; i < exerciseList.size(); i++){
-            session += "\t";
             session += exerciseList.get(i).toString();
         }
         session += "\n";
