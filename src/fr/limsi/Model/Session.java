@@ -8,32 +8,15 @@ public class Session {
 
     private final long sessionID;
     private ArrayList<Exercise> exerciseList;
-    //private int exerciseNb;
-    private AdaptationRules userAdaptationRules;
     private int userFeedback;
+    private long userID;
 
-    public Session(ArrayList<Exercise> exerciseList, UserModel user, int userFeedback){
-      //  this.exerciseNb = exerciseNb;
+    public Session(ArrayList<Exercise> exerciseList, long userID, int userFeedback){
         this.sessionID = Utils.calculateUniqueID();
         this.exerciseList = exerciseList;
         this.userFeedback = userFeedback;
-        // use user to init adapt rules
+        this.userID = userID;
     }
-/*
-    public void computeAdaptationRules(){
-        float distancePAMultiplier = userAdaptationRules.distancePAMultiplier();
-        float lengthPAMultiplier = userAdaptationRules.lengthPAMultiplier();
-        for(Exercise exercise : this.exerciseList){
-            if(exercise.getDuration() != 0){
-                exercise.setDuration((int)(exercise.getDuration() * lengthPAMultiplier));
-            }
-            if(exercise.getDistance() != 0){
-                exercise.setDistance((int)(exercise.getDistance() * distancePAMultiplier));
-            }
-        }
-    }
-
- */
 
     public ArrayList<Exercise> getExerciseList() {
         return exerciseList;
@@ -42,16 +25,6 @@ public class Session {
     public void setExerciseList(ArrayList<Exercise> exerciseList) {
         this.exerciseList = exerciseList;
     }
-/*
-    public int getExerciseNb() {
-        return exerciseNb;
-    }
-
-    public void setExerciseNb(int exerciseNb) {
-        this.exerciseNb = exerciseNb;
-    }
-
- */
 
     public long getSessionID() {
         return sessionID;
@@ -60,6 +33,14 @@ public class Session {
     public int getUserFeedback() { return userFeedback; }
 
     public void setUserFeedback(int userFeedback){ this.userFeedback = userFeedback; }
+
+    public long getUserID() {
+        return userID;
+    }
+
+    public void setUserID(long userID) {
+        this.userID = userID;
+    }
 
     @Override
     public String toString(){

@@ -1,8 +1,6 @@
 package fr.limsi.Model;
 
 import fr.limsi.Model.Utils.Utils;
-import fr.limsi.View.ProfileView;
-import fr.limsi.View.TraceView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,20 +15,16 @@ public class Programme {
     private UserModel user;
     private AdaptationRules adaptationRules;
     private JSONObject jsonMETAObject;
-    private TraceView traceView;
 
-    public Programme(TraceView trcView) throws IOException{
+    public Programme() throws IOException{
 
         // config components
         jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
         user = new UserModel(jsonMETAObject);
-        traceView = trcView;
 
         // load init data from init.json -- User John Doe + sample exercises and session
         initProgramme();
         adaptationRules = new AdaptationRules(user, sessionArrayList.get(0));
-        traceView.getMainDisplay().appendText(Utils.arrayListToString(sessionArrayList));
-
     }
 
     public void initProgramme() throws IOException {
@@ -54,7 +48,7 @@ public class Programme {
             setExerciseArrayListFromJSONArray(temp, exercises);
             Session session = new Session(
                     exercises,
-                    user,
+                    user.getUserID(),
                     jsonObject.getInt("userFeedback")
             );
             sessionArrayList.add(session);

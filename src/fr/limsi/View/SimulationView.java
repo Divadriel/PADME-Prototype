@@ -20,8 +20,6 @@ public class SimulationView extends Parent {
 
     private UserModel user;
     private TraceView traceView;
-    private Session sessionOne;
-    private Session sessionTwo;
 
     public SimulationView(UserModel usr, TraceView trcView){
 
@@ -78,7 +76,7 @@ public class SimulationView extends Parent {
                 Exercise exOne = createExercise(exOneNameField, exOneLengthSpinner, exOneDistanceSpinner);
                 Exercise exTwo = createExercise(exTwoNameField, exTwoLengthSpinner, exTwoDistanceSpinner);
                 Exercise exThree = createExercise(exThreeNameField, exThreeLengthSpinner, exThreeDistanceSpinner);
-                sessionOne = createSession(exOne, exTwo, exThree);
+               // sessionOne = createSession(exOne, exTwo, exThree);
                 // 2. make "start session" clickable
                 startSessionButton.setDisable(false);
             }
@@ -257,7 +255,7 @@ public class SimulationView extends Parent {
         list.add(exOne);
         list.add(exTwo);
         list.add(exThree);
-        Session session = new Session(list, user, 3);
+        Session session = new Session(list, user.getUserID(), 3);
         traceView.getMainDisplay().appendText(session.toString());
         return session;
     }

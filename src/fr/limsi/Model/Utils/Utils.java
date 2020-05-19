@@ -3,7 +3,6 @@ package fr.limsi.Model.Utils;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,7 +22,6 @@ public class Utils {
     }
 
     public static String loadInitJSONFile() throws IOException {
-        //FileReader file = new FileReader(Strings.PATH_TO_INIT_JSON);
         return new String(Files.readAllBytes(Paths.get(Strings.PATH_TO_INIT_JSON)));
     }
 
@@ -37,7 +35,6 @@ public class Utils {
     }
 
     public static long calculateUniqueID(){
-        //return (long) (10000000000.0 * ((System.currentTimeMillis() / 10000000000.0) - (Math.floor(System.currentTimeMillis() / 10000000000.0)))); // 10 digits
         return System.currentTimeMillis(); // 13 digits, in 2020
     }
 

@@ -9,22 +9,15 @@ import fr.limsi.View.SimulationView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends Application {
-
-
 
     public static void main(String[] args){ Application.launch(args);
     }
@@ -32,21 +25,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        TraceView configTrace = new TraceView("Configuration Trace");
         // config components
-        Programme programme = new Programme(configTrace);
-
-        // config components
-       // JSONObject jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
-       // UserModel initUser = new UserModel(jsonMETAObject);
-
-        //ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-        //exerciseList.add(new Exercise("init", 0, 0));
-        //ArrayList<Session> sessionList = new ArrayList<Session>();
-        //sessionList.add(new Session(exerciseList, initUser,0));
-        //programme.getSessionArrayList().add(new Session(exerciseList, programme.getUser(),0));
-
-        AdaptationRules adaptationRules = new AdaptationRules(programme.getUser(), programme.getSessionArrayList().get(0));
+        Programme programme = new Programme();
 
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);
@@ -54,9 +34,9 @@ public class Main extends Application {
         Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
 
         // config UI components
-        //TraceView configTrace = new TraceView("Configuration Trace");
+        TraceView configTrace = new TraceView("Configuration Trace");
         ProfileView userProfileView = new ProfileView(programme.getUser(), configTrace);
-        SessionConfigView sessionConfigView = new SessionConfigView(programme.getUser(), configTrace, adaptationRules);
+        SessionConfigView sessionConfigView = new SessionConfigView(programme.getUser(), configTrace, programme.getAdaptationRules());
         SimulationView simulation = new SimulationView(programme.getUser(), configTrace);
 
         // update text fields in profile view with data loaded from creating a new Programme object (init.json)
@@ -99,12 +79,5 @@ public class Main extends Application {
         root.getChildren().add(tabPane);
         stage.setScene(scene);
         stage.show();
-    }
-
-    private void initApp(){
-        // load all external files and parse their content
-        // exercises
-
-        // sessions
     }
 }
