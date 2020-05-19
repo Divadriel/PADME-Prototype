@@ -18,7 +18,16 @@ public class ProfileView extends Parent {
 
     private UserModel user;
     private TraceView traceView;
+    // fields
     private TextArea dynamicProfileDisplay;
+    private TextField nameField;
+    private Spinner<Integer> ageSpinner;
+    private RadioButton maleRB;
+    private RadioButton femaleRB;
+    private Spinner<Integer> motivationSpinner;
+    private Spinner<Integer> PASpinner;
+    private Spinner<Integer> promotionSpinner;
+    private Spinner<Integer> preventionSpinner;
 
     public ProfileView(UserModel usr, TraceView trcView){
 
@@ -49,13 +58,13 @@ public class ProfileView extends Parent {
         // row 0, cell 0
         Label name = new Label("Name");
         // row 0, cell 1
-        TextField nameField = new TextField("");
+        nameField = new TextField("");
         nameField.setPrefWidth(120);
 
         // row 1, cell 0
         Label age = new Label("Age");
         // row 1, cell 1
-        Spinner<Integer> ageSpinner = new Spinner<>(1, 120, 25);
+        ageSpinner = new Spinner<>(1, 120, 25);
         ageSpinner.setEditable(true);
 
         // row 2, cell 0
@@ -65,11 +74,11 @@ public class ProfileView extends Parent {
         sexBox.setSpacing(5);
 
         ToggleGroup sexGroup = new ToggleGroup();
-        RadioButton maleRB = new RadioButton("Male");
+        maleRB = new RadioButton("Male");
         maleRB.setToggleGroup(sexGroup);
         maleRB.setFocusTraversable(false);
 
-        RadioButton femaleRB = new RadioButton("Female");
+        femaleRB = new RadioButton("Female");
         femaleRB.setToggleGroup(sexGroup);
         femaleRB.setFocusTraversable(false);
 
@@ -91,24 +100,31 @@ public class ProfileView extends Parent {
         // row 3, cell 0
         Label motivationLabel = new Label("Motivation");
         // row 3, cell 1
-        Spinner<Integer> motivationSpinner = new Spinner<>(1, 100, 50);
+        motivationSpinner = new Spinner<>(0, 100, 50);
         motivationSpinner.setEditable(true);
 
         // row 4, cell 0
         Label PALabel = new Label("Physical Activity");
         PALabel.setPadding(new Insets(5));
         // row 4, cell 1
-        Spinner<Integer> PASpinner = new Spinner<>(1, 100, 50);
+        PASpinner = new Spinner<>(0, 100, 50);
         PASpinner.setEditable(true);
 
         // row 5, cell 0
-        Label RFLabel = new Label("Chronic focus");
-        RFLabel.setPadding(new Insets(5));
+        Label proLabel = new Label("Promotion");
+        proLabel.setPadding(new Insets(5));
         // row 5, cell 1
-        Spinner<Integer> RFSpinner = new Spinner<>(1, 100, 50);
-        RFSpinner.setEditable(true);
+        promotionSpinner = new Spinner<>(0,100,50);
+        promotionSpinner.setEditable(true);
 
         // row 6, cell 0
+        Label preLabel = new Label("Prevention");
+        preLabel.setPadding(new Insets(5));
+        // row 6, cell 1
+        preventionSpinner = new Spinner<>(0, 100, 50);
+        preventionSpinner.setEditable(true);
+
+        // row 7, cell 0
         Button displayProfile = new Button("Display Profile");
         displayProfile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -117,7 +133,7 @@ public class ProfileView extends Parent {
                 dynamicProfileDisplay.appendText(user.displayDynamicProfile());
             }
         });
-        // row 6, cell 1
+        // row 7, cell 1
         GridPane saveLoadPane = new GridPane();
         saveLoadPane.setPadding(new Insets(5));
         saveLoadPane.setVgap(5);
@@ -130,7 +146,8 @@ public class ProfileView extends Parent {
                 user.setAge(ageSpinner.getValue());
                 user.setMotivationLevel(motivationSpinner.getValue());
                 user.setPhysicalActivityLevel(PASpinner.getValue());
-                user.setRegulatoryFocus(RFSpinner.getValue());
+                user.setPromotion(promotionSpinner.getValue());
+                user.setPrevention(preventionSpinner.getValue());
                 traceView.getMainDisplay().appendText("Saved!\n");
                 if(user.saveUserModelToJSON()){
                     traceView.getMainDisplay().appendText("Save to JSON file complete\n");
@@ -148,24 +165,10 @@ public class ProfileView extends Parent {
                 try {
                     // load a json file to user model
                     user.loadUserModelFromJSON();
-                    // display updated info from user model to fields
-                    nameField.setText(user.getFirstName());
-                    ageSpinner.getValueFactory().setValue(user.getAge());
-                    if(user.getGender().equals("M")){
-                        maleRB.setSelected(true);
-                    }
-                    else {
-                        femaleRB.setSelected(true);
-                    }
-                    motivationSpinner.getValueFactory().setValue(user.getMotivationLevel());
-                    PASpinner.getValueFactory().setValue(user.getPhysicalActivityLevel());
-                    RFSpinner.getValueFactory().setValue(user.getRegulatoryFocus());
-
-                    traceView.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                updateUserTextFields();
             }
         });
 
@@ -194,8 +197,8 @@ public class ProfileView extends Parent {
 
         // adding to gridpanes
         staticProfilePane.add(staticName, 0, 0, 2, 1);
-        staticProfilePane.addColumn(0, name, age, sex, motivationLabel, PALabel, RFLabel, displayProfile);
-        staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivationSpinner, PASpinner, RFSpinner, saveLoadPane);
+        staticProfilePane.addColumn(0, name, age, sex, motivationLabel, PALabel, proLabel, preLabel, displayProfile);
+        staticProfilePane.addColumn(1, nameField, ageSpinner, sexBox, motivationSpinner, PASpinner, promotionSpinner, preventionSpinner, saveLoadPane);
         dynamicProfilePane.add(dynamicName, 0, 0);
         dynamicProfilePane.add(dynamicProfileDisplay, 0, 1);
         dynamicProfilePane.add(resetDynamicProfile, 0, 2);
@@ -206,6 +209,24 @@ public class ProfileView extends Parent {
         profilePane.setContent(content);
         this.getChildren().add(profilePane);
 
+    }
+
+    public void updateUserTextFields(){
+        // display updated info from user model to fields
+        nameField.setText(user.getFirstName());
+        ageSpinner.getValueFactory().setValue(user.getAge());
+        if(user.getGender().equals("M")){
+            maleRB.setSelected(true);
+        }
+        else {
+            femaleRB.setSelected(true);
+        }
+        motivationSpinner.getValueFactory().setValue(user.getMotivationLevel());
+        PASpinner.getValueFactory().setValue(user.getPhysicalActivityLevel());
+        promotionSpinner.getValueFactory().setValue(user.getPromotion());
+        preventionSpinner.getValueFactory().setValue(user.getPrevention());
+
+        traceView.getMainDisplay().appendText("Successfully loaded profile: "+user.getFirstName()+"\n");
     }
 
     public TextArea getDynamicProfileDisplay() {
