@@ -61,10 +61,7 @@ public class Session {
 
     public void setUserFeedback(int userFeedback){ this.userFeedback = userFeedback; }
 
-    @Override
-    public String toString(){
-        return "Session toString to be completed, there are " + exerciseList.size() + " exercises in the session.\n";
-    }
+
 /*
     @Override
     public String toString() {

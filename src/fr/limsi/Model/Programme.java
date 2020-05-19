@@ -1,6 +1,7 @@
 package fr.limsi.Model;
 
 import fr.limsi.Model.Utils.Utils;
+import fr.limsi.View.ProfileView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 
 public class Programme {
 
+    // user related
     private ArrayList<Exercise> exerciseArrayList;
     private ArrayList<Session> sessionArrayList;
     private UserModel user;
@@ -23,12 +25,11 @@ public class Programme {
 
         // load init data from init.json -- User John Doe + sample exercises and session
         initProgramme();
-
         adaptationRules = new AdaptationRules(user, sessionArrayList.get(0));
 
     }
 
-    private void initProgramme() throws IOException {
+    public void initProgramme() throws IOException {
         // load init.json
         String initJSON = Utils.loadInitJSONFile();
         // parse UserModel

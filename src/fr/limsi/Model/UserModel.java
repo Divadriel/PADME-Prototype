@@ -26,7 +26,9 @@ public class UserModel {
     private String gender;
 
     // for each, range from 1 to 100
-    private int regulatoryFocus;
+    private int promotion;
+    private int prevention;
+    private int chronicRegulatoryFocus; // assessment needs to be done --> which?
     private int physicalActivityLevel;
     private int motivationLevel;
 
@@ -51,28 +53,9 @@ public class UserModel {
     // jsonUserArray is the collection of user records (no exercise nor session, just user)
     private JSONArray jsonUserArray = new JSONArray();
 
-    public UserModel(String firstName, String lastName, int age, int weight, int height, String gender,
-                     int regulatoryFocus, int physicalActivityLevel, int motivationLevel){
-        this.userID = Utils.calculateUniqueID();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-        this.weight = weight;
-        this.height = height;
-        this.gender = gender;
-        this.regulatoryFocus = regulatoryFocus;
-        this.physicalActivityLevel = physicalActivityLevel;
-        this.motivationLevel = motivationLevel;
-    }
-
     public UserModel(JSONObject jsonMETAObject){
         this.userID = Utils.calculateUniqueID();
         this.jsonMETAObject = jsonMETAObject;
-    }
-
-    public UserModel(String firstName){
-        this.userID = Utils.calculateUniqueID();
-        this.firstName = firstName;
     }
 
     @Override
@@ -84,7 +67,7 @@ public class UserModel {
                 ", Weight: " + weight +
                 ", Height: " + height +
                 ", Gender: " + gender +
-                ", Regulatory Focus: '" + regulatoryFocus + '\'' +
+                ", Regulatory Focus: '" + chronicRegulatoryFocus + '\'' +
                 ", Physical Activity Level: '" + physicalActivityLevel + '\'' +
                 ", Motivation Level: '" + motivationLevel + '\'' +
                 '.';
@@ -99,7 +82,9 @@ public class UserModel {
         profile += "Gender \t" + gender + "\n";
         profile += "Motivation \t" + motivationLevel + "\n";
         profile += "Physical Activity \t" + physicalActivityLevel + "\n";
-        profile += "Chronic focus \t" + regulatoryFocus + "\n";
+        profile += "Promotion \t" + promotion + "\n";
+        profile += "Prevention \t" + prevention + "\n";
+        profile += "Chronic focus \t" + chronicRegulatoryFocus + "\n";
 
         return profile;
     }
@@ -134,7 +119,9 @@ public class UserModel {
        // jsonUser.put("weight", weight);
      //   jsonUser.put("height", height);
         jsonUserObject.put("gender", gender);
-        jsonUserObject.put("regulatoryFocus", regulatoryFocus);
+        jsonUserObject.put("promotion", promotion);
+        jsonUserObject.put("prevention", prevention);
+        jsonUserObject.put("chronicRegulatoryFocus", chronicRegulatoryFocus);
         jsonUserObject.put("physicalActivityLevel", physicalActivityLevel);
         jsonUserObject.put("motivationLevel", motivationLevel);
 
@@ -202,7 +189,10 @@ public class UserModel {
         firstName = jsonObject.getString("firstName");
         age = jsonObject.getInt("age");
         gender = jsonObject.getString("gender");
-        regulatoryFocus = jsonObject.getInt("regulatoryFocus");
+        promotion = jsonObject.getInt("promotion");
+        prevention = jsonObject.getInt("prevention");
+        //chronicRegulatoryFocus = jsonObject.getInt("chronicRegulatoryFocus");
+        computeChronicRegulatoryFocus();
         physicalActivityLevel = jsonObject.getInt("physicalActivityLevel");
         motivationLevel = jsonObject.getInt("motivationLevel");
 
@@ -293,12 +283,16 @@ public class UserModel {
         this.gender = gender;
     }
 
-    public int getRegulatoryFocus() {
-        return regulatoryFocus;
+    public int getChronicRegulatoryFocus() {
+        return chronicRegulatoryFocus;
     }
 
-    public void setRegulatoryFocus(int regulatoryFocus) {
-        this.regulatoryFocus = regulatoryFocus;
+    public void setChronicRegulatoryFocus(int chronicRegulatoryFocus) {
+        this.chronicRegulatoryFocus = chronicRegulatoryFocus;
+    }
+
+    public void computeChronicRegulatoryFocus(){
+        this.chronicRegulatoryFocus = promotion - prevention;
     }
 
     public int getPhysicalActivityLevel() {
@@ -325,6 +319,22 @@ public class UserModel {
         else{
             this.motivationLevel = motivationLevel;
         }
+    }
+
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
+    }
+
+    public int getPrevention() {
+        return prevention;
+    }
+
+    public void setPrevention(int prevention) {
+        this.prevention = prevention;
     }
 
     public int getStartedExercises() {

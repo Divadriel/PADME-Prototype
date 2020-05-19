@@ -58,6 +58,9 @@ public class Main extends Application {
         SessionConfigView sessionConfigView = new SessionConfigView(programme.getUser(), configTrace, adaptationRules);
         SimulationView simulation = new SimulationView(programme.getUser(), configTrace);
 
+        // update text fields in profile view with data loaded from creating a new Programme object (init.json)
+        userProfileView.updateUserTextFields();
+
         // config TabPane + 2 tabs: configuration and simulation
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
