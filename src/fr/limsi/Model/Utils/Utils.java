@@ -1,5 +1,6 @@
 package fr.limsi.Model.Utils;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import javafx.stage.FileChooser;
 import org.json.JSONArray;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Utils {
 
@@ -55,5 +57,35 @@ public class Utils {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
         return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userFirstName+"_"+now.format(formatterDate)+".json";
+    }
+
+    public static int calculatePercentile(int percentile, int sampleSize){
+        return (int) Math.floor((percentile * (sampleSize + 1)) / 100);
+    }
+
+    public static ArrayList<Integer> generateRandomStepsRecord(int days){
+        ArrayList<Integer> result = new ArrayList<Integer>(days);
+        for (int i = 0; i < days; i++){
+            result.add((int) Math.floor((Math.random() * 10000) + 1));
+        }
+        return result;
+    }
+
+    public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord){
+
+        int percentile = calculatePercentile(60, stepsRecord.size());
+        ArrayList<Integer> stepsRecordSorted = new ArrayList<Integer>();
+        for(int val : stepsRecord){
+            stepsRecordSorted.add(val);
+        }
+        stepsRecordSorted.sort(Comparator.naturalOrder());
+
+        return stepsRecordSorted.get(percentile - 1);
+    }
+
+    public static ArrayList<Integer> updateStepsRecord(ArrayList<Integer> stepsRecord, int nextObj){
+        stepsRecord.remove(0);
+        stepsRecord.add(nextObj);
+        return stepsRecord;
     }
 }
