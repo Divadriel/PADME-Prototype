@@ -177,6 +177,12 @@ public class SessionConfigView extends Parent {
 
             // row 2: percentile algorithm
         Label percentileAlgoLabel = new Label("Percentile Algorithm");
+
+        FlowPane percentileFlowpane = new FlowPane();
+        percentileFlowpane.setHgap(5);
+        percentileFlowpane.setVgap(5);
+        percentileFlowpane.setPadding(new Insets(5));
+
         Spinner<Integer> percentileSpinner = new Spinner<>(1, 100, 60);
         percentileSpinner.setEditable(true);
         percentileSpinner.setPrefWidth(60);
@@ -216,10 +222,11 @@ public class SessionConfigView extends Parent {
             }
         });
 
-
+        percentileFlowpane.getChildren().addAll(percentileSpinner, daysSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);
         adaptRulesContentPane.addRow(0, exerciseDurationRule, exerciseDurationRuleField, exerciseDurationRuleButton);
         adaptRulesContentPane.addRow(1, exerciseDistanceRule, exerciseDistanceRuleField, exerciseDistanceRuleButton);
-        adaptRulesContentPane.addRow(2, percentileAlgoLabel, percentileSpinner, daysSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);
+        adaptRulesContentPane.add(percentileAlgoLabel, 0, 2);
+        adaptRulesContentPane.add(percentileFlowpane, 1, 2, 2, 1);
         adaptRulesPane.setContent(adaptRulesContentPane);
 
         // add to content GridPane
