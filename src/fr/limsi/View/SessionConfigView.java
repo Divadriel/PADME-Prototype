@@ -186,28 +186,43 @@ public class SessionConfigView extends Parent {
         Spinner<Integer> percentileSpinner = new Spinner<>(1, 100, 60);
         percentileSpinner.setEditable(true);
         percentileSpinner.setPrefWidth(60);
+        percentileSpinner.setTooltip(new Tooltip("Percentile"));
         Spinner<Integer> daysSpinner = new Spinner<>(1, 100, 9);
         daysSpinner.setEditable(true);
         daysSpinner.setPrefWidth(60);
+        daysSpinner.setTooltip(new Tooltip("Moving days"));
         Spinner<Integer> verboseSpinner = new Spinner<>(0, 1, 0);
         verboseSpinner.setPrefWidth(60);
+        verboseSpinner.setTooltip(new Tooltip("1 if you want to display more info"));
+        Spinner<Integer> correctionSpinner = new Spinner<>(0,1,1);
+        correctionSpinner.setPrefWidth(60);
+        correctionSpinner.setTooltip(new Tooltip("1 if you want to apply correction"));
         Button percentileAlgoButton = new Button("Iterate");
         Button initPercentileAlgo = new Button("Init");
+        initPercentileAlgo.setTooltip(new Tooltip("Initial set of day records"));
         percentileAlgoButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 boolean verbose;
+                boolean correction;
                 if (verboseSpinner.getValueFactory().getValue().equals(0)){
                     verbose = false;
                 }
                 else {
                     verbose = true;
                 }
+                if(correctionSpinner.getValueFactory().getValue().equals(0)){
+                    correction = false;
+                }
+                else{
+                    correction = true;
+                }
                 dayCount++;
                 traceView.getMainDisplay().appendText(Utils.nthPercentileAlgorithmDisplay(
                         percentileSpinner.getValueFactory().getValue(),
                         stepsRecord,
                         dayCount,
+                        correction,
                         verbose
                 ));
 
@@ -222,7 +237,7 @@ public class SessionConfigView extends Parent {
             }
         });
 
-        percentileFlowpane.getChildren().addAll(percentileSpinner, daysSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);
+        percentileFlowpane.getChildren().addAll(percentileSpinner, daysSpinner, correctionSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);
         adaptRulesContentPane.addRow(0, exerciseDurationRule, exerciseDurationRuleField, exerciseDurationRuleButton);
         adaptRulesContentPane.addRow(1, exerciseDistanceRule, exerciseDistanceRuleField, exerciseDistanceRuleButton);
         adaptRulesContentPane.add(percentileAlgoLabel, 0, 2);

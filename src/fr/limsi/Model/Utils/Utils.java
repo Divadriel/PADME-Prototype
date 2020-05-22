@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Utils {
@@ -86,34 +87,81 @@ public class Utils {
         return stepsRecordSorted.get(index - 1);
     }
 
-    public static String nthPercentileAlgorithmDisplay(int wantedPercentile, ArrayList<Integer> stepsRecord, int dayCount, boolean verbose){
+    public static String nthPercentileAlgorithmDisplay(int wantedPercentile, ArrayList<Integer> stepsRecord, int dayCount, boolean correction, boolean verbose){
         String result = "";
 
         int nextObj = generateNextStepsObjective(stepsRecord, wantedPercentile); // returns the next objective (steps nb)
         ArrayList<Integer> temp = new ArrayList<>(stepsRecord);// temp list to show ordered elements
         temp.sort(Comparator.naturalOrder());
-        // removes first index and add next objective
+
+        // removes first index and add next objective depending on whether correction is true or false
         stepsRecord.remove(0);
-        Random random = new Random();
-        IntStream genInts = random.ints(1,(int)(Math.floor(0.9*nextObj)), (int)(Math.floor(1.1*nextObj)));
-        stepsRecord.add(genInts.sum());
+
+        int realNextObj;
+        if(correction){
+            realNextObj = considerCorrection(
+                    10000,
+                    0.2, // 0.2 means lower limit can be 20% lower than expected next objective
+                    0.2, // 0.2 means upper limit can be 20% higher than expected next objective
+                    stepsRecord.get(stepsRecord.size() - 1), // current day steps
+                    stepsRecord.get(stepsRecord.size() - 2), // previous day steps
+                    nextObj // expected next objective
+            );
+        }
+        else{
+            realNextObj = nextObj;
+        }
+
+        stepsRecord.add(realNextObj);
 
         // if verbose is true, we add more info in result String
 
         result += "Wanted percentile: " + wantedPercentile + " ; moving days: " + stepsRecord.size() + "\n";
         if(verbose){
-
             result += "Steps record sorted:\n";
             result += arrayListToString(temp) + "\n";
         }
         result += "Day counter: " + dayCount + "\n";
         result += "Next objective: " + nextObj + "\n";
-        result += "Simulator decided to walk " + stepsRecord.get(stepsRecord.size() -1) + " steps tomorrow.\n";
+        if(correction){
+            result += "Correction is active.\n";
+        }
+        else{
+            result += "Correction is not active.\n";
+        }
+        result += "Simulator decided to walk " + stepsRecord.get(stepsRecord.size() - 1) + " steps tomorrow.\n";
         if(verbose){
             result += "Updated steps record:\n";
             result += arrayListToString(stepsRecord);
         }
         result += "\n";
         return result;
+    }
+    // upperTolerance and lowerTolerance are numbers between 0 and 1
+    public static int considerCorrection(int precision, double lowerTolerance, double upperTolerance, int currSteps, int prevSteps, int steps){
+        int upperLimit = steps + (int)(Math.floor(steps * upperTolerance));
+        int lowerLimit = steps - (int)(Math.floor(steps * lowerTolerance));
+
+        ArrayList<Integer> drawList = new ArrayList<>(precision);
+        Random random = new Random();
+        IntStream partOne;
+        IntStream partTwo;
+
+        // pseudo random array list with weights
+        if(currSteps >= prevSteps){
+            partOne = random.ints((long)(Math.floor(precision * 0.69)), steps, upperLimit);
+            partTwo = random.ints((long)(Math.floor(precision * 0.31)), lowerLimit, steps);
+        }
+        else {
+            partOne = random.ints((long)(Math.floor(precision * 0.44)), steps, upperLimit);
+            partTwo = random.ints((long)(Math.floor(precision * 0.56)), lowerLimit, steps);
+        }
+        drawList.addAll(partOne.boxed().collect(Collectors.toList()));
+        drawList.addAll(partTwo.boxed().collect(Collectors.toList()));
+
+        // pseudo random choice of one element in the array list
+        int index = (int)(Math.random() * drawList.size());
+
+        return drawList.get(index);
     }
 }
