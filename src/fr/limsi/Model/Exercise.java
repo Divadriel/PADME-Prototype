@@ -9,7 +9,8 @@ public class Exercise {
     private String name;
     private double duration; // in minutes
     private double distance; // in km
-    private String description;
+    private int stepNb;
+    //private String description;
     private double completed; // percents of completion - range 0-100
 
     public Exercise(String name, double duration, double distance){
@@ -18,6 +19,12 @@ public class Exercise {
         this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
         this.distance = distance;
         this.completed = 0;
+    }
+
+    public Exercise(String name, int stepNb){
+        this.exerciseID = Utils.calculateUniqueID();
+        this.name = name;
+        this.stepNb = stepNb;
     }
 
     public JSONObject saveExerciseToJSONObject (){
@@ -58,6 +65,10 @@ public class Exercise {
     public void setDistance(double distance) {
         this.distance = distance;
     }
+
+    public int getStepNb() { return stepNb; }
+
+    public void setStepNb(int stepNb) { this.stepNb = stepNb; }
 
     public double getCompleted() { return completed; }
 
