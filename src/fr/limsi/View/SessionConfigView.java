@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 public class SessionConfigView extends Parent {
 
-    private UserModel user;
     private TraceView traceView;
     private AdaptationRules adaptationRules;
+    private ArrayList<Integer> stepsRecord;
+    private int dayCount;
 
     public SessionConfigView(Programme programme, TraceView trcView){
 
-        user = programme.getUser();
         traceView = trcView;
         adaptationRules = programme.getAdaptationRules();
 
@@ -111,9 +111,9 @@ public class SessionConfigView extends Parent {
         loadExercisesButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // 1. open fileChooser to choose a file exos.json
+                // 1. open fileChooser to choose a file
                 // 2. fill ListArray with exercises from file
-                // 3. verbose on config trace -- verbose needs to show INDEX in ListArray of each exercise
+                // 3. verbose on config trace
             }
         });
         Button displayExercisesButton = new Button("Display Exercises");
@@ -151,10 +151,12 @@ public class SessionConfigView extends Parent {
         adaptRulesContentPane.setVgap(5);
 
         // content of adaptation rules titled pane
+            // row 0: duration rule
         Label exerciseDurationRule = new Label("Exercise duration rule");
         TextField exerciseDurationRuleField = new TextField("0");
         Button exerciseDurationRuleButton = new Button("Apply");
         exerciseDurationRuleButton.setDisable(true);
+            // row 1: distance rule
         Label exerciseDistanceRule = new Label("Exercise distance rule");
         TextField exerciseDistanceRuleField = new TextField("0");
         Button exerciseDistanceRuleButton = new Button("Apply");
@@ -173,8 +175,51 @@ public class SessionConfigView extends Parent {
             }
         });
 
+            // row 2: percentile algorithm
+        Label percentileAlgoLabel = new Label("Percentile Algorithm");
+        Spinner<Integer> percentileSpinner = new Spinner<>(1, 100, 60);
+        percentileSpinner.setEditable(true);
+        percentileSpinner.setPrefWidth(60);
+        Spinner<Integer> daysSpinner = new Spinner<>(1, 100, 9);
+        daysSpinner.setEditable(true);
+        daysSpinner.setPrefWidth(60);
+        Spinner<Integer> verboseSpinner = new Spinner<>(0, 1, 0);
+        verboseSpinner.setPrefWidth(60);
+        Button percentileAlgoButton = new Button("Iterate");
+        Button initPercentileAlgo = new Button("Init");
+        percentileAlgoButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                boolean verbose;
+                if (verboseSpinner.getValueFactory().getValue().equals(0)){
+                    verbose = false;
+                }
+                else {
+                    verbose = true;
+                }
+                dayCount++;
+                traceView.getMainDisplay().appendText(Utils.nthPercentileAlgorithmDisplay(
+                        percentileSpinner.getValueFactory().getValue(),
+                        stepsRecord,
+                        dayCount,
+                        verbose
+                ));
+
+            }
+        });
+        initPercentileAlgo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                stepsRecord = Utils.generateRandomStepsRecord(daysSpinner.getValueFactory().getValue()); // init: returns a random set of steps, of size "days"
+                traceView.getMainDisplay().appendText("Initial set of records:\n" + Utils.arrayListToString(stepsRecord));
+                dayCount = 0;
+            }
+        });
+
+
         adaptRulesContentPane.addRow(0, exerciseDurationRule, exerciseDurationRuleField, exerciseDurationRuleButton);
         adaptRulesContentPane.addRow(1, exerciseDistanceRule, exerciseDistanceRuleField, exerciseDistanceRuleButton);
+        adaptRulesContentPane.addRow(2, percentileAlgoLabel, percentileSpinner, daysSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);
         adaptRulesPane.setContent(adaptRulesContentPane);
 
         // add to content GridPane
@@ -184,14 +229,6 @@ public class SessionConfigView extends Parent {
         // add to global TitledPane
         sessionConfigPane.setContent(content);
         this.getChildren().add(sessionConfigPane);
-    }
-
-    public UserModel getUser() {
-        return user;
-    }
-
-    public void setUser(UserModel user) {
-        this.user = user;
     }
 
     public TraceView getTraceView() {

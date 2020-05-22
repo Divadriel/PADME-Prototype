@@ -3,6 +3,7 @@ package fr.limsi.Model.Utils;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import javafx.stage.FileChooser;
 import org.json.JSONArray;
+import sun.plugin.javascript.navig.Array;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Utils {
 
@@ -59,7 +62,7 @@ public class Utils {
         return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userFirstName+"_"+now.format(formatterDate)+".json";
     }
 
-    public static int calculatePercentile(int percentile, int sampleSize){
+    public static int calculateIndex(int percentile, int sampleSize){
         return (int) Math.floor((percentile * (sampleSize + 1)) / 100);
     }
 
@@ -71,21 +74,46 @@ public class Utils {
         return result;
     }
 
-    public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord){
+    public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord, int percentile){
 
-        int percentile = calculatePercentile(60, stepsRecord.size());
+        int index = calculateIndex(percentile, stepsRecord.size());
         ArrayList<Integer> stepsRecordSorted = new ArrayList<Integer>();
         for(int val : stepsRecord){
             stepsRecordSorted.add(val);
         }
         stepsRecordSorted.sort(Comparator.naturalOrder());
 
-        return stepsRecordSorted.get(percentile - 1);
+        return stepsRecordSorted.get(index - 1);
     }
 
-    public static ArrayList<Integer> updateStepsRecord(ArrayList<Integer> stepsRecord, int nextObj){
+    public static String nthPercentileAlgorithmDisplay(int wantedPercentile, ArrayList<Integer> stepsRecord, int dayCount, boolean verbose){
+        String result = "";
+
+        int nextObj = generateNextStepsObjective(stepsRecord, wantedPercentile); // returns the next objective (steps nb)
+        ArrayList<Integer> temp = new ArrayList<>(stepsRecord);// temp list to show ordered elements
+        temp.sort(Comparator.naturalOrder());
+        // removes first index and add next objective
         stepsRecord.remove(0);
-        stepsRecord.add(nextObj);
-        return stepsRecord;
+        Random random = new Random();
+        IntStream genInts = random.ints(1,(int)(Math.floor(0.9*nextObj)), (int)(Math.floor(1.1*nextObj)));
+        stepsRecord.add(genInts.sum());
+
+        // if verbose is true, we add more info in result String
+
+        result += "Wanted percentile: " + wantedPercentile + " ; moving days: " + stepsRecord.size() + "\n";
+        if(verbose){
+
+            result += "Steps record sorted:\n";
+            result += arrayListToString(temp) + "\n";
+        }
+        result += "Day counter: " + dayCount + "\n";
+        result += "Next objective: " + nextObj + "\n";
+        result += "Simulator decided to walk " + stepsRecord.get(stepsRecord.size() -1) + " steps tomorrow.\n";
+        if(verbose){
+            result += "Updated steps record:\n";
+            result += arrayListToString(stepsRecord);
+        }
+        result += "\n";
+        return result;
     }
 }
