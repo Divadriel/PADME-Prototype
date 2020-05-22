@@ -119,11 +119,7 @@ public class UserModel {
         // save static profile
         jsonUserObject.put("firstName", firstName);
         jsonUserObject.put("userID", userID);
-        //jsonUser.put("lastName", lastName);
-      //  jsonUser.put("email", email);
         jsonUserObject.put("age", age);
-       // jsonUser.put("weight", weight);
-     //   jsonUser.put("height", height);
         jsonUserObject.put("gender", gender);
         jsonUserObject.put("promotion", promotion);
         jsonUserObject.put("prevention", prevention);
@@ -153,15 +149,11 @@ public class UserModel {
         // bundle jsonUser to jsonUserArray
         jsonUserArray.put(jsonUserObject);
 
-
-
         // put to jsonMETAObject with class name as key
         jsonMETAObject.put(this.getClass().getSimpleName(), jsonUserArray);
 
         // save object to a daily file (all changes from a same day on a same file)
         try {
-            //file = new FileWriter("/Users/"+System.getProperty("user.name")+"/Documents/PADMEH_data/"+firstName+"_"+now.format(formatterDate)+".json", false);
-            //file = new FileWriter("D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+firstName+"_"+now.format(formatterDate)+".json", false);
             file = new FileWriter(Utils.getUserSaveFilePath(firstName), false);
 /*
             JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(Utils.getUserSaveFilePath(firstName))))); // whole object
