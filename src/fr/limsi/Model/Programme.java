@@ -36,24 +36,13 @@ public class Programme {
         // parse Exercise ArrayList
         JSONObject object = new JSONObject(initJSON);
         JSONArray jsonExerciseArray = object.getJSONArray(Exercise.class.getSimpleName());
-        exerciseArrayList = new ArrayList<Exercise>();
+        exerciseArrayList = new ArrayList<>();
         setExerciseArrayListFromJSONArray(jsonExerciseArray, exerciseArrayList);
 
         // parse Session ArrayList
         JSONArray jsonSessionArray = object.getJSONArray(Session.class.getSimpleName());
-        sessionArrayList = new ArrayList<Session>();
-        for (int j = 0; j < jsonSessionArray.length(); j++){
-            JSONObject jsonObject = jsonSessionArray.getJSONObject(j);
-            JSONArray temp = jsonObject.getJSONArray("ExerciseList");
-            ArrayList<Exercise> exercises = new ArrayList<Exercise>();
-            setExerciseArrayListFromJSONArray(temp, exercises);
-            Session session = new Session(
-                    exercises,
-                    user.getUserID(),
-                    jsonObject.getInt("userFeedback")
-            );
-            sessionArrayList.add(session);
-        }
+        sessionArrayList = new ArrayList<>();
+        setSessionArrayListFromJSONArray(jsonSessionArray, sessionArrayList);
     }
     private void setExerciseArrayListFromJSONArray(JSONArray jsonExerciseArray, ArrayList<Exercise> arrayList){
         for (int i = 0; i < jsonExerciseArray.length(); i++){
@@ -61,14 +50,41 @@ public class Programme {
             Exercise exercise = new Exercise(
                     jsonObject.getString("name"),
                     jsonObject.getDouble("duration"),
-                    jsonObject.getDouble("distance")
+                    jsonObject.getDouble("distance"),
+                    jsonObject.getDouble("completed"),
+                    jsonObject.getLong("exerciseID")
             );
             arrayList.add(exercise);
         }
     }
 
+    private void setSessionArrayListFromJSONArray(JSONArray jsonSessionArray, ArrayList<Session> arrayList){
+        for (int j = 0; j < jsonSessionArray.length(); j++){
+            JSONObject jsonObject = jsonSessionArray.getJSONObject(j);
+            JSONArray temp = jsonObject.getJSONArray("ExerciseList");
+            ArrayList<Exercise> exercises = new ArrayList<>();
+            setExerciseArrayListFromJSONArray(temp, exercises);
+            Session session = new Session(
+                    exercises,
+                    user.getUserID(),
+                    jsonObject.getInt("userFeedback")
+            );
+            arrayList.add(session);
+        }
+    }
+
     public ArrayList<Exercise> getExerciseArrayList() {
         return exerciseArrayList;
+    }
+
+    public void updateExerciseArrayList(){
+        JSONArray jsonArray = user.getJsonMETAObject().getJSONArray(Exercise.class.getSimpleName());
+        setExerciseArrayListFromJSONArray(jsonArray, exerciseArrayList);
+    }
+
+    public void updateSessionArrayList(){
+        JSONArray jsonArray = user.getJsonMETAObject().getJSONArray(Session.class.getSimpleName());
+        setSessionArrayListFromJSONArray(jsonArray, sessionArrayList);
     }
 
     public void setExerciseArrayList(ArrayList<Exercise> exerciseArrayList) {
@@ -77,20 +93,23 @@ public class Programme {
 
     public void resetExerciseArrayList(){
         this.exerciseArrayList = null;
-        exerciseArrayList = new ArrayList<Exercise>();
+        exerciseArrayList = new ArrayList<>();
     }
 
-    public boolean saveExerciseArrayListToJSON(String path) throws IOException {
+    public void saveExerciseArrayListToJSON(long userID) throws IOException {
 
+        // get file
+        String path = Utils.getUserSaveFilePath(userID);
         // update Exercise ArrayList from JSON
         JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(path)))); // whole object
         object.remove(Exercise.class.getSimpleName()); // remove array corresponding to "Exercise" key
         JSONArray jsonArray = new JSONArray();
-        for(int i = 0; i < exerciseArrayList.size(); i++){
-            jsonArray.put(exerciseArrayList.get(i).saveExerciseToJSONObject());
+        for (Exercise exercise : exerciseArrayList) {
+            jsonArray.put(exercise.saveExerciseToJSONObject());
         }
-        object.put(Exercise.class.getSimpleName(), jsonArray); // put "Exercise" key with arrayList / JSONArray as value
+        object.put(Exercise.class.getSimpleName(), jsonArray); // put "Exercise" key with JSONArray as value
         // update user jsonMETAObject with ExerciseList
+        user.getJsonMETAObject().remove(Exercise.class.getSimpleName());
         user.getJsonMETAObject().put(Exercise.class.getSimpleName(), jsonArray);
 
         // save object again to file -- rewriting it completely (append false)
@@ -103,12 +122,35 @@ public class Programme {
         }
         finally {
             try{
+                assert file != null;
                 file.flush();
                 file.close();
-                return true;
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+            }
+        }
+    }
+
+    public void initNewJsonFile(long userID){
+        FileWriter file = null;
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        jsonObject.put(UserModel.class.getSimpleName(), jsonArray);
+        jsonObject.put(Exercise.class.getSimpleName(), jsonArray);
+        jsonObject.put(Session.class.getSimpleName(), jsonArray);
+        try {
+            file = new FileWriter(Utils.getUserSaveFilePath(userID), false);
+            file.write(jsonObject.toString(2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                assert file != null;
+                file.flush();
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

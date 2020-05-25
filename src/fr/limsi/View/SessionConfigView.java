@@ -4,8 +4,6 @@ package fr.limsi.View;
 import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.Utils.Utils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -67,60 +65,45 @@ public class SessionConfigView extends Parent {
         buttonsFlowPane.setPadding(new Insets(5));
 
         Button addExerciseButton = new Button("Add");
-        addExerciseButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. create Exercise object with current fields values and add it to exercise ListArray
-                Exercise exercise = new Exercise(nameField.getText(),durationSpinner.getValue(), distanceSpinner.getValue());
-                programme.getExerciseArrayList().add(exercise);
-                // 2. verbose on config trace
-                traceView.getMainDisplay().appendText("Exercise "+ nameField.getText() +" added to exerciseArrayList.\n");
-                // -- NO CHANGE IN JSON --
-            }
+        addExerciseButton.setOnAction(event -> {
+            // 1. create Exercise object with current fields values and add it to exercise ListArray
+            Exercise exercise = new Exercise(nameField.getText(),durationSpinner.getValue(), distanceSpinner.getValue());
+            programme.getExerciseArrayList().add(exercise);
+            // 2. verbose on config trace
+            traceView.getMainDisplay().appendText("Exercise "+ nameField.getText() +" added to exerciseArrayList.\n");
+            // -- NO CHANGE IN JSON --
         });
         Button resetExerciseListButton = new Button("Reset List");
-        resetExerciseListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. reset Exercise ArrayList (null assignment then new object creation)
-                programme.resetExerciseArrayList();
-                // 2. verbose on config trace
-                traceView.getMainDisplay().appendText("exerciseArrayList reset.\n");
-                // -- NO CHANGE IN JSON --
-            }
+        resetExerciseListButton.setOnAction(event -> {
+            // 1. reset Exercise ArrayList (null assignment then new object creation)
+            programme.resetExerciseArrayList();
+            // 2. verbose on config trace
+            traceView.getMainDisplay().appendText("exerciseArrayList reset.\n");
+            // -- NO CHANGE IN JSON --
         });
         Button saveExerciseListButton = new Button("Save");
-        saveExerciseListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. save in JSON file
-                try {
-                    programme.saveExerciseArrayListToJSON(Utils.getUserSaveFilePath(programme.getUser().getFirstName()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    traceView.getMainDisplay().appendText("Error while saving exerciseArrayList to JSON.\n");
-                    return;
-                }
-                // 2. verbose on config trace
-                traceView.getMainDisplay().appendText("exerciseArrayList saved to JSON.\n");
+        saveExerciseListButton.setOnAction(event -> {
+            // 1. save in JSON file
+            try {
+                programme.saveExerciseArrayListToJSON(programme.getUser().getUserID());
+            } catch (IOException e) {
+                e.printStackTrace();
+                traceView.getMainDisplay().appendText("Error while saving exerciseArrayList to JSON.\n");
+                return;
             }
+            // 2. verbose on config trace
+            traceView.getMainDisplay().appendText("exerciseArrayList saved to JSON.\n");
         });
         Button loadExercisesButton = new Button("Load");
-        loadExercisesButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. open fileChooser to choose a file
-                // 2. fill ListArray with exercises from file
-                // 3. verbose on config trace
-            }
+        loadExercisesButton.setOnAction(event -> {
+            // 1. open fileChooser to choose a file
+            // 2. fill ListArray with exercises from file
+            // 3. verbose on config trace
         });
         Button displayExercisesButton = new Button("Display Exercises");
-        displayExercisesButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. display current content of exerciseListArray
-                traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getExerciseArrayList()));
-            }
+        displayExercisesButton.setOnAction(event -> {
+            // 1. display current content of exerciseListArray
+            traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getExerciseArrayList()));
         });
         buttonsFlowPane.getChildren().addAll(addExerciseButton, resetExerciseListButton, saveExerciseListButton, loadExercisesButton, displayExercisesButton);
 
@@ -160,17 +143,11 @@ public class SessionConfigView extends Parent {
         Button exerciseDistanceRuleButton = new Button("Apply");
         exerciseDistanceRuleButton.setDisable(true);
 
-        exerciseDurationRuleButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // later
-            }
+        exerciseDurationRuleButton.setOnAction(event -> {
+            // later
         });
-        exerciseDistanceRuleButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // later
-            }
+        exerciseDistanceRuleButton.setOnAction(event -> {
+            // later
         });
 
             // row 2: PERCENTILE ALGORITHM
@@ -198,41 +175,25 @@ public class SessionConfigView extends Parent {
         Button percentileAlgoButton = new Button("Iterate");
         Button initPercentileAlgo = new Button("Init");
         initPercentileAlgo.setTooltip(new Tooltip("Initial set of day records"));
-        percentileAlgoButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                boolean verbose;
-                boolean correction;
-                if (verboseSpinner.getValueFactory().getValue().equals(0)){
-                    verbose = false;
-                }
-                else {
-                    verbose = true;
-                }
-                if(correctionSpinner.getValueFactory().getValue().equals(0)){
-                    correction = false;
-                }
-                else{
-                    correction = true;
-                }
-                dayCount++;
-                traceView.getMainDisplay().appendText(Utils.nthPercentileAlgorithmDisplay(
-                        percentileSpinner.getValueFactory().getValue(),
-                        stepsRecord,
-                        dayCount,
-                        correction,
-                        verbose
-                ));
+        percentileAlgoButton.setOnAction(event -> {
+            boolean verbose;
+            boolean correction;
+            verbose = !verboseSpinner.getValueFactory().getValue().equals(0);
+            correction = !correctionSpinner.getValueFactory().getValue().equals(0);
+            dayCount++;
+            traceView.getMainDisplay().appendText(Utils.nthPercentileAlgorithmDisplay(
+                    percentileSpinner.getValueFactory().getValue(),
+                    stepsRecord,
+                    dayCount,
+                    correction,
+                    verbose
+            ));
 
-            }
         });
-        initPercentileAlgo.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                stepsRecord = Utils.generateRandomStepsRecord(daysSpinner.getValueFactory().getValue()); // init: returns a random set of steps, of size "days"
-                traceView.getMainDisplay().appendText("Initial set of records:\n" + Utils.arrayListToString(stepsRecord));
-                dayCount = 0;
-            }
+        initPercentileAlgo.setOnAction(event -> {
+            stepsRecord = Utils.generateRandomStepsRecord(daysSpinner.getValueFactory().getValue()); // init: returns a random set of steps, of size "days"
+            traceView.getMainDisplay().appendText("Initial set of records:\n" + Utils.arrayListToString(stepsRecord));
+            dayCount = 0;
         });
 
         percentileFlowpane.getChildren().addAll(percentileSpinner, daysSpinner, correctionSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);
@@ -249,13 +210,5 @@ public class SessionConfigView extends Parent {
         // add to global TitledPane
         sessionConfigPane.setContent(content);
         this.getChildren().add(sessionConfigPane);
-    }
-
-    public TraceView getTraceView() {
-        return traceView;
-    }
-
-    public void setTraceView(TraceView traceView) {
-        this.traceView = traceView;
     }
 }

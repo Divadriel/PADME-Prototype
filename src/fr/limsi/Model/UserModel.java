@@ -109,6 +109,7 @@ public class UserModel {
 
     public boolean saveUserModelToJSON() throws IOException {
         JSONObject jsonUserObject = new JSONObject();
+        boolean result;
 
         // save static profile
         jsonUserObject.put("firstName", firstName);
@@ -148,12 +149,7 @@ public class UserModel {
 
         // save object to a daily file (all changes from a same day on a same file)
         try {
-            file = new FileWriter(Utils.getUserSaveFilePath(firstName), false);
-/*
-            JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(Utils.getUserSaveFilePath(firstName))))); // whole object
-            object.remove(this.getClass().getSimpleName()); // remove array corresponding to "UserModel" key
-            object.put(this.getClass().getSimpleName(), jsonUserArray);
-*/
+            file = new FileWriter(Utils.getUserSaveFilePath(userID), false);
             file.write(jsonMETAObject.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
@@ -162,12 +158,13 @@ public class UserModel {
             try{
                 file.flush();
                 file.close();
-                return true;
+                result = true;
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+                result = false;
             }
         }
+        return result;
     }
 
     public void parseUserModelFromString(String content){
@@ -181,8 +178,9 @@ public class UserModel {
         JSONObject jsonObject = jsonUserArray.getJSONObject((jsonUserArray.length() -1));
 
         // update jsonMETAObject
-        jsonMETAObject.remove(this.getClass().getSimpleName()); // delete current data for key "UserModel"
-        jsonMETAObject.put(this.getClass().getSimpleName(), jsonUserArray);
+        jsonMETAObject = null; // reset whole object
+        jsonMETAObject = temp;
+//        jsonMETAObject.put(this.getClass().getSimpleName(), jsonUserArray);
 
         userID = jsonObject.getLong("userID");
         // load static profile

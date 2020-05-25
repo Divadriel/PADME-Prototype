@@ -21,6 +21,14 @@ public class Exercise {
         this.completed = 0;
     }
 
+    public Exercise(String name, double duration, double distance, double completed, long exerciseID){
+        this.name = name;
+        this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
+        this.distance = distance;
+        this.completed = completed;
+        this.exerciseID = exerciseID;
+    }
+
     public Exercise(String name, int stepNb){
         this.exerciseID = Utils.calculateUniqueID();
         this.name = name;
@@ -29,6 +37,7 @@ public class Exercise {
 
     public JSONObject saveExerciseToJSONObject (){
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("exerciseID", exerciseID);
         jsonObject.put("name", name);
         jsonObject.put("duration", duration);
         jsonObject.put("distance", distance);

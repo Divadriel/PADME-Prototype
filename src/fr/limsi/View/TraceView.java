@@ -2,8 +2,6 @@ package fr.limsi.View;
 
 import fr.limsi.Model.Utils.Strings;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -46,36 +44,20 @@ public class TraceView extends Parent {
         flowPane.setPadding(new Insets(5));
 
         resetButton = new Button("Reset");
-        resetButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n");
-            }
-        });
+        resetButton.setOnAction(event -> mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n"));
 
         importButton = new Button("Import");
-        importButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // import text and whole session + profile from a JSON file
-            }
+        importButton.setOnAction(event -> {
+            // import text and whole session + profile from a JSON file
         });
 
         exportButton = new Button("Export");
-        exportButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // export to JSON file
-            }
+        exportButton.setOnAction(event -> {
+            // export to JSON file
         });
 
         quitApp = new Button("Quit App");
-        quitApp.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Platform.exit();
-            }
-        });
+        quitApp.setOnAction(event -> Platform.exit());
 
         flowPane.getChildren().addAll(resetButton, importButton, exportButton, quitApp);
         gridpane.add(mainDisplay, 0, 0);
@@ -87,37 +69,5 @@ public class TraceView extends Parent {
 
     public TextArea getMainDisplay() {
         return mainDisplay;
-    }
-
-    public void setMainDisplay(TextArea displayActions) {
-        this.mainDisplay = displayActions;
-    }
-
-    public Button getResetButton() { return resetButton; }
-
-    public void setResetButton(Button resetButton) { this.resetButton = resetButton; }
-
-    public Button getImportButton() {
-        return importButton;
-    }
-
-    public void setImportButton(Button importButton) {
-        this.importButton = importButton;
-    }
-
-    public Button getExportButton() {
-        return exportButton;
-    }
-
-    public void setExportButton(Button exportButton) {
-        this.exportButton = exportButton;
-    }
-
-    public Button getQuitApp() {
-        return quitApp;
-    }
-
-    public void setQuitApp(Button quitApp) {
-        this.quitApp = quitApp;
     }
 }

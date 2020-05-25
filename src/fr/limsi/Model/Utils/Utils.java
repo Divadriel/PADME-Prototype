@@ -41,23 +41,24 @@ public class Utils {
         }
     }
 
+    // could be initialized in the past to have more or less unique and long IDs
     public static long calculateUniqueID(){
         return System.currentTimeMillis(); // 13 digits
     }
 
     public static String arrayListToString(ArrayList<?> arrayList){
         String result = "";
-        for(int i = 0; i < arrayList.size(); i++){
-            result += arrayList.get(i).toString() + "\n";
+        for (Object o : arrayList) {
+            result += o.toString() + "\n";
         }
         return result;
     }
 
-    public static String getUserSaveFilePath(String userFirstName){
+    public static String getUserSaveFilePath(long userID){
         // save timestamp formatter
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
-        return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userFirstName+"_"+now.format(formatterDate)+".json";
+        return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userID+"_"+now.format(formatterDate)+".json";
     }
 
     public static int calculateIndex(int percentile, int sampleSize){
@@ -65,7 +66,7 @@ public class Utils {
     }
 
     public static ArrayList<Integer> generateRandomStepsRecord(int days){
-        ArrayList<Integer> result = new ArrayList<Integer>(days);
+        ArrayList<Integer> result = new ArrayList<>(days);
         for (int i = 0; i < days; i++){
             result.add((int) Math.floor((Math.random() * 10000) + 1));
         }
@@ -75,16 +76,14 @@ public class Utils {
     public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord, int percentile){
 
         int index = calculateIndex(percentile, stepsRecord.size());
-        ArrayList<Integer> stepsRecordSorted = new ArrayList<Integer>();
-        for(int val : stepsRecord){
-            stepsRecordSorted.add(val);
-        }
+        ArrayList<Integer> stepsRecordSorted = new ArrayList<>(stepsRecord);
         stepsRecordSorted.sort(Comparator.naturalOrder());
 
         return stepsRecordSorted.get(index - 1);
     }
 
-    public static String nthPercentileAlgorithmDisplay(int wantedPercentile, ArrayList<Integer> stepsRecord, int dayCount, boolean correction, boolean verbose){
+    public static String nthPercentileAlgorithmDisplay(int wantedPercentile, ArrayList<Integer> stepsRecord,
+                                                       int dayCount, boolean correction, boolean verbose){
         String result = "";
 
         int nextObj = generateNextStepsObjective(stepsRecord, wantedPercentile); // returns the next objective (steps nb)
@@ -135,7 +134,8 @@ public class Utils {
         return result;
     }
     // upperTolerance and lowerTolerance are numbers between 0 and 1
-    public static int considerCorrection(int precision, double lowerTolerance, double upperTolerance, int currSteps, int prevSteps, int steps){
+    public static int considerCorrection(int precision, double lowerTolerance, double upperTolerance,
+                                         int currSteps, int prevSteps, int steps){
         int upperLimit = steps + (int)(Math.floor(steps * upperTolerance));
         int lowerLimit = steps - (int)(Math.floor(steps * lowerTolerance));
 

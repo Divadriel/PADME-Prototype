@@ -2,15 +2,12 @@ package fr.limsi.View;
 
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.UserModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -80,16 +77,13 @@ public class ProfileView extends Parent {
         femaleRB.setToggleGroup(sexGroup);
         femaleRB.setFocusTraversable(false);
 
-        sexGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observableValue, Toggle oldValue, Toggle newValue) {
+        sexGroup.selectedToggleProperty().addListener((observableValue, oldValue, newValue) -> {
 
-                if(newValue.equals(maleRB)){
-                    programme.getUser().setGender("M");
-                }
-                else{
-                    programme.getUser().setGender("F");
-                }
+            if(newValue.equals(maleRB)){
+                programme.getUser().setGender("M");
+            }
+            else{
+                programme.getUser().setGender("F");
             }
         });
             // adding to HBox
@@ -124,12 +118,9 @@ public class ProfileView extends Parent {
 
         // row 7, cell 0
         Button displayProfile = new Button("Display Profile");
-        displayProfile.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                traceView.getMainDisplay().appendText(programme.getUser().displayStaticProfile());
-                dynamicProfileDisplay.setText(programme.getUser().displayDynamicProfile());
-            }
+        displayProfile.setOnAction(event -> {
+            traceView.getMainDisplay().appendText(programme.getUser().displayStaticProfile());
+            dynamicProfileDisplay.setText(programme.getUser().displayDynamicProfile());
         });
         // row 7, cell 1
         GridPane saveLoadPane = new GridPane();
@@ -137,51 +128,64 @@ public class ProfileView extends Parent {
         saveLoadPane.setVgap(5);
         saveLoadPane.setHgap(5);
         Button saveButton = new Button("Save");
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                programme.getUser().setFirstName(nameField.getText());
-                programme.getUser().setAge(ageSpinner.getValue());
-                programme.getUser().setMotivationLevel(motivationSpinner.getValue());
-                programme.getUser().setPhysicalActivityLevel(PASpinner.getValue());
-                programme.getUser().setPromotion(promotionSpinner.getValue());
-                programme.getUser().setPrevention(preventionSpinner.getValue());
-                traceView.getMainDisplay().appendText("Updated UserModel.\n" + programme.getUser().getFirstName());
-                try {
-                    if(programme.getUser().saveUserModelToJSON()){
-                        traceView.getMainDisplay().appendText("Save to JSON file complete\n");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    traceView.getMainDisplay().appendText("Error while saving to JSON\n");
+        saveButton.setOnAction(event -> {
+            programme.getUser().setFirstName(nameField.getText());
+            programme.getUser().setAge(ageSpinner.getValue());
+            programme.getUser().setMotivationLevel(motivationSpinner.getValue());
+            programme.getUser().setPhysicalActivityLevel(PASpinner.getValue());
+            programme.getUser().setPromotion(promotionSpinner.getValue());
+            programme.getUser().setPrevention(preventionSpinner.getValue());
+            traceView.getMainDisplay().appendText("Updated UserModel " + programme.getUser().getFirstName() + ".\n");
+            try {
+                if(programme.getUser().saveUserModelToJSON()){
+                    traceView.getMainDisplay().appendText("Save to JSON file complete\n");
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                traceView.getMainDisplay().appendText("Error while saving to JSON\n");
             }
         });
 
         Button loadButton = new Button("Load");
-        loadButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    // load a json file to user model
-                    programme.getUser().loadUserModelFromJSON();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                updateUserTextFields(programme.getUser());
+        loadButton.setOnAction(event -> {
+            try {
+                // load a json file to user model
+                programme.getUser().loadUserModelFromJSON();
+            } catch (IOException e) {
+                e.printStackTrace();
+                traceView.getMainDisplay().appendText("Error loading profile.\n");
+                return;
             }
+            updateUserTextFields(programme.getUser());
+            try {
+                // once user profile is loaded, load exercises
+                programme.updateExerciseArrayList();
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+                traceView.getMainDisplay().appendText("Error loading exercises.\n");
+                return;
+            }
+            traceView.getMainDisplay().appendText("Successfully loaded exercises.\n");
+            try {
+                // once user profile is loaded, load sessions
+                programme.updateSessionArrayList();
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+                traceView.getMainDisplay().appendText("Error loading sessions.\n");
+                return;
+            }
+            traceView.getMainDisplay().appendText("Successfully loaded sessions.\n");
         });
 
         Button newButton = new Button("New");
-        newButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // reset user to start from scratch a new one
-                programme.setUser(null);
-                programme.setUser(new UserModel());
-                clearUserTextFields();
-            }
+        newButton.setOnAction(event -> {
+            // reset user to start from scratch a new one
+            programme.setUser(null);
+            programme.setUser(new UserModel());
+            programme.initNewJsonFile(programme.getUser().getUserID());
+            clearUserTextFields();
         });
 
             // add to gridPane
@@ -200,12 +204,7 @@ public class ProfileView extends Parent {
 
         // row 1: reset button
         Button resetDynamicProfile = new Button("Reset");
-        resetDynamicProfile.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                dynamicProfileDisplay.setText("");
-            }
-        });
+        resetDynamicProfile.setOnAction(event -> dynamicProfileDisplay.setText(""));
 
         // adding to gridpanes
         staticProfilePane.add(staticName, 0, 0, 2, 1);
@@ -249,13 +248,5 @@ public class ProfileView extends Parent {
         promotionSpinner.getValueFactory().setValue(0);
         preventionSpinner.getValueFactory().setValue(0);
         traceView.getMainDisplay().setText("Cleared all fields.\n");
-    }
-
-    public TextArea getDynamicProfileDisplay() {
-        return dynamicProfileDisplay;
-    }
-
-    public void setDynamicProfileDisplay(TextArea dynamicProfileDisplay) {
-        this.dynamicProfileDisplay = dynamicProfileDisplay;
     }
 }
