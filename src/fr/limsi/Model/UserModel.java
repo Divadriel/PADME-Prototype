@@ -6,8 +6,6 @@ import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -53,16 +51,12 @@ public class UserModel {
     // jsonMETAObject is all data for a single user : user records, exercises records, sessions records, etc...
     private JSONObject jsonMETAObject;
     // jsonUserArray is the collection of user records (no exercise nor session, just user)
-    private JSONArray jsonUserArray = new JSONArray();
-
-    public UserModel(JSONObject jsonMETAObject){
-        this.userID = Utils.calculateUniqueID();
-        this.jsonMETAObject = jsonMETAObject;
-    }
+    private JSONArray jsonUserArray;
 
     public UserModel(){
         this.userID = Utils.calculateUniqueID();
         this.jsonMETAObject = new JSONObject();
+        this.jsonUserArray = new JSONArray();
     }
 
     @Override
@@ -432,5 +426,7 @@ public class UserModel {
     }
 
     public FileWriter getFile(){ return file; }
+
+    public JSONObject getJsonMETAObject() { return jsonMETAObject; }
 
 }

@@ -2,7 +2,6 @@ package fr.limsi.View;
 
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.UserModel;
-import fr.limsi.Model.Utils.Utils;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -17,7 +16,6 @@ import java.io.IOException;
 
 public class ProfileView extends Parent {
 
-    private UserModel user;
     private TraceView traceView;
     // fields
     private TextArea dynamicProfileDisplay;
@@ -32,7 +30,6 @@ public class ProfileView extends Parent {
 
     public ProfileView(Programme programme, TraceView trcView){
 
-        user = programme.getUser();
         traceView = trcView;
 
         // creation and config of titled pane
@@ -88,10 +85,10 @@ public class ProfileView extends Parent {
             public void changed(ObservableValue<? extends Toggle> observableValue, Toggle oldValue, Toggle newValue) {
 
                 if(newValue.equals(maleRB)){
-                    user.setGender("M");
+                    programme.getUser().setGender("M");
                 }
                 else{
-                    user.setGender("F");
+                    programme.getUser().setGender("F");
                 }
             }
         });
@@ -130,8 +127,8 @@ public class ProfileView extends Parent {
         displayProfile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                traceView.getMainDisplay().appendText(user.displayStaticProfile());
-                dynamicProfileDisplay.setText(user.displayDynamicProfile());
+                traceView.getMainDisplay().appendText(programme.getUser().displayStaticProfile());
+                dynamicProfileDisplay.setText(programme.getUser().displayDynamicProfile());
             }
         });
         // row 7, cell 1
@@ -167,12 +164,12 @@ public class ProfileView extends Parent {
             public void handle(ActionEvent event) {
                 try {
                     // load a json file to user model
-                    user.loadUserModelFromJSON();
+                    programme.getUser().loadUserModelFromJSON();
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;
                 }
-                updateUserTextFields();
+                updateUserTextFields(programme.getUser());
             }
         });
 
@@ -181,10 +178,8 @@ public class ProfileView extends Parent {
             @Override
             public void handle(ActionEvent event) {
                 // reset user to start from scratch a new one
-                user = null;
                 programme.setUser(null);
-                user = new UserModel();
-                programme.setUser(user);
+                programme.setUser(new UserModel());
                 clearUserTextFields();
             }
         });
@@ -228,7 +223,7 @@ public class ProfileView extends Parent {
 
     }
 
-    public void updateUserTextFields(){
+    public void updateUserTextFields(UserModel user){
         // display updated info from user model to fields
         nameField.setText(user.getFirstName());
         ageSpinner.getValueFactory().setValue(user.getAge());

@@ -1,9 +1,6 @@
 package fr.limsi.Model.Utils;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import javafx.stage.FileChooser;
-import org.json.JSONArray;
-import sun.plugin.javascript.navig.Array;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,5 @@
 package fr.limsi.Model;
 
-import fr.limsi.Model.Utils.Strings;
 import fr.limsi.Model.Utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,13 +17,11 @@ public class Programme {
     private ArrayList<Session> sessionArrayList;
     private UserModel user;
     private AdaptationRules adaptationRules;
-    private JSONObject jsonMETAObject;
 
     public Programme() throws IOException{
 
         // config components
-        jsonMETAObject = new JSONObject(); // jsonObject representing all data for user : userModel, exercises, sessions, etc. hence the name
-        user = new UserModel(jsonMETAObject);
+        user = new UserModel();
 
         // load init data from init.json -- User John Doe + sample exercises and session
         initProgramme();
@@ -93,8 +90,8 @@ public class Programme {
             jsonArray.put(exerciseArrayList.get(i).saveExerciseToJSONObject());
         }
         object.put(Exercise.class.getSimpleName(), jsonArray); // put "Exercise" key with arrayList / JSONArray as value
-        // update jsonMETAObject with ExerciseList
-        jsonMETAObject.put(Exercise.class.getSimpleName(), jsonArray);
+        // update user jsonMETAObject with ExerciseList
+        user.getJsonMETAObject().put(Exercise.class.getSimpleName(), jsonArray);
 
         // save object again to file -- rewriting it completely (append false)
         FileWriter file = null;
@@ -138,13 +135,5 @@ public class Programme {
 
     public void setAdaptationRules(AdaptationRules adaptationRules) {
         this.adaptationRules = adaptationRules;
-    }
-
-    public JSONObject getJsonMETAObject() {
-        return jsonMETAObject;
-    }
-
-    public void setJsonMETAObject(JSONObject jsonMETAObject) {
-        this.jsonMETAObject = jsonMETAObject;
     }
 }

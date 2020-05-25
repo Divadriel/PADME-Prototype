@@ -1,9 +1,8 @@
 package fr.limsi.View;
 
-import fr.limsi.Model.AdaptationRules;
+//import fr.limsi.Model.AdaptationRules;
 import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
-import fr.limsi.Model.UserModel;
 import fr.limsi.Model.Utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,21 +13,20 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class SessionConfigView extends Parent {
 
     private TraceView traceView;
-    private AdaptationRules adaptationRules;
+    //private AdaptationRules adaptationRules;
     private ArrayList<Integer> stepsRecord;
     private int dayCount;
 
     public SessionConfigView(Programme programme, TraceView trcView){
 
         traceView = trcView;
-        adaptationRules = programme.getAdaptationRules();
+        //adaptationRules = programme.getAdaptationRules();
 
         // creation and config of titled pane
         TitledPane sessionConfigPane = new TitledPane();
@@ -151,12 +149,12 @@ public class SessionConfigView extends Parent {
         adaptRulesContentPane.setVgap(5);
 
         // content of adaptation rules titled pane
-            // row 0: duration rule
+            // row 0: duration rule // DISABLED
         Label exerciseDurationRule = new Label("Exercise duration rule");
         TextField exerciseDurationRuleField = new TextField("0");
         Button exerciseDurationRuleButton = new Button("Apply");
         exerciseDurationRuleButton.setDisable(true);
-            // row 1: distance rule
+            // row 1: distance rule // DISABLED
         Label exerciseDistanceRule = new Label("Exercise distance rule");
         TextField exerciseDistanceRuleField = new TextField("0");
         Button exerciseDistanceRuleButton = new Button("Apply");
@@ -175,7 +173,7 @@ public class SessionConfigView extends Parent {
             }
         });
 
-            // row 2: percentile algorithm
+            // row 2: PERCENTILE ALGORITHM
         Label percentileAlgoLabel = new Label("Percentile Algorithm");
 
         FlowPane percentileFlowpane = new FlowPane();
