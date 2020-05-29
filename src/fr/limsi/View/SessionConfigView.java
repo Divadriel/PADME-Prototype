@@ -50,7 +50,7 @@ public class SessionConfigView extends Parent {
         exercisePane.setText("Exercise Configuration");
         GridPane exerciseContentPane = new GridPane();
         exerciseContentPane.setHgap(5);
-        exerciseContentPane.setVgap(5);
+        exerciseContentPane.setVgap(7);
 
         Label nameLabel = new Label("Name");
         Label lengthLabel = new Label("Duration");
@@ -70,7 +70,7 @@ public class SessionConfigView extends Parent {
         FlowPane buttonsFlowPane = new FlowPane();
         buttonsFlowPane.setHgap(5);
         buttonsFlowPane.setVgap(5);
-        buttonsFlowPane.setPadding(new Insets(5));
+        //buttonsFlowPane.setPadding(new Insets(5));
 
         Button addExerciseButton = new Button("Add");
         addExerciseButton.setOnAction(event -> {
@@ -128,7 +128,7 @@ public class SessionConfigView extends Parent {
         sessionPane.setText("Session Configuration");
         GridPane sessionContentPane = new GridPane();
         sessionContentPane.setHgap(5);
-        sessionContentPane.setVgap(5);
+        sessionContentPane.setVgap(7);
 
         // inside sessionContentPane, row 0:
         Label randomLabel = new Label("Random");
@@ -193,10 +193,15 @@ public class SessionConfigView extends Parent {
         });
 
         // row 2: button "save session" to conclude the configuration + other general buttons
-        FlowPane sessionConfigFlowPane = new FlowPane();
-        sessionConfigFlowPane.setVgap(5);
-        sessionConfigFlowPane.setHgap(5);
-        sessionConfigFlowPane.setPadding(new Insets(5));
+        FlowPane sessionConfigFlowPane1 = new FlowPane();
+        sessionConfigFlowPane1.setVgap(5);
+        sessionConfigFlowPane1.setHgap(5);
+       // sessionConfigFlowPane1.setPadding(new Insets(5));
+
+        FlowPane sessionConfigFlowPane2 = new FlowPane();
+        sessionConfigFlowPane2.setVgap(5);
+        sessionConfigFlowPane2.setHgap(5);
+        //sessionConfigFlowPane2.setPadding(new Insets(5));
 
         Button saveSessionButton = new Button("Save Session");
         saveSessionButton.setOnAction(event -> {
@@ -238,14 +243,21 @@ public class SessionConfigView extends Parent {
             sessionToConfig = new Session();
             traceView.getMainDisplay().appendText("New empty session object created.\n");
         }));
+        Button displaySessionsButton = new Button("Display List");
+        displaySessionsButton.setOnAction((event -> {
+            // 1. display current content of sessionListArray
+            traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getSessionArrayList()));
+        }));
 
-        sessionConfigFlowPane.getChildren().addAll(saveSessionButton, loadSessionButton, resetSessionListButton, newSessionButton);
+        sessionConfigFlowPane1.getChildren().addAll(saveSessionButton, newSessionButton);
+        sessionConfigFlowPane2.getChildren().addAll(loadSessionButton, resetSessionListButton, displaySessionsButton);
 
         // adding to gridPane sessionContentPane
         sessionContentPane.addRow(0, randomLabel, randomBox);
         sessionContentPane.addRow(1, exNbSpinner);
         sessionContentPane.addRow(1, exIDTextField, addExToSessionButton, removeExFromSessionButton);
-        sessionContentPane.add(sessionConfigFlowPane,0,2,4,1);
+        sessionContentPane.add(sessionConfigFlowPane1,0,2,4,1);
+        sessionContentPane.add(sessionConfigFlowPane2,0,3,4,1);
         // adding to sessionPane
         sessionPane.setContent(sessionContentPane);
 
