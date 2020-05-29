@@ -3,12 +3,16 @@ package fr.limsi.View;
 //import fr.limsi.Model.AdaptationRules;
 import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
+import fr.limsi.Model.Session;
 import fr.limsi.Model.Utils.Utils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -20,10 +24,13 @@ public class SessionConfigView extends Parent {
     //private AdaptationRules adaptationRules;
     private ArrayList<Integer> stepsRecord;
     private int dayCount;
+    private boolean randomSessionConfig;
+    private Session sessionToConfig;
 
     public SessionConfigView(Programme programme, TraceView trcView){
 
         traceView = trcView;
+        sessionToConfig = new Session();
         //adaptationRules = programme.getAdaptationRules();
 
         // creation and config of titled pane
@@ -49,11 +56,12 @@ public class SessionConfigView extends Parent {
         Label lengthLabel = new Label("Duration");
         Label distanceLabel = new Label("Distance");
         Text minText = new Text("minutes");
-        Text kmText = new Text("km");
+        //Text kmText = new Text("km");
+        Text stepsText = new Text("steps");
 
         TextField nameField = new TextField();
-        Spinner<Integer> durationSpinner = new Spinner<>(0, 120, 10);
-        Spinner<Integer> distanceSpinner = new Spinner<>(0, 10, 1);
+        Spinner<Integer> durationSpinner = new Spinner<>(0, 120, 15);
+        Spinner<Integer> distanceSpinner = new Spinner<>(1000, 15000, 3000);
         durationSpinner.setEditable(true);
         distanceSpinner.setEditable(true);
         nameField.setPrefWidth(150);
@@ -109,7 +117,7 @@ public class SessionConfigView extends Parent {
 
         exerciseContentPane.addRow(0, nameLabel, nameField);
         exerciseContentPane.addRow(1, lengthLabel, durationSpinner, minText);
-        exerciseContentPane.addRow(2, distanceLabel, distanceSpinner, kmText);
+        exerciseContentPane.addRow(2, distanceLabel, distanceSpinner, stepsText);
         exerciseContentPane.add(buttonsFlowPane, 0, 3, 3, 1);
 
         exercisePane.setContent(exerciseContentPane);
@@ -122,6 +130,124 @@ public class SessionConfigView extends Parent {
         sessionContentPane.setHgap(5);
         sessionContentPane.setVgap(5);
 
+        // inside sessionContentPane, row 0:
+        Label randomLabel = new Label("Random");
+        HBox randomBox = new HBox();
+        randomBox.setSpacing(5);
+
+        ToggleGroup randomGroup = new ToggleGroup();
+        RadioButton randomYesRB = new RadioButton("Yes");
+        randomYesRB.setToggleGroup(randomGroup);
+        randomYesRB.setFocusTraversable(false);
+
+        RadioButton randomNoRB = new RadioButton("No");
+        randomNoRB.setToggleGroup(randomGroup);
+        randomNoRB.setFocusTraversable(false);
+
+        // adding to HBox
+        randomBox.getChildren().addAll(randomYesRB, randomNoRB);
+
+        // inside sessionContentPane, row 1: -- depends on what is selected on row 0 (yes or no)
+        // case YES: exercises will be randomly selected
+        Spinner<Integer> exNbSpinner = new Spinner<>(1,15,3);
+        exNbSpinner.setVisible(false);
+        // case NO: user will decide which exercises will be included in the session
+        TextField exIDTextField = new TextField();
+        exIDTextField.setVisible(false);
+        Button addExToSessionButton = new Button("Add");
+        addExToSessionButton.setOnAction(event -> {
+            // search for exoID in programme.exoAL and add it to session.exoAL
+            // check if already present in sessionToConfig.exoAL + verbose if yes
+            // verbose if not found
+            // verbose anyway if success
+        });
+        addExToSessionButton.setVisible(false);
+        Button removeExFromSessionButton = new Button("Remove");
+        removeExFromSessionButton.setOnAction(event -> {
+            // search for exoID in sessionToConfig.exoAL and remove it + verbose
+            // verbose if not found
+            // del all occurrences + verbose if yes
+        });
+        removeExFromSessionButton.setVisible(false);
+
+        // action of radio button random
+        randomGroup.selectedToggleProperty().addListener((observableValue, oldValue, newValue) -> {
+            if(newValue.equals(randomYesRB)){
+                randomSessionConfig = true;
+                // make spinner appear
+                exNbSpinner.setVisible(true);
+
+                exIDTextField.setVisible(false);
+                addExToSessionButton.setVisible(false);
+                removeExFromSessionButton.setVisible(false);
+            }
+            else{
+                randomSessionConfig = false;
+
+                exNbSpinner.setVisible(false);
+
+                exIDTextField.setVisible(true);
+                addExToSessionButton.setVisible(true);
+                removeExFromSessionButton.setVisible(true);
+            }
+        });
+
+        // row 2: button "save session" to conclude the configuration + other general buttons
+        FlowPane sessionConfigFlowPane = new FlowPane();
+        sessionConfigFlowPane.setVgap(5);
+        sessionConfigFlowPane.setHgap(5);
+        sessionConfigFlowPane.setPadding(new Insets(5));
+
+        Button saveSessionButton = new Button("Save Session");
+        saveSessionButton.setOnAction(event -> {
+            boolean ok = true;
+            if (randomSessionConfig){ // random session config
+                // 1. get spinner number and randomly select N indexes in range 0 to size of prog.exoAL
+                // 2. add each index to sessionToConfig.exoAL
+                // 3. save verbose : "random mode selected" or equivalent
+            }
+            else { // manual session config
+                if(sessionToConfig.getExerciseList().size() < 1){
+                    ok = false;
+                    // verbose for abort / ex missing / list empty
+                }
+                // save verbose : "manual mode selected" or equivalent
+            }
+            if(ok){
+                // 3. save new Session object
+                // 3.1. save session to prog.sessionAL
+                // 3.2. save session to JSON META + JSON file
+                // 4. verbose if session config success + display session details (toString)
+            }
+        });
+        Button loadSessionButton = new Button("Load List");
+        loadSessionButton.setOnAction((event -> {
+            // open dialog to select file with session info
+            // handle whole process in class Programme
+        }));
+        Button resetSessionListButton = new Button("Reset List");
+        resetSessionListButton.setOnAction((event -> {
+            // reset prog.sessionAL list
+            programme.resetSessionArrayList();
+            traceView.getMainDisplay().appendText("sessionArrayList reset.\n");
+        }));
+        Button newSessionButton = new Button("New Session");
+        newSessionButton.setOnAction((event -> {
+            // create new session object to be filled
+            sessionToConfig = null;
+            sessionToConfig = new Session();
+            traceView.getMainDisplay().appendText("New empty session object created.\n");
+        }));
+
+        sessionConfigFlowPane.getChildren().addAll(saveSessionButton, loadSessionButton, resetSessionListButton, newSessionButton);
+
+        // adding to gridPane sessionContentPane
+        sessionContentPane.addRow(0, randomLabel, randomBox);
+        sessionContentPane.addRow(1, exNbSpinner);
+        sessionContentPane.addRow(1, exIDTextField, addExToSessionButton, removeExFromSessionButton);
+        sessionContentPane.add(sessionConfigFlowPane,0,2,4,1);
+        // adding to sessionPane
+        sessionPane.setContent(sessionContentPane);
 
 
         // col 0 and 1, full row 1: adaptation rules TitledPane

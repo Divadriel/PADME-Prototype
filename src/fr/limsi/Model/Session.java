@@ -20,6 +20,10 @@ public class Session {
         this.userID = userID;
     }
 
+    public Session(){
+        this.sessionID = Utils.calculateUniqueID();
+    }
+
     public JSONObject saveSessionToJSONObject(){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("sessionID", sessionID);

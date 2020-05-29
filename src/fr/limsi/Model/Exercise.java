@@ -13,6 +13,7 @@ public class Exercise {
     //private String description;
     private double completed; // percents of completion - range 0-100
 
+    // used when creating exercises from SessionConfigView -- button add
     public Exercise(String name, double duration, double distance){
         this.exerciseID = Utils.calculateUniqueID();
         this.name = name;
@@ -20,7 +21,7 @@ public class Exercise {
         this.distance = distance;
         this.completed = 0;
     }
-
+    // used when importing from JSON
     public Exercise(String name, double duration, double distance, double completed, long exerciseID){
         this.name = name;
         this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);

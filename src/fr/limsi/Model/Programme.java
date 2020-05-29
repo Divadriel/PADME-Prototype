@@ -96,6 +96,11 @@ public class Programme {
         exerciseArrayList = new ArrayList<>();
     }
 
+    public void resetSessionArrayList(){
+        this.sessionArrayList = null;
+        sessionArrayList = new ArrayList<>();
+    }
+
     public void saveExerciseArrayListToJSON(long userID) throws IOException {
 
         // get file
