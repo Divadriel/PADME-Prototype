@@ -19,13 +19,15 @@ public class Exercise {
         this.name = name;
         this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
         this.distance = distance;
+        this.stepNb = (int)distance;
         this.completed = 0;
     }
     // used when importing from JSON
-    public Exercise(String name, double duration, double distance, double completed, long exerciseID){
+    public Exercise(String name, double duration, double distance, int stepNb, double completed, long exerciseID){
         this.name = name;
         this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
         this.distance = distance;
+        this.stepNb = stepNb;
         this.completed = completed;
         this.exerciseID = exerciseID;
     }
@@ -42,6 +44,7 @@ public class Exercise {
         jsonObject.put("name", name);
         jsonObject.put("duration", duration);
         jsonObject.put("distance", distance);
+        jsonObject.put("stepNb", stepNb);
         jsonObject.put("completed", completed);
         return jsonObject;
     }
@@ -53,6 +56,7 @@ public class Exercise {
         exercise += "\n\tName \t" + name;
         exercise += "\n\tDuration \t" + duration;
         exercise += "\n\tDistance \t" + distance;
+        exercise += "\n\tStep Nb \t" + stepNb;
         exercise += "\n\tCompleted \t" + completed;
         exercise += "\n";
         return exercise;

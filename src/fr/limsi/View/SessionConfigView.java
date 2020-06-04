@@ -331,7 +331,7 @@ public class SessionConfigView extends Parent {
         initPercentileAlgo.setOnAction(event -> {
             stepsRecord = Utils.generateRandomStepsRecord(daysSpinner.getValueFactory().getValue()); // init: returns a random set of steps, of size "days"
             traceView.getMainDisplay().appendText("Initial set of records:\n" + Utils.arrayListToString(stepsRecord));
-            dayCount = 0;
+            dayCount = daysSpinner.getValueFactory().getValue();
         });
 
         percentileFlowpane.getChildren().addAll(percentileSpinner, daysSpinner, correctionSpinner, verboseSpinner, initPercentileAlgo, percentileAlgoButton);

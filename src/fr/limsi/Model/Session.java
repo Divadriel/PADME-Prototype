@@ -21,7 +21,9 @@ public class Session {
     }
 
     public Session(){
+
         this.sessionID = Utils.calculateUniqueID();
+        this.exerciseList = new ArrayList<>();
     }
 
     public JSONObject saveSessionToJSONObject(){

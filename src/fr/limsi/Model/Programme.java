@@ -51,6 +51,7 @@ public class Programme {
                     jsonObject.getString("name"),
                     jsonObject.getDouble("duration"),
                     jsonObject.getDouble("distance"),
+                    jsonObject.getInt("stepNb"),
                     jsonObject.getDouble("completed"),
                     jsonObject.getLong("exerciseID")
             );
