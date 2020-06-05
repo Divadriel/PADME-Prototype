@@ -72,7 +72,7 @@ public class Main extends Application {
         simuGridpane.setHgap(20);
         simuGridpane.setPadding(new Insets(10));
         // adding components to simuGridPane
-        simuGridpane.add(simulation, 0, 0);
+        simuGridpane.add(simulation, 0, 0, 1, 1);
 
         // fill tabs with content
         configTab.setContent(configGridpane);
