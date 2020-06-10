@@ -104,9 +104,14 @@ public class SessionConfigView extends Parent {
         });
         Button loadExercisesButton = new Button("Load");
         loadExercisesButton.setOnAction(event -> {
-            // 1. open fileChooser to choose a file
-            // 2. fill ListArray with exercises from file
+            boolean loadExercises = programme.loadContentFromJSONFile(Exercise.class.getSimpleName());
             // 3. verbose on config trace
+            if(loadExercises){
+                traceView.getMainDisplay().appendText("Exercise List loaded and updated successfully.\n");
+            }
+            else{
+                traceView.getMainDisplay().appendText("Error while loading Exercise List.\n");
+            }
         });
         Button displayExercisesButton = new Button("Display Exercises");
         displayExercisesButton.setOnAction(event -> {

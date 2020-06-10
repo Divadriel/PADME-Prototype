@@ -48,8 +48,13 @@ public class Utils {
 
     public static String arrayListToString(ArrayList<?> arrayList){
         String result = "";
-        for (Object o : arrayList) {
-            result += o.toString() + "\n";
+        if (arrayList.size()<1){
+            result += "ArrayList is empty.\n";
+        }
+        else{
+            for (Object o : arrayList) {
+                result += o.toString() + "\n";
+            }
         }
         return result;
     }

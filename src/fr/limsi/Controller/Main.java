@@ -40,7 +40,7 @@ public class Main extends Application {
         ProfileView userProfileView = new ProfileView(programme, configTrace);
         SessionConfigView sessionConfigView = new SessionConfigView(programme, configTrace);
 
-        SimulationView simulation = new SimulationView(programme.getUser(), configTrace);
+        SimulationView simulation = new SimulationView(programme, configTrace);
 
         // update text fields in profile view with data loaded from creating a new Programme object (init.json)
         userProfileView.updateUserTextFields(programme.getUser());

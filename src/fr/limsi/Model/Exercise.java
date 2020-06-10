@@ -55,7 +55,7 @@ public class Exercise {
         exercise += "\tExercise ID \t" + exerciseID;
         exercise += "\n\tName \t" + name;
         exercise += "\n\tDuration \t" + duration;
-        exercise += "\n\tDistance \t" + distance;
+       // exercise += "\n\tDistance \t" + distance;
         exercise += "\n\tStep Nb \t" + stepNb;
         exercise += "\n\tCompleted \t" + completed;
         exercise += "\n";

@@ -44,6 +44,54 @@ public class Programme {
         sessionArrayList = new ArrayList<>();
         setSessionArrayListFromJSONArray(jsonSessionArray, sessionArrayList);
     }
+
+    public boolean loadContentFromJSONFile(String contentType) {
+
+        String content = "";
+
+        try{
+            content = Utils.getJSONContentFromFile();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        // parse String to JSONObject
+        JSONObject temp = new JSONObject(content);
+
+        switch (contentType){
+            case "Exercise":
+                // load to exoAL: extract json array from content string and then use setExoALFromJsonArray
+                JSONArray jsonExerciseArray = temp.getJSONArray(Exercise.class.getSimpleName()); // json array of exercises
+                // update exerciseAL with ex from file
+                setExerciseArrayListFromJSONArray(jsonExerciseArray, exerciseArrayList);
+
+                // update jsonMETAObject
+                user.getJsonMETAObject().remove(Exercise.class.getSimpleName()); // remove array corresponding to "Exercise" key
+                JSONArray jsonArray = new JSONArray();
+                for (Exercise exercise : exerciseArrayList) {
+                    jsonArray.put(exercise.saveExerciseToJSONObject());
+                }
+                user.getJsonMETAObject().put(Exercise.class.getSimpleName(), jsonArray); // put "Exercise" key with JSONArray as value
+                break;
+            case "Session":
+                // load to SessionAL: extract json array from content string and then use setSessionALFromJsonArray
+                JSONArray jsonSessionArray = temp.getJSONArray(Session.class.getSimpleName());
+                setSessionArrayListFromJSONArray(jsonSessionArray, sessionArrayList);
+
+                // update META -- same procedure as above for Exercise
+                user.getJsonMETAObject().remove(Session.class.getSimpleName());
+                JSONArray jsonArray1 = new JSONArray();
+                for (Session session : sessionArrayList) {
+                    jsonArray1.put(session.saveSessionToJSONObject());
+                }
+                user.getJsonMETAObject().put(Session.class.getSimpleName(), jsonArray1);
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
     private void setExerciseArrayListFromJSONArray(JSONArray jsonExerciseArray, ArrayList<Exercise> arrayList){
         for (int i = 0; i < jsonExerciseArray.length(); i++){
             JSONObject jsonObject = jsonExerciseArray.getJSONObject(i);
