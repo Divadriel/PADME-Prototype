@@ -2,6 +2,7 @@ package fr.limsi.View;
 
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.UserModel;
+import fr.limsi.Model.Utils.Utils;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -61,6 +62,7 @@ public class ProfileView extends Parent {
         // row 1, cell 1
         ageSpinner = new Spinner<>(1, 120, 25);
         ageSpinner.setEditable(true);
+        Utils.commitSpinnerValueOnLostFocus(ageSpinner);
 
         // row 2, cell 0
         Label sex = new Label("Gender");
@@ -94,6 +96,7 @@ public class ProfileView extends Parent {
         // row 3, cell 1
         motivationSpinner = new Spinner<>(0, 100, 50);
         motivationSpinner.setEditable(true);
+        Utils.commitSpinnerValueOnLostFocus(motivationSpinner);
 
         // row 4, cell 0
         Label PALabel = new Label("Physical Activity");
@@ -101,6 +104,7 @@ public class ProfileView extends Parent {
         // row 4, cell 1
         PASpinner = new Spinner<>(0, 100, 50);
         PASpinner.setEditable(true);
+        Utils.commitSpinnerValueOnLostFocus(PASpinner);
 
         // row 5, cell 0
         Label proLabel = new Label("Promotion");
@@ -108,6 +112,7 @@ public class ProfileView extends Parent {
         // row 5, cell 1
         promotionSpinner = new Spinner<>(0,100,50);
         promotionSpinner.setEditable(true);
+        Utils.commitSpinnerValueOnLostFocus(promotionSpinner);
 
         // row 6, cell 0
         Label preLabel = new Label("Prevention");
@@ -115,6 +120,7 @@ public class ProfileView extends Parent {
         // row 6, cell 1
         preventionSpinner = new Spinner<>(0, 100, 50);
         preventionSpinner.setEditable(true);
+        Utils.commitSpinnerValueOnLostFocus(preventionSpinner);
 
         // row 7, cell 0
         Button displayProfile = new Button("Display Profile");

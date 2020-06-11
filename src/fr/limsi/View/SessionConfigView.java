@@ -61,9 +61,11 @@ public class SessionConfigView extends Parent {
 
         TextField nameField = new TextField();
         Spinner<Integer> durationSpinner = new Spinner<>(0, 120, 15);
-        Spinner<Integer> distanceSpinner = new Spinner<>(1000, 15000, 3000);
+        Spinner<Integer> distanceSpinner = new Spinner<>(0, 15000, 3000);
         durationSpinner.setEditable(true);
         distanceSpinner.setEditable(true);
+        Utils.commitSpinnerValueOnLostFocus(durationSpinner);
+        Utils.commitSpinnerValueOnLostFocus(distanceSpinner);
         nameField.setPrefWidth(150);
 
         // buttons
@@ -156,6 +158,8 @@ public class SessionConfigView extends Parent {
         // case YES: exercises will be randomly selected
         Spinner<Integer> exNbSpinner = new Spinner<>(1,15,3);
         exNbSpinner.setVisible(false);
+        Utils.commitSpinnerValueOnLostFocus(exNbSpinner);
+
         // case NO: user will decide which exercises will be included in the session
         TextField exIDTextField = new TextField();
         exIDTextField.setVisible(false);
@@ -212,9 +216,17 @@ public class SessionConfigView extends Parent {
         saveSessionButton.setOnAction(event -> {
             boolean ok = true;
             if (randomSessionConfig){ // random session config
-                // 1. get spinner number and randomly select N indexes in range 0 to size of prog.exoAL
-                // 2. add each index to sessionToConfig.exoAL
+
                 // 3. save verbose : "random mode selected" or equivalent
+                traceView.getMainDisplay().appendText("Random Mode Selected.\n");
+
+                int randNb = exNbSpinner.getValueFactory().getValue();
+                for (int i = 0; i < randNb; i++){
+                    Exercise randEx = Utils.getRandomExercise(programme.getExerciseArrayList());
+                    sessionToConfig.getExerciseList().add(randEx);
+                    traceView.getMainDisplay().appendText("Exercise " + randEx.getName() + " added to Session Exercise List.\n");
+                }
+                traceView.getMainDisplay().appendText("Exercise random selection complete.\n");
             }
             else { // manual session config
                 if(sessionToConfig.getExerciseList().size() < 1){
@@ -230,12 +242,12 @@ public class SessionConfigView extends Parent {
                 // 4. verbose if session config success + display session details (toString)
             }
         });
-        Button loadSessionButton = new Button("Load List");
+        Button loadSessionButton = new Button("Load S List");
         loadSessionButton.setOnAction((event -> {
             // open dialog to select file with session info
             // handle whole process in class Programme
         }));
-        Button resetSessionListButton = new Button("Reset List");
+        Button resetSessionListButton = new Button("Reset S List");
         resetSessionListButton.setOnAction((event -> {
             // reset prog.sessionAL list
             programme.resetSessionArrayList();
@@ -248,7 +260,7 @@ public class SessionConfigView extends Parent {
             sessionToConfig = new Session();
             traceView.getMainDisplay().appendText("New empty session object created.\n");
         }));
-        Button displaySessionsButton = new Button("Display List");
+        Button displaySessionsButton = new Button("Display S List");
         displaySessionsButton.setOnAction((event -> {
             // 1. display current content of sessionListArray
             traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getSessionArrayList()));
@@ -305,16 +317,20 @@ public class SessionConfigView extends Parent {
         percentileSpinner.setEditable(true);
         percentileSpinner.setPrefWidth(60);
         percentileSpinner.setTooltip(new Tooltip("Percentile"));
+        Utils.commitSpinnerValueOnLostFocus(percentileSpinner);
         Spinner<Integer> daysSpinner = new Spinner<>(1, 100, 9);
         daysSpinner.setEditable(true);
         daysSpinner.setPrefWidth(60);
         daysSpinner.setTooltip(new Tooltip("Moving days"));
+        Utils.commitSpinnerValueOnLostFocus(daysSpinner);
         Spinner<Integer> verboseSpinner = new Spinner<>(0, 1, 0);
         verboseSpinner.setPrefWidth(60);
         verboseSpinner.setTooltip(new Tooltip("1 if you want to display more info"));
+        Utils.commitSpinnerValueOnLostFocus(verboseSpinner);
         Spinner<Integer> correctionSpinner = new Spinner<>(0,1,1);
         correctionSpinner.setPrefWidth(60);
         correctionSpinner.setTooltip(new Tooltip("1 if you want to apply correction"));
+        Utils.commitSpinnerValueOnLostFocus(correctionSpinner);
         Button percentileAlgoButton = new Button("Iterate");
         Button initPercentileAlgo = new Button("Init");
         initPercentileAlgo.setTooltip(new Tooltip("Initial set of day records"));

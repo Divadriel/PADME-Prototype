@@ -62,6 +62,8 @@ public class Exercise {
         return exercise;
     }
 
+    public String getName() { return name; }
+
     public long getExerciseID() { return exerciseID; }
 
     public double getDuration() {

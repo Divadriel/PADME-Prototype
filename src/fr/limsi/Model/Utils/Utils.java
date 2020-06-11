@@ -1,5 +1,6 @@
 package fr.limsi.Model.Utils;
 
+import fr.limsi.Model.Exercise;
 import javafx.scene.control.Spinner;
 import javafx.stage.FileChooser;
 
@@ -103,6 +104,10 @@ public class Utils {
         String path = file.getAbsolutePath();
         // extract content to String and return it
         return new String(Files.readAllBytes(Paths.get(path)));
+    }
+
+    public static Exercise getRandomExercise(ArrayList<Exercise> arrayList){
+        return arrayList.get(new Random().nextInt(arrayList.size()));
     }
 
     public static String getUserSaveFilePath(long userID){
