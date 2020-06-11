@@ -1,5 +1,6 @@
 package fr.limsi.Model.Utils;
 
+import javafx.scene.control.Spinner;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -17,35 +18,6 @@ import java.util.stream.IntStream;
 
 public class Utils {
 
-    public static String getJSONContentFromFile() throws IOException {
-        // get file
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose JSON file");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        File file = fileChooser.showOpenDialog(null);
-        String path = file.getAbsolutePath();
-        // extract content to String and return it
-        return new String(Files.readAllBytes(Paths.get(path)));
-    }
-
-    public static String loadInitJSONFile() throws IOException {
-        return new String(Files.readAllBytes(Paths.get(Strings.PATH_TO_INIT_JSON)));
-    }
-
-    public static double setDurationToClosestUpperNMinutes(double duration, int N){
-        if (duration % N == 0){
-            return duration;
-        }
-        else{
-            return (Math.floor(duration / N) + 1) * N;
-        }
-    }
-
-    // could be initialized in the past to have more or less unique and long IDs
-    public static long calculateUniqueID(){
-        return System.currentTimeMillis(); // 13 digits
-    }
-
     public static String arrayListToString(ArrayList<?> arrayList){
         String result = "";
         if (arrayList.size()<1){
@@ -59,15 +31,59 @@ public class Utils {
         return result;
     }
 
-    public static String getUserSaveFilePath(long userID){
-        // save timestamp formatter
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
-        return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userID+"_"+now.format(formatterDate)+".json";
-    }
-
     public static int calculateIndex(int percentile, int sampleSize){
         return (int) Math.floor((percentile * (sampleSize + 1)) / 100);
+    }
+
+    // could be initialized in the past to have more or less unique and long IDs
+    public static long calculateUniqueID(){
+        return System.currentTimeMillis(); // 13 digits
+    }
+
+    public static void commitSpinnerValueOnLostFocus(Spinner<?> spinner) {
+        spinner.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue){
+                spinner.increment(0);
+            }
+        }));
+    }
+
+    // upperTolerance and lowerTolerance are numbers between 0 and 1
+    public static int considerCorrection(int precision, double lowerTolerance, double upperTolerance,
+                                         int currSteps, int prevSteps, int steps){
+        int upperLimit = steps + (int)(Math.floor(steps * upperTolerance));
+        int lowerLimit = steps - (int)(Math.floor(steps * lowerTolerance));
+
+        ArrayList<Integer> drawList = new ArrayList<>(precision);
+        Random random = new Random();
+        IntStream partOne;
+        IntStream partTwo;
+
+        // pseudo random array list with weights
+        if(currSteps >= prevSteps){
+            partOne = random.ints((long)(Math.floor(precision * 0.69)), steps, upperLimit);
+            partTwo = random.ints((long)(Math.floor(precision * 0.31)), lowerLimit, steps);
+        }
+        else {
+            partOne = random.ints((long)(Math.floor(precision * 0.44)), steps, upperLimit);
+            partTwo = random.ints((long)(Math.floor(precision * 0.56)), lowerLimit, steps);
+        }
+        drawList.addAll(partOne.boxed().collect(Collectors.toList()));
+        drawList.addAll(partTwo.boxed().collect(Collectors.toList()));
+
+        // pseudo random choice of one element in the array list
+        int index = (int)(Math.random() * drawList.size());
+
+        return drawList.get(index);
+    }
+
+    public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord, int percentile){
+
+        int index = calculateIndex(percentile, stepsRecord.size());
+        ArrayList<Integer> stepsRecordSorted = new ArrayList<>(stepsRecord);
+        stepsRecordSorted.sort(Comparator.naturalOrder());
+
+        return stepsRecordSorted.get(index - 1);
     }
 
     public static ArrayList<Integer> generateRandomStepsRecord(int days){
@@ -78,13 +94,26 @@ public class Utils {
         return result;
     }
 
-    public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord, int percentile){
+    public static String getJSONContentFromFile() throws IOException {
+        // get file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose JSON file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        File file = fileChooser.showOpenDialog(null);
+        String path = file.getAbsolutePath();
+        // extract content to String and return it
+        return new String(Files.readAllBytes(Paths.get(path)));
+    }
 
-        int index = calculateIndex(percentile, stepsRecord.size());
-        ArrayList<Integer> stepsRecordSorted = new ArrayList<>(stepsRecord);
-        stepsRecordSorted.sort(Comparator.naturalOrder());
+    public static String getUserSaveFilePath(long userID){
+        // save timestamp formatter
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // for JSON filename
+        return "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\"+userID+"_"+now.format(formatterDate)+".json";
+    }
 
-        return stepsRecordSorted.get(index - 1);
+    public static String loadInitJSONFile() throws IOException {
+        return new String(Files.readAllBytes(Paths.get(Strings.PATH_TO_INIT_JSON)));
     }
 
     public static String nthPercentileAlgorithmDisplay(int wantedPercentile, ArrayList<Integer> stepsRecord,
@@ -138,32 +167,13 @@ public class Utils {
         result += "\n";
         return result;
     }
-    // upperTolerance and lowerTolerance are numbers between 0 and 1
-    public static int considerCorrection(int precision, double lowerTolerance, double upperTolerance,
-                                         int currSteps, int prevSteps, int steps){
-        int upperLimit = steps + (int)(Math.floor(steps * upperTolerance));
-        int lowerLimit = steps - (int)(Math.floor(steps * lowerTolerance));
 
-        ArrayList<Integer> drawList = new ArrayList<>(precision);
-        Random random = new Random();
-        IntStream partOne;
-        IntStream partTwo;
-
-        // pseudo random array list with weights
-        if(currSteps >= prevSteps){
-            partOne = random.ints((long)(Math.floor(precision * 0.69)), steps, upperLimit);
-            partTwo = random.ints((long)(Math.floor(precision * 0.31)), lowerLimit, steps);
+    public static double setDurationToClosestUpperNMinutes(double duration, int N){
+        if (duration % N == 0){
+            return duration;
         }
-        else {
-            partOne = random.ints((long)(Math.floor(precision * 0.44)), steps, upperLimit);
-            partTwo = random.ints((long)(Math.floor(precision * 0.56)), lowerLimit, steps);
+        else{
+            return (Math.floor(duration / N) + 1) * N;
         }
-        drawList.addAll(partOne.boxed().collect(Collectors.toList()));
-        drawList.addAll(partTwo.boxed().collect(Collectors.toList()));
-
-        // pseudo random choice of one element in the array list
-        int index = (int)(Math.random() * drawList.size());
-
-        return drawList.get(index);
     }
 }
