@@ -38,6 +38,15 @@ public class Exercise {
         this.stepNb = stepNb;
     }
 
+    public Exercise(JSONObject jsonObject){
+        this.name = jsonObject.getString("name");
+        this.duration = jsonObject.getDouble("duration");
+        this.distance = jsonObject.getDouble("distance");
+        this.stepNb = jsonObject.getInt("stepNb");
+        this.completed = jsonObject.getDouble("completed");
+        this.exerciseID = jsonObject.getLong("exerciseID");
+    }
+
     public JSONObject saveExerciseToJSONObject (){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("exerciseID", exerciseID);

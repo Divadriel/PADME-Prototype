@@ -40,9 +40,8 @@ public class Programme {
         setExerciseArrayListFromJSONArray(jsonExerciseArray, exerciseArrayList);
 
         // parse Session ArrayList
-        JSONArray jsonSessionArray = object.getJSONArray(Session.class.getSimpleName());
         sessionArrayList = new ArrayList<>();
-        setSessionArrayListFromJSONArray(jsonSessionArray, sessionArrayList);
+        setSessionArrayListFromJSONObject(object, sessionArrayList);
     }
 
     public boolean loadContentFromJSONFile(String contentType) {
@@ -75,8 +74,7 @@ public class Programme {
                 break;
             case "Session":
                 // load to SessionAL: extract json array from content string and then use setSessionALFromJsonArray
-                JSONArray jsonSessionArray = temp.getJSONArray(Session.class.getSimpleName());
-                setSessionArrayListFromJSONArray(jsonSessionArray, sessionArrayList);
+                setSessionArrayListFromJSONObject(temp, sessionArrayList);
 
                 // update META -- same procedure as above for Exercise
                 user.getJsonMETAObject().remove(Session.class.getSimpleName());
@@ -95,28 +93,43 @@ public class Programme {
     private void setExerciseArrayListFromJSONArray(JSONArray jsonExerciseArray, ArrayList<Exercise> arrayList){
         for (int i = 0; i < jsonExerciseArray.length(); i++){
             JSONObject jsonObject = jsonExerciseArray.getJSONObject(i);
-            Exercise exercise = new Exercise(
-                    jsonObject.getString("name"),
-                    jsonObject.getDouble("duration"),
-                    jsonObject.getDouble("distance"),
-                    jsonObject.getInt("stepNb"),
-                    jsonObject.getDouble("completed"),
-                    jsonObject.getLong("exerciseID")
-            );
+            Exercise exercise = new Exercise(jsonObject);
             arrayList.add(exercise);
         }
     }
 
-    private void setSessionArrayListFromJSONArray(JSONArray jsonSessionArray, ArrayList<Session> arrayList){
-        for (int j = 0; j < jsonSessionArray.length(); j++){
-            JSONObject jsonObject = jsonSessionArray.getJSONObject(j);
-            JSONArray temp = jsonObject.getJSONArray("ExerciseList");
-            ArrayList<Exercise> exercises = new ArrayList<>();
-            setExerciseArrayListFromJSONArray(temp, exercises);
+    private void setSessionArrayListFromJSONObject(JSONObject jsonObject, ArrayList<Session> arrayList){
+        JSONArray jsonSessionArray = jsonObject.getJSONArray(Session.class.getSimpleName()); // session json array
+        JSONArray jsonExerciseArray = jsonObject.getJSONArray(Exercise.class.getSimpleName()); // exercise json array
+        int i;
+        int j;
+        int k;
+        for (j = 0; j < jsonSessionArray.length(); j++){
+            JSONObject jsonObject2 = jsonSessionArray.getJSONObject(j); // session json object
+            JSONArray temp = jsonObject2.getJSONArray("ExerciseIDList"); // exercise ID json array
+            ArrayList<Exercise> exercises = new ArrayList<>(); // reset exercises ArrayList for each new Session json object
+
+            for(k = 0; k < temp.length(); k++){ // temp -> each ID must be matched with exId in exArray
+                i = 0; // reset jsonExerciseArray index i for new research at index k in temp
+                long tempID = temp.getLong(k); // exercise ID at index k
+
+                while(i < jsonExerciseArray.length()){
+
+                    if(tempID == jsonExerciseArray.getJSONObject(i).getLong("exerciseID")){
+                        exercises.add(new Exercise(jsonExerciseArray.getJSONObject(i)));
+                        break; // index i in jsonExerciseArray is equal to index k in exerciseID list from jsonSessionArray
+                    }
+                    else {
+                        i++;
+                    }
+                }
+            } // end of for loop = exercises ArrayList is full
+
+            // create a new session and add it to the final list
             Session session = new Session(
                     exercises,
                     user.getUserID(),
-                    jsonObject.getInt("userFeedback")
+                    jsonObject2.getInt("userFeedback")
             );
             arrayList.add(session);
         }
@@ -132,8 +145,7 @@ public class Programme {
     }
 
     public void updateSessionArrayList(){
-        JSONArray jsonArray = user.getJsonMETAObject().getJSONArray(Session.class.getSimpleName());
-        setSessionArrayListFromJSONArray(jsonArray, sessionArrayList);
+        setSessionArrayListFromJSONObject(user.getJsonMETAObject(), sessionArrayList);
     }
 
     public void setExerciseArrayList(ArrayList<Exercise> exerciseArrayList) {

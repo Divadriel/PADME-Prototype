@@ -31,8 +31,17 @@ public class Session {
         jsonObject.put("sessionID", sessionID);
         jsonObject.put("userFeedback", userFeedback);
         jsonObject.put("userID", userID);
-        jsonObject.put("ExerciseList", new JSONArray(exerciseList));
+//        jsonObject.put("ExerciseList", new JSONArray(exerciseList));
+        jsonObject.put("ExerciseIDList", getExerciseIDArrayList());
         return jsonObject;
+    }
+
+    public JSONArray getExerciseIDArrayList(){
+        JSONArray jsonArray = new JSONArray();
+        for (Exercise exercise : exerciseList){
+            jsonArray.put(exercise.getExerciseID());
+        }
+        return jsonArray;
     }
 
     public ArrayList<Exercise> getExerciseList() {
@@ -63,6 +72,7 @@ public class Session {
     public String toString(){
         String session = "";
         session += "Session ID \t" + sessionID + "\n";
+        session += "User ID \t" + userID + "\n";
         session += "UserFeedback \t" + userFeedback + "\n";
         session += "Exercise List \n";
         for (Exercise exercise : exerciseList) {
