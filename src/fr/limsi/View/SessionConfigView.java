@@ -5,8 +5,6 @@ import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.Session;
 import fr.limsi.Model.Utils.Utils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -296,15 +294,10 @@ public class SessionConfigView extends Parent {
             traceView.getMainDisplay().appendText("New empty session object created.\n");
         }));
         Button displaySessionsButton = new Button("Display S List");
-        displaySessionsButton.setOnAction((event -> {
-            // 1. display current content of sessionListArray
-            traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getSessionArrayList()));
-        }));
+        displaySessionsButton.setOnAction((event -> traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getSessionArrayList()))));
 
         Button displayCurrentSessionButton = new Button("Display current session");
-        displayCurrentSessionButton.setOnAction((event -> {
-            traceView.getMainDisplay().appendText(sessionToConfig.toString());
-        }));
+        displayCurrentSessionButton.setOnAction((event -> traceView.getMainDisplay().appendText(sessionToConfig.toString())));
 
         sessionConfigFlowPane1.getChildren().addAll(saveSessionButton, newSessionButton, displayCurrentSessionButton);
         sessionConfigFlowPane2.getChildren().addAll(loadSessionButton, resetSessionListButton, displaySessionsButton);

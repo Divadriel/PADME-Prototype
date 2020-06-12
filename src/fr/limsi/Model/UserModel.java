@@ -107,7 +107,7 @@ public class UserModel {
         return profile;
     }
 
-    public boolean saveUserModelToJSON() throws IOException {
+    public boolean saveUserModelToJSON() {
         JSONObject jsonUserObject = new JSONObject();
         boolean result;
 
@@ -298,12 +298,7 @@ public class UserModel {
     }
 
     public void setPhysicalActivityLevel(int physicalActivityLevel) {
-        if (physicalActivityLevel > 100){
-            this.physicalActivityLevel = 100;
-        }
-        else{
-            this.physicalActivityLevel = physicalActivityLevel;
-        }
+        this.physicalActivityLevel = Math.min(physicalActivityLevel, 100);
     }
 
     public int getMotivationLevel() {
@@ -311,12 +306,7 @@ public class UserModel {
     }
 
     public void setMotivationLevel(int motivationLevel) {
-        if(motivationLevel > 100){
-            this.motivationLevel = 100;
-        }
-        else{
-            this.motivationLevel = motivationLevel;
-        }
+        this.motivationLevel = Math.min(motivationLevel, 100);
     }
 
     public int getPromotion() {
