@@ -31,6 +31,7 @@ public class SessionConfigView extends Parent {
 
         traceView = trcView;
         sessionToConfig = new Session();
+        sessionToConfig.setUserID(programme.getUser().getUserID());
         //adaptationRules = programme.getAdaptationRules();
 
         // creation and config of titled pane
@@ -138,7 +139,7 @@ public class SessionConfigView extends Parent {
         sessionContentPane.setVgap(7);
 
         // inside sessionContentPane, row 0:
-        Label randomLabel = new Label("Random");
+        Label randomLabel = new Label("Random Exercises");
         HBox randomBox = new HBox();
         randomBox.setSpacing(5);
 
@@ -164,20 +165,35 @@ public class SessionConfigView extends Parent {
         TextField exIDTextField = new TextField();
         exIDTextField.setVisible(false);
         Button addExToSessionButton = new Button("Add");
-        addExToSessionButton.setOnAction(event -> {
-            // search for exoID in programme.exoAL and add it to session.exoAL
-            // check if already present in sessionToConfig.exoAL + verbose if yes
-            // verbose if not found
-            // verbose anyway if success
-        });
         addExToSessionButton.setVisible(false);
-        Button removeExFromSessionButton = new Button("Remove");
-        removeExFromSessionButton.setOnAction(event -> {
-            // search for exoID in sessionToConfig.exoAL and remove it + verbose
-            // verbose if not found
-            // del all occurrences + verbose if yes
+        addExToSessionButton.setOnAction(event -> {
+            // get text field value
+            long exID = Long.parseLong(exIDTextField.getText()); // long
+            // search for exoID in programme.exoAL and add it to session.exoAL
+            Exercise exercise = Utils.findExercise(exID, programme.getExerciseArrayList());
+            if(exercise == null){ // not found
+                traceView.getMainDisplay().appendText("Exercise ID " + exID + " not found in Programme Exercise List.\n");
+            }
+            else{
+                sessionToConfig.getExerciseList().add(exercise);
+                traceView.getMainDisplay().appendText("Exercise with ID " + exID + " successfully added to Session Exercise List.\n");
+            }
         });
+        Button removeExFromSessionButton = new Button("Remove");
         removeExFromSessionButton.setVisible(false);
+        removeExFromSessionButton.setOnAction(event -> {
+            // get text field value
+            long exID = Long.parseLong(exIDTextField.getText()); // long
+            // search for exoID in sessionToConfig.exoAL and remove it
+            Exercise exercise = Utils.findExercise(exID, sessionToConfig.getExerciseList());
+            if(exercise == null){ // not found
+                traceView.getMainDisplay().appendText("Exercise ID " + exID + " not found in Session Exercise List.\n");
+            }
+            else{
+                sessionToConfig.getExerciseList().remove(exercise);
+                traceView.getMainDisplay().appendText("Exercise with ID " + exID + " successfully removed from Session Exercise List.\n");
+            }
+        });
 
         // action of radio button random
         randomGroup.selectedToggleProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -214,10 +230,10 @@ public class SessionConfigView extends Parent {
 
         Button saveSessionButton = new Button("Save Session");
         saveSessionButton.setOnAction(event -> {
-            boolean ok = true;
+            boolean ok = true; // sessionToConfig exAL has at least 1 exercise
             if (randomSessionConfig){ // random session config
 
-                // 3. save verbose : "random mode selected" or equivalent
+                // 3. save verbose : "random mode selected"
                 traceView.getMainDisplay().appendText("Random Mode Selected.\n");
 
                 int randNb = exNbSpinner.getValueFactory().getValue();
@@ -231,15 +247,33 @@ public class SessionConfigView extends Parent {
             else { // manual session config
                 if(sessionToConfig.getExerciseList().size() < 1){
                     ok = false;
-                    // verbose for abort / ex missing / list empty
+                    // verbose for empty list
+                    traceView.getMainDisplay().appendText("Session Exercise List is empty.\nPlease add at least one exercise.\n");
                 }
-                // save verbose : "manual mode selected" or equivalent
+                else{
+                    // save verbose : "manual mode selected"
+                    traceView.getMainDisplay().appendText("Manual Mode Selected.\n");
+                }
             }
             if(ok){
-                // 3. save new Session object
-                // 3.1. save session to prog.sessionAL
-                // 3.2. save session to JSON META + JSON file
-                // 4. verbose if session config success + display session details (toString)
+                // save or update session to programme.sessionAL according to sessionID
+                Session session = Utils.findSession(sessionToConfig.getSessionID(), programme.getSessionArrayList());
+                if(!(session == null)){
+                    programme.getSessionArrayList().remove(sessionToConfig);
+                }
+                programme.getSessionArrayList().add(sessionToConfig);
+                // save session to user JSON META + JSON file
+                // 1. save in JSON file
+                try {
+                    programme.saveSessionArrayListToJSON(programme.getUser().getUserID());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    traceView.getMainDisplay().appendText("Error while saving sessionArrayList to JSON.\n");
+                    return;
+                }
+                // 2. verbose on config trace + display session details (toString)
+                traceView.getMainDisplay().appendText("sessionArrayList saved to JSON.\n");
+                //traceView.getMainDisplay().appendText(sessionToConfig.toString());
             }
         });
         Button loadSessionButton = new Button("Load S List");
@@ -258,6 +292,7 @@ public class SessionConfigView extends Parent {
             // create new session object to be filled
             sessionToConfig = null;
             sessionToConfig = new Session();
+            sessionToConfig.setUserID(programme.getUser().getUserID());
             traceView.getMainDisplay().appendText("New empty session object created.\n");
         }));
         Button displaySessionsButton = new Button("Display S List");
@@ -266,7 +301,12 @@ public class SessionConfigView extends Parent {
             traceView.getMainDisplay().appendText(Utils.arrayListToString(programme.getSessionArrayList()));
         }));
 
-        sessionConfigFlowPane1.getChildren().addAll(saveSessionButton, newSessionButton);
+        Button displayCurrentSessionButton = new Button("Display current session");
+        displayCurrentSessionButton.setOnAction((event -> {
+            traceView.getMainDisplay().appendText(sessionToConfig.toString());
+        }));
+
+        sessionConfigFlowPane1.getChildren().addAll(saveSessionButton, newSessionButton, displayCurrentSessionButton);
         sessionConfigFlowPane2.getChildren().addAll(loadSessionButton, resetSessionListButton, displaySessionsButton);
 
         // adding to gridPane sessionContentPane

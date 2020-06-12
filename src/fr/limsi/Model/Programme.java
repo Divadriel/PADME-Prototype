@@ -127,6 +127,7 @@ public class Programme {
 
             // create a new session and add it to the final list
             Session session = new Session(
+                    jsonObject2.getLong("sessionID"),
                     exercises,
                     user.getUserID(),
                     jsonObject2.getInt("userFeedback")
@@ -177,6 +178,41 @@ public class Programme {
         // update user jsonMETAObject with ExerciseList
         user.getJsonMETAObject().remove(Exercise.class.getSimpleName());
         user.getJsonMETAObject().put(Exercise.class.getSimpleName(), jsonArray);
+
+        // save object again to file -- rewriting it completely (append false)
+        FileWriter file = null;
+        try {
+            file = new FileWriter(path, false);
+            file.write(object.toString(2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                assert file != null;
+                file.flush();
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveSessionArrayListToJSON(long userID) throws IOException {
+        // get file
+        String path = Utils.getUserSaveFilePath(userID);
+        // update Session ArrayList from JSON
+        JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(path)))); // whole object
+
+        object.remove(Session.class.getSimpleName()); // remove array corresponding to "Session" key
+        JSONArray jsonArray = new JSONArray();
+        for (Session session : sessionArrayList) {
+            jsonArray.put(session.saveSessionToJSONObject());
+        }
+        object.put(Session.class.getSimpleName(), jsonArray); // put "Session" key with JSONArray as value
+        // update user jsonMETAObject with SessionList
+        user.getJsonMETAObject().remove(Session.class.getSimpleName());
+        user.getJsonMETAObject().put(Session.class.getSimpleName(), jsonArray);
 
         // save object again to file -- rewriting it completely (append false)
         FileWriter file = null;

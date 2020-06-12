@@ -26,6 +26,13 @@ public class Session {
         this.exerciseList = new ArrayList<>();
     }
 
+    public Session(long sessionID, ArrayList<Exercise> exerciseList, long userID, int userFeedback){
+        this.sessionID = sessionID;
+        this.exerciseList = exerciseList;
+        this.userFeedback = userFeedback;
+        this.userID = userID;
+    }
+
     public JSONObject saveSessionToJSONObject(){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("sessionID", sessionID);

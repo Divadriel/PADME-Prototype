@@ -1,11 +1,13 @@
 package fr.limsi.Model.Utils;
 
 import fr.limsi.Model.Exercise;
+import fr.limsi.Model.Session;
 import javafx.scene.control.Spinner;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -76,6 +78,24 @@ public class Utils {
         int index = (int)(Math.random() * drawList.size());
 
         return drawList.get(index);
+    }
+
+    public static Exercise findExercise(long exID, ArrayList<Exercise> exerciseArrayList){
+        for(Exercise exercise : exerciseArrayList){
+            if(exercise.getExerciseID() == exID){
+                return exercise;
+            }
+        }
+        return null;
+    }
+
+    public static Session findSession(long sessionID, ArrayList<Session> sessionArrayList){
+        for (Session session : sessionArrayList){
+            if(session.getSessionID() == sessionID){
+                return session;
+            }
+        }
+        return null;
     }
 
     public static int generateNextStepsObjective(ArrayList<Integer> stepsRecord, int percentile){
