@@ -5,6 +5,8 @@ import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.Session;
 import fr.limsi.Model.Utils.Utils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -215,16 +217,15 @@ public class SessionConfigView extends Parent {
             }
         });
 
-        // row 2: button "save session" to conclude the configuration + other general buttons
+        // row 2: buttons: save session, new session, display current session
         FlowPane sessionConfigFlowPane1 = new FlowPane();
         sessionConfigFlowPane1.setVgap(5);
         sessionConfigFlowPane1.setHgap(5);
-       // sessionConfigFlowPane1.setPadding(new Insets(5));
 
+        // row 3: buttons on session list: load, reset, display
         FlowPane sessionConfigFlowPane2 = new FlowPane();
         sessionConfigFlowPane2.setVgap(5);
         sessionConfigFlowPane2.setHgap(5);
-        //sessionConfigFlowPane2.setPadding(new Insets(5));
 
         Button saveSessionButton = new Button("Save Session");
         saveSessionButton.setOnAction(event -> {
@@ -299,8 +300,39 @@ public class SessionConfigView extends Parent {
         Button displayCurrentSessionButton = new Button("Display current session");
         displayCurrentSessionButton.setOnAction((event -> traceView.getMainDisplay().appendText(sessionToConfig.toString())));
 
+        // row 4: load a session from session list using its ID
+        FlowPane sessionConfigFlowPane3 = new FlowPane();
+        sessionConfigFlowPane3.setVgap(5);
+        sessionConfigFlowPane3.setHgap(5);
+
+        Label loadSessionLabel = new Label("Load Session");
+        TextField loadSessionTF = new TextField();
+        Button loadIDSessionButton = new Button("Load with ID");
+        loadIDSessionButton.setOnAction(event -> {
+            // get text field value
+            long sessionID = Long.parseLong(loadSessionTF.getText()); // long
+
+            Session session = Utils.findSession(sessionID, programme.getSessionArrayList());
+            if(session == null){ // not found
+                traceView.getMainDisplay().appendText("Session ID " + sessionID + " not found in Programme Session List.\n");
+            }
+            else{
+                sessionToConfig = null;
+                sessionToConfig = session;
+                traceView.getMainDisplay().appendText("Session with ID " + sessionID + " successfully loaded.\n");
+            }
+        });
+        Button loadRandSession = new Button("Load Random");
+        loadRandSession.setOnAction(event -> {
+            sessionToConfig = null;
+            sessionToConfig = Utils.getRandomSession(programme.getSessionArrayList());
+            traceView.getMainDisplay().appendText("Session with ID " + sessionToConfig.getSessionID() + " randomly loaded.\n");
+        });
+
+
         sessionConfigFlowPane1.getChildren().addAll(saveSessionButton, newSessionButton, displayCurrentSessionButton);
         sessionConfigFlowPane2.getChildren().addAll(loadSessionButton, resetSessionListButton, displaySessionsButton);
+        sessionConfigFlowPane3.getChildren().addAll(loadSessionLabel, loadSessionTF, loadIDSessionButton, loadRandSession);
 
         // adding to gridPane sessionContentPane
         sessionContentPane.addRow(0, randomLabel, randomBox);
@@ -308,6 +340,7 @@ public class SessionConfigView extends Parent {
         sessionContentPane.addRow(1, exIDTextField, addExToSessionButton, removeExFromSessionButton);
         sessionContentPane.add(sessionConfigFlowPane1,0,2,4,1);
         sessionContentPane.add(sessionConfigFlowPane2,0,3,4,1);
+        sessionContentPane.add(sessionConfigFlowPane3, 0, 4, 4, 1);
         // adding to sessionPane
         sessionPane.setContent(sessionContentPane);
 

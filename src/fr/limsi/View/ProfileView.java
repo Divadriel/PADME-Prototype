@@ -146,7 +146,7 @@ public class ProfileView extends Parent {
                 if(programme.getUser().saveUserModelToJSON()){
                     traceView.getMainDisplay().appendText("Save to JSON file complete\n");
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 traceView.getMainDisplay().appendText("Error while saving to JSON\n");
             }

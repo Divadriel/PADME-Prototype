@@ -129,6 +129,10 @@ public class Utils {
         return arrayList.get(new Random().nextInt(arrayList.size()));
     }
 
+    public static Session getRandomSession(ArrayList<Session> arrayList){
+        return arrayList.get(new Random().nextInt(arrayList.size()));
+    }
+
     public static String getUserSaveFilePath(long userID){
         // save timestamp formatter
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC+02:00"));
