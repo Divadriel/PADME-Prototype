@@ -302,11 +302,12 @@ public class SessionConfigView extends Parent {
 
         // row 4: load a session from session list using its ID
         FlowPane sessionConfigFlowPane3 = new FlowPane();
-        sessionConfigFlowPane3.setVgap(5);
+       // sessionConfigFlowPane3.setVgap(5);
         sessionConfigFlowPane3.setHgap(5);
 
         Label loadSessionLabel = new Label("Load Session");
         TextField loadSessionTF = new TextField();
+        loadSessionTF.setPrefWidth(120);
         Button loadIDSessionButton = new Button("Load with ID");
         loadIDSessionButton.setOnAction(event -> {
             // get text field value
@@ -336,8 +337,7 @@ public class SessionConfigView extends Parent {
 
         // adding to gridPane sessionContentPane
         sessionContentPane.addRow(0, randomLabel, randomBox);
-        sessionContentPane.addRow(1, exNbSpinner);
-        sessionContentPane.addRow(1, exIDTextField, addExToSessionButton, removeExFromSessionButton);
+        sessionContentPane.addRow(1, exNbSpinner, exIDTextField, addExToSessionButton, removeExFromSessionButton);
         sessionContentPane.add(sessionConfigFlowPane1,0,2,4,1);
         sessionContentPane.add(sessionConfigFlowPane2,0,3,4,1);
         sessionContentPane.add(sessionConfigFlowPane3, 0, 4, 4, 1);

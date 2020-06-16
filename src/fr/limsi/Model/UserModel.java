@@ -76,7 +76,7 @@ public class UserModel {
 
     public String displayStaticProfile(){
         String profile = "";
-        profile += "\n\t\tStatic profile\n\n";
+        profile += "\t\tStatic profile\n\n";
         profile += "User ID \t" + userID + "\n";
         profile += "Name \t" + firstName + "\n";
         profile += "Age \t" + age + "\n";

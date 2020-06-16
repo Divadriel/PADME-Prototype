@@ -1,5 +1,6 @@
 package fr.limsi.Controller;
 
+import com.sun.deploy.trace.Trace;
 import fr.limsi.Model.*;
 import fr.limsi.Model.Utils.Strings;
 import fr.limsi.View.SessionConfigView;
@@ -35,12 +36,15 @@ public class Main extends Application {
         Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
 
         // config UI components
-        TraceView configTrace = new TraceView("Configuration Trace");
+        TraceView configTrace = new TraceView("Configuration Trace", true, 20, 25);
+        TraceView staticProfileTrace = new TraceView("Static Profile", false, 15, 15);
+        TraceView dynamicProfileTrace = new TraceView("Dynamic Profile", false, 15, 15);
+        TraceView simulationTrace = new TraceView("Simulation Trace", true, 20,25);
 
         ProfileView userProfileView = new ProfileView(programme, configTrace);
         SessionConfigView sessionConfigView = new SessionConfigView(programme, configTrace);
 
-        SimulationView simulation = new SimulationView(programme, configTrace);
+        SimulationView simulation = new SimulationView(programme, staticProfileTrace, dynamicProfileTrace, simulationTrace);
 
         // update text fields in profile view with data loaded from creating a new Programme object (init.json)
         userProfileView.updateUserTextFields(programme.getUser());
@@ -72,7 +76,7 @@ public class Main extends Application {
         simuGridpane.setHgap(20);
         simuGridpane.setPadding(new Insets(10));
         // adding components to simuGridPane
-        simuGridpane.add(simulation, 0, 0, 1, 1);
+        simuGridpane.add(simulation, 0, 0);
 
         // fill tabs with content
         configTab.setContent(configGridpane);

@@ -17,7 +17,7 @@ public class TraceView extends Parent {
     private Button exportButton;
     private Button quitApp;
 
-    public TraceView(String name, boolean buttons){
+    public TraceView(String name, boolean buttons, int rows, int cols){
 
         TitledPane pane = new TitledPane();
         pane.setText(name);
@@ -33,8 +33,8 @@ public class TraceView extends Parent {
         mainDisplay = new TextArea();
         mainDisplay.setEditable(false);
         mainDisplay.appendText(Strings.APP_TITLE + Strings.APP_VERSION + "\n");
-        mainDisplay.setPrefRowCount(20);
-        mainDisplay.setPrefColumnCount(25);
+        mainDisplay.setPrefRowCount(rows); // 20
+        mainDisplay.setPrefColumnCount(cols); // 25
         mainDisplay.setWrapText(true);
 
         // col 0, row 1: flowpane with action buttons: reset text area, export, quit app
@@ -44,7 +44,7 @@ public class TraceView extends Parent {
         flowPane.setPadding(new Insets(5));
 
         resetButton = new Button("Reset");
-        resetButton.setOnAction(event -> mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n"));
+        resetButton.setOnAction(event -> mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n\n"));
 
         if(buttons){
             exportButton = new Button("Export");
