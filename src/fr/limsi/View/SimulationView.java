@@ -1,13 +1,16 @@
 package fr.limsi.View;
 
+import com.sun.deploy.trace.Trace;
 import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.Session;
 import fr.limsi.Model.UserModel;
 import fr.limsi.Model.Utils.Strings;
+import fr.limsi.Model.Utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -21,147 +24,81 @@ public class SimulationView extends Parent {
 
     //private UserModel user;
     private Programme programme;
-    private TraceView traceView;
+    private TraceView staticProfileTrace;
+    private TraceView dynamicProfileTrace;
+    private TraceView simulationTrace;
 
-    public SimulationView(Programme prog, TraceView trcView){
+    public SimulationView(Programme prog){
 
         programme = prog;
-        traceView = trcView;
+        staticProfileTrace = new TraceView("Static Profile", false, 15, 15);
+        dynamicProfileTrace = new TraceView("Dynamic Profile", false, 15, 15);
+        simulationTrace = new TraceView("Simulation Trace", true, 20,25);
 
-        // creation and config of titled pane
-        TitledPane simulationPane = new TitledPane();
-        simulationPane.setText("Simulation");
-        simulationPane.setCollapsible(false);
-        simulationPane.setAnimated(false);
+        // GridPane around everything
+        GridPane mainGrid = new GridPane();
+        mainGrid.setVgap(5);
+        mainGrid.setHgap(5);
+        mainGrid.setPadding(new Insets(5));
 
-        // content placed in gridpane
-        GridPane content = new GridPane();
-        content.setHgap(10);
-        content.setVgap(10);
-        content.setPrefWidth(700);
+        // first TitledPane = start pane: display user, select session, activate or not Adaptation Rules
+        TitledPane startPane = new TitledPane();
+        startPane.setText("Start");
+        startPane.setCollapsible(false);
+        startPane.setAnimated(false);
 
+        // startPane content
+        GridPane startGrid = new GridPane();
+        startGrid.setHgap(5);
 
-        // col 1: progress through the session
-        // row 0
-        Label progressLabel = new Label("Session Progress");
-        progressLabel.setPadding(new Insets(5));
-        // row 1
-        TitledPane exOneProgress = generateExerciseProgressTitledPane(1);
-        // row 2
-        TitledPane exTwoProgress = generateExerciseProgressTitledPane(2);
-        // row 3
-        TitledPane exThreeProgress = generateExerciseProgressTitledPane(3);
-        // row 4
-        FlowPane feedbackPane = new FlowPane();
-        feedbackPane.setVgap(5);
-        feedbackPane.setHgap(5);
-        feedbackPane.setPadding(new Insets(5));
+       // FlowPane startFlowPane = new FlowPane();
+        //startFlowPane.setHgap(5);
+        Button displayUserProfile = new Button("Display Profile");
+        displayUserProfile.setOnAction(event -> {
+            staticProfileTrace.getMainDisplay().setText(programme.getUser().displayStaticProfile());
+            dynamicProfileTrace.getMainDisplay().setText(programme.getUser().displayDynamicProfile());
+        });
+        Separator vertSep1 = new Separator();
+        vertSep1.setOrientation(Orientation.VERTICAL);
+        Label loadSessionLabel = new Label("Load Session");
+        TextField loadSessionTF = new TextField();
+        loadSessionTF.setPrefWidth(120);
+        Button loadIDSessionButton = new Button("Load");
+        loadIDSessionButton.setOnAction(event -> {
+            // get text field value
+            long sessionID = Long.parseLong(loadSessionTF.getText()); // long
 
-        Label feedbackLabel = new Label("Session User Feedback");
-        Spinner<Integer> feedbackSpinner = new Spinner<>(1, 5, 3);
-
-        feedbackPane.getChildren().addAll(feedbackLabel, feedbackSpinner);
-        // row 5
-        FlowPane endResetFlowPane = new FlowPane();
-        endResetFlowPane.setHgap(5);
-        endResetFlowPane.setVgap(5);
-        endResetFlowPane.setPadding(new Insets(5));
-
-        Button endSession = new Button("End Session");
-        endSession.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1.
+            Session session = Utils.findSession(sessionID, programme.getSessionArrayList());
+            if(session == null){ // not found
+                simulationTrace.getMainDisplay().appendText("Session ID " + sessionID + " not found in Programme Session List.\n");
+            }
+            else{
+                programme.setCurrentSession(null);
+                programme.setCurrentSession(session);
+                simulationTrace.getMainDisplay().appendText("Session with ID " + sessionID + " successfully loaded.\n");
             }
         });
-        Button resetSimulationButton = new Button("Reset Simulation");
-        resetSimulationButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. reset display
-                // 2. delete session and exercise objects (null assignation)
-            }
-        });
-        endResetFlowPane.getChildren().addAll(endSession, resetSimulationButton);
+        Separator vertSep2 = new Separator();
+        vertSep2.setOrientation(Orientation.VERTICAL);
 
-        // adding to gridpane and positioning
-        content.addColumn(1, progressLabel, exOneProgress, exTwoProgress, exThreeProgress, feedbackPane, endResetFlowPane);
+        //startFlowPane.getChildren().addAll(displayUserProfile, vertSep1, loadSessionLabel, loadSessionTF, loadIDSessionButton, vertSep2);
+        startGrid.addRow(0, displayUserProfile, vertSep1, loadSessionLabel, loadSessionTF, loadIDSessionButton, vertSep2);
 
-        simulationPane.setContent(content);
-        this.getChildren().add(simulationPane);
+        // traces
+        /*
+        FlowPane tracesFlowPane = new FlowPane();
+        tracesFlowPane.setHgap(5);
+        tracesFlowPane.getChildren().addAll(staticProfileTrace, dynamicProfileTrace, simulationTrace);
+         */
+
+
+        startPane.setContent(startGrid);
+        mainGrid.add(startPane, 0, 0, 2, 1);
+        mainGrid.add(staticProfileTrace, 0,1, 1, 1);
+        mainGrid.add(dynamicProfileTrace, 1,1);
+        mainGrid.add(simulationTrace, 2, 0, 1, 2);
+        this.getChildren().add(mainGrid);
     }
 
-    private TitledPane generateExerciseProgressTitledPane(int exerciseNb){
-        TitledPane pane  = new TitledPane();
-        pane.setText("Exercise " + exerciseNb);
-        FlowPane flowpane = new FlowPane();
-        flowpane.setHgap(10);
-        flowpane.setVgap(10);
-        flowpane.setPadding(new Insets(10));
 
-        // button beginning
-        Button beginningButton = new Button("Beginning");
-        beginningButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. displays image of exercise beginning in a dialog
-                // 2. verbose on display
-                if(programme.getUser().getChronicRegulatoryFocus() >= 0){ // PROMOTION
-                    traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_BEG);
-                }
-                else{
-                    traceView.getMainDisplay().appendText(Strings.PREV_ASCII_EX_BEG);
-                }
-
-            }
-        });
-
-        // button mid
-        Button midButton = new Button("Mid");
-        midButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. displays image of exercise midway in a dialog
-                // 2. verbose on display
-                if(programme.getUser().getChronicRegulatoryFocus() >= 0){ // PROMOTION
-                    traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_MID);
-                }
-                else{
-                    traceView.getMainDisplay().appendText(Strings.PREV_ASCII_EX_MID);
-                }
-            }
-        });
-
-        // button end
-        Button endButton = new Button("End");
-        endButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. displays image of exercise end in a dialog
-                // 2. verbose on display
-                if(programme.getUser().getChronicRegulatoryFocus() >= 0){ // PROMOTION
-                    traceView.getMainDisplay().appendText(Strings.PROM_ASCII_EX_END);
-                }
-                else{
-                    traceView.getMainDisplay().appendText(Strings.PREV_ASCII_EX_END);
-                }
-
-            }
-        });
-
-        // button not finished
-        Button notFinishedButton = new Button("Not Completed");
-        notFinishedButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // 1. displays not finished message
-                // 2. verbose on display
-            }
-        });
-
-        // adding to panes
-        flowpane.getChildren().addAll(beginningButton, midButton, endButton, notFinishedButton);
-        pane.setContent(flowpane);
-        return pane;
-    }
 }

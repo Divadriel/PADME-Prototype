@@ -37,14 +37,11 @@ public class Main extends Application {
 
         // config UI components
         TraceView configTrace = new TraceView("Configuration Trace", true, 20, 25);
-        TraceView staticProfileTrace = new TraceView("Static Profile", false, 15, 15);
-        TraceView dynamicProfileTrace = new TraceView("Dynamic Profile", false, 15, 15);
-        TraceView simulationTrace = new TraceView("Simulation Trace", true, 20,25);
 
         ProfileView userProfileView = new ProfileView(programme, configTrace);
         SessionConfigView sessionConfigView = new SessionConfigView(programme, configTrace);
 
-        SimulationView simulation = new SimulationView(programme, staticProfileTrace, dynamicProfileTrace, simulationTrace);
+        SimulationView simulation = new SimulationView(programme);
 
         // update text fields in profile view with data loaded from creating a new Programme object (init.json)
         userProfileView.updateUserTextFields(programme.getUser());
@@ -79,8 +76,8 @@ public class Main extends Application {
         simuGridpane.add(simulation, 0, 0);
 
         // fill tabs with content
-        configTab.setContent(configGridpane);
         simuTab.setContent(simuGridpane);
+        configTab.setContent(configGridpane);
 
         // init
         root.getChildren().add(tabPane);

@@ -17,6 +17,7 @@ public class Programme {
     private ArrayList<Session> sessionArrayList;
     private UserModel user;
     private AdaptationRules adaptationRules;
+    private Session currentSession;
 
     public Programme() throws IOException{
 
@@ -25,7 +26,7 @@ public class Programme {
 
         // load init data from init.json -- User John Doe + sample exercises and session
         initProgramme();
-        adaptationRules = new AdaptationRules(user, sessionArrayList.get(0));
+        //adaptationRules = new AdaptationRules(user, sessionArrayList.get(0));
     }
 
     public void initProgramme() throws IOException {
@@ -280,4 +281,8 @@ public class Programme {
     public void setAdaptationRules(AdaptationRules adaptationRules) {
         this.adaptationRules = adaptationRules;
     }
+
+    public Session getCurrentSession(){ return currentSession; }
+
+    public void setCurrentSession(Session currentSession){ this.currentSession = currentSession; }
 }
