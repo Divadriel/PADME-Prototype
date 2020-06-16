@@ -14,11 +14,10 @@ public class TraceView extends Parent {
 
     private TextArea mainDisplay;
     private Button resetButton;
-    private Button importButton;
     private Button exportButton;
     private Button quitApp;
 
-    public TraceView(String name){
+    public TraceView(String name, boolean buttons){
 
         TitledPane pane = new TitledPane();
         pane.setText(name);
@@ -35,9 +34,10 @@ public class TraceView extends Parent {
         mainDisplay.setEditable(false);
         mainDisplay.appendText(Strings.APP_TITLE + Strings.APP_VERSION + "\n");
         mainDisplay.setPrefRowCount(20);
-        mainDisplay.setPrefColumnCount(30);
+        mainDisplay.setPrefColumnCount(25);
+        mainDisplay.setWrapText(true);
 
-        // col 0, row 1: flowpane with action buttons: reset text area, import, export, quit app
+        // col 0, row 1: flowpane with action buttons: reset text area, export, quit app
         FlowPane flowPane = new FlowPane();
         flowPane.setHgap(5);
         flowPane.setVgap(5);
@@ -46,20 +46,20 @@ public class TraceView extends Parent {
         resetButton = new Button("Reset");
         resetButton.setOnAction(event -> mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n"));
 
-        importButton = new Button("Import");
-        importButton.setOnAction(event -> {
-            // import text and whole session + profile from a JSON file
-        });
+        if(buttons){
+            exportButton = new Button("Export");
+            exportButton.setOnAction(event -> {
+                // export to JSON file
+            });
 
-        exportButton = new Button("Export");
-        exportButton.setOnAction(event -> {
-            // export to JSON file
-        });
+            quitApp = new Button("Quit App");
+            quitApp.setOnAction(event -> Platform.exit());
 
-        quitApp = new Button("Quit App");
-        quitApp.setOnAction(event -> Platform.exit());
-
-        flowPane.getChildren().addAll(resetButton, importButton, exportButton, quitApp);
+            flowPane.getChildren().addAll(resetButton, exportButton, quitApp);
+        }
+        else {
+            flowPane.getChildren().addAll(resetButton);
+        }
         gridpane.add(mainDisplay, 0, 0);
         gridpane.add(flowPane, 0, 1);
 
