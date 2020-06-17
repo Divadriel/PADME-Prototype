@@ -12,6 +12,7 @@ public class Session {
     private ArrayList<Exercise> exerciseList;
     private int userFeedback;
     private long userID;
+    private Exercise currentExercise;
 
     public Session(ArrayList<Exercise> exerciseList, long userID, int userFeedback){
         this.sessionID = Utils.calculateUniqueID();
@@ -73,6 +74,14 @@ public class Session {
 
     public void setUserID(long userID) {
         this.userID = userID;
+    }
+
+    public Exercise getCurrentExercise() {
+        return currentExercise;
+    }
+
+    public void setCurrentExercise(Exercise currentExercise) {
+        this.currentExercise = currentExercise;
     }
 
     @Override
