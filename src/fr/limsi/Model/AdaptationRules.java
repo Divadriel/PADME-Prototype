@@ -49,6 +49,25 @@ public class AdaptationRules {
         }
     }
 
+    /**
+     * PSEUDO CODE FOCUS RULE
+     * // colours
+     * if(user.focus == "promotion"){
+     *     apply promotion colours;
+     * }
+     * else{
+     *     apply prevention colours;
+     * }
+     * // messages
+     * if(user.focus == "promotion"){
+     *     load promotion messages;
+     * }
+     * else{
+     *     load prevention messages;
+     * }
+     *
+     */
+
     public UserModel getUser() {
         return user;
     }
