@@ -48,12 +48,23 @@ public class Strings {
     public static final String PROM_MESS_EX_BEG = "You will get there: if you have the desire you will succeed!\n";
     public static final String PROM_MESS_EX_MID1 = "Come on, you are getting closer to your goal!\n";
     public static final String PROM_MESS_EX_MID2 = "Go for it! You are the best!\n";
+    public static final String PROM_MESS_EX_END = "Success is only one exercise away!\n";
     public static final String PROM_MESS_SESSION_END = "You did it, well done!\n";
 
     public static final String PREV_MESS_PROFILE_CREATED = "Your profile is now created. It will help you prevent an unhealthy life.\n";
     public static final String PREV_MESS_EX_BEG = "You will do what is necessary to avoid failing!\n";
+    public static final String PREV_MESS_EX_MID1 = "Exercising like this prevents chronic diseases.\n";
+    public static final String PREV_MESS_EX_MID2 = "Keep it up to keep you healthy!\n";
     public static final String PREV_MESS_EX_END = "Come on! You need to complete one more exercise only!\n";
     public static final String PREV_MESS_SESSION_END = "Congratulations! By continuing like this, you will preserve your health!\n";
+
+    // Neutral messages -- Case of no adaptation --
+    public static final String NEUT_MESS_PROFILE_CREATED = "Profile created.\n";
+    public static final String NEUT_MESS_EX_BEG = "Exercise begun.\n";
+    public static final String NEUT_MESS_EX_MID1 = "You are mid exercise.\n";
+    public static final String NEUT_MESS_EX_MID2 = "You did half of the exercise.\n";
+    public static final String NEUT_MESS_EX_END = "You completed the exercise.\n";
+    public static final String NEUT_MESS_SESSION_END = "You completed the session.\n";
 
     // SYSTEM STRINGS
     public static final String PATH_TO_INIT_JSON = "D:\\Users\\"+System.getProperty("user.name")+"\\Documents\\PADMEH_data\\init.json";
