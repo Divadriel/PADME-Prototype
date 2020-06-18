@@ -25,6 +25,7 @@ public class SimulationView extends Parent {
     private TraceView staticProfileTrace;
     private TraceView dynamicProfileTrace;
     private TraceView simulationTrace;
+    private boolean autoMode;
 
     public SimulationView(Programme prog){
 
@@ -32,6 +33,10 @@ public class SimulationView extends Parent {
         staticProfileTrace = new TraceView("Static Profile", false, 15, 15);
         dynamicProfileTrace = new TraceView("Dynamic Profile", false, 15, 15);
         simulationTrace = new TraceView("Simulation Trace", true, 20,25);
+
+        /* ----------------------------------------------------------
+        ---------------- UI CONFIGURATION ---------------------------
+        ---------------------------------------------------------- */
 
         // GridPane around everything
         GridPane mainGrid = new GridPane();
@@ -50,30 +55,13 @@ public class SimulationView extends Parent {
         startGrid.setHgap(5);
 
         Button displayUserProfile = new Button("Display Profile");
-        displayUserProfile.setOnAction(event -> {
-            staticProfileTrace.getMainDisplay().setText(programme.getUser().displayStaticProfile());
-            dynamicProfileTrace.getMainDisplay().setText(programme.getUser().displayDynamicProfile());
-        });
         Separator vertSep1 = new Separator();
         vertSep1.setOrientation(Orientation.VERTICAL);
         Label loadSessionLabel = new Label("Load Session");
         TextField loadSessionTF = new TextField();
         loadSessionTF.setPrefWidth(120);
         Button loadIDSessionButton = new Button("Load");
-        loadIDSessionButton.setOnAction(event -> {
-            // get text field value
-            long sessionID = Long.parseLong(loadSessionTF.getText()); // long
 
-            Session session = Utils.findSession(sessionID, programme.getSessionArrayList());
-            if(session == null){ // not found
-                simulationTrace.getMainDisplay().appendText("Session ID " + sessionID + " not found in Programme Session List.\n");
-            }
-            else{
-                programme.setCurrentSession(null);
-                programme.setCurrentSession(session);
-                simulationTrace.getMainDisplay().appendText("Session with ID " + sessionID + " successfully loaded.\n");
-            }
-        });
         Separator vertSep2 = new Separator();
         vertSep2.setOrientation(Orientation.VERTICAL);
 
@@ -129,9 +117,6 @@ public class SimulationView extends Parent {
 
         modeBox.getChildren().addAll(autoRB, manualRB);
         Button launchSimulation = new Button("Launch");
-        launchSimulation.setOnAction(event -> {
-            // launch simulation
-        });
 
         // row 1: Exercise controls
         Label exerciseLabel = new Label("Exercise");
@@ -141,7 +126,82 @@ public class SimulationView extends Parent {
         Button end = new Button("End");
         Button notCompleted = new Button("Not Completed");
 
+        // row 2: session user feedback
+        Label sessionFeedbackLabel = new Label("Session User Feedback");
+        Spinner<Integer> feedbackSpinner = new Spinner<>(1, 5, 3);
+        Utils.commitSpinnerValueOnLostFocus(feedbackSpinner);
+
+        // invisible row 3 to make space
+        Label fakeLabel = new Label("fakeLabel");
+        fakeLabel.setVisible(false);
+
+        // row 4: stop and end buttons
+        Button abortSimuButton = new Button("Abort Simulation");
+        Button endSimuButton = new Button("End Simulation");
+        endSimuButton.setDisable(true);
+
+        // adding to grid and pane
+        simuGrid.addRow(0, modeLabel, modeBox, launchSimulation);
+        simuGrid.addRow(1, exerciseLabel, exerciseName, beginning, middle, end, notCompleted);
+        simulationPane.setContent(simuGrid);
+        simuGrid.addRow(2, sessionFeedbackLabel, feedbackSpinner);
+        simuGrid.addRow(3, fakeLabel);
+        simuGrid.add(abortSimuButton, 2, 4, 2, 1);
+        simuGrid.add(endSimuButton, 4, 4, 2, 1);
+
+        mainGrid.add(startPane, 0, 0, 2, 1);
+        mainGrid.add(staticProfileTrace, 0,1, 1, 1);
+        mainGrid.add(dynamicProfileTrace, 1,1);
+        mainGrid.add(simulationTrace, 2, 0, 1, 2);
+        mainGrid.add(simulationPane, 0, 3, 3, 1);
+
+        /* ----------------------------------------------------------
+        ---------------- BEHAVIOUR CONFIGURATION --------------------
+        ---------------------------------------------------------- */
+
+        // behaviour - start pane content
+        displayUserProfile.setOnAction(event -> {
+            staticProfileTrace.getMainDisplay().setText(programme.getUser().displayStaticProfile());
+            dynamicProfileTrace.getMainDisplay().setText(programme.getUser().displayDynamicProfile());
+        });
+
+        loadIDSessionButton.setOnAction(event -> {
+            // get text field value
+            long sessionID = Long.parseLong(loadSessionTF.getText()); // long
+
+            Session session = Utils.findSession(sessionID, programme.getSessionArrayList());
+            if(session == null){ // not found
+                simulationTrace.getMainDisplay().appendText("Session ID " + sessionID + " not found in Programme Session List.\n");
+            }
+            else{
+                programme.setCurrentSession(null);
+                programme.setCurrentSession(session);
+                simulationTrace.getMainDisplay().appendText("Session with ID " + sessionID + " successfully loaded.\n");
+            }
+        });
+
+        // behaviour - simulation pane
+        // row 0: mode auto / manual + launch button
+        modeGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            autoMode = newValue.equals(autoRB);
+        }));
+
+        launchSimulation.setOnAction(event -> {
+            // launch simulation
+            if(autoMode){
+                // auto mode
+                simulationTrace.getMainDisplay().appendText("--- Auto Mode Activated ---\n");
+            }
+            else {
+                // manual mode
+                simulationTrace.getMainDisplay().appendText("--- Manual Mode Activated ---\n");
+                beginning.setDisable(false);
+            }
+        });
+
+        // row 1: Exercise controls
         // Exercise controls config
+        beginning.setDisable(true);
         middle.setDisable(true);
         end.setDisable(true);
         notCompleted.setDisable(true);
@@ -160,20 +220,7 @@ public class SimulationView extends Parent {
             // exercise not completed
         });
 
-        // row 2: session user feedback
-        Label sessionFeedbackLabel = new Label("Session User Feedback");
-        Spinner<Integer> feedbackSpinner = new Spinner<>(1, 5, 3);
-        Utils.commitSpinnerValueOnLostFocus(feedbackSpinner);
-
-        // invisible row 3 to make space
-        Label fakeLabel = new Label("fakeLabel");
-        fakeLabel.setVisible(false);
-
         // row 4: stop and end buttons
-        Button abortSimuButton = new Button("Abort Simulation");
-        Button endSimuButton = new Button("End Simulation");
-        endSimuButton.setDisable(true);
-
         abortSimuButton.setOnAction(event -> {
             // cancel simulation
         });
@@ -185,20 +232,8 @@ public class SimulationView extends Parent {
             // + verbose
         });
 
-        // adding to grid and pane
-        simuGrid.addRow(0, modeLabel, modeBox, launchSimulation);
-        simuGrid.addRow(1, exerciseLabel, exerciseName, beginning, middle, end, notCompleted);
-        simulationPane.setContent(simuGrid);
-        simuGrid.addRow(2, sessionFeedbackLabel, feedbackSpinner);
-        simuGrid.addRow(3, fakeLabel);
-        simuGrid.add(abortSimuButton, 2, 4, 1, 1);
-        simuGrid.add(endSimuButton, 3, 4, 1, 1);
-
-        mainGrid.add(startPane, 0, 0, 2, 1);
-        mainGrid.add(staticProfileTrace, 0,1, 1, 1);
-        mainGrid.add(dynamicProfileTrace, 1,1);
-        mainGrid.add(simulationTrace, 2, 0, 1, 2);
-        mainGrid.add(simulationPane, 0, 3, 3, 1);
+        // ----------------------------------
+        // ---------- END OF CLASS ----------
         this.getChildren().add(mainGrid);
     }
 
