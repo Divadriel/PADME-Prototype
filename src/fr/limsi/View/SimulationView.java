@@ -106,6 +106,8 @@ public class SimulationView extends Parent {
         // simulation accordion
         TitledPane simulationPane = new TitledPane();
         simulationPane.setText("Simulation");
+        simulationPane.setCollapsible(false);
+        simulationPane.setAnimated(false);
         GridPane simuGrid = new GridPane();
         simuGrid.setHgap(5);
         simuGrid.setVgap(5);
@@ -158,11 +160,39 @@ public class SimulationView extends Parent {
             // exercise not completed
         });
 
+        // row 2: session user feedback
+        Label sessionFeedbackLabel = new Label("Session User Feedback");
+        Spinner<Integer> feedbackSpinner = new Spinner<>(1, 5, 3);
+        Utils.commitSpinnerValueOnLostFocus(feedbackSpinner);
+
+        // invisible row 3 to make space
+        Label fakeLabel = new Label("fakeLabel");
+        fakeLabel.setVisible(false);
+
+        // row 4: stop and end buttons
+        Button abortSimuButton = new Button("Abort Simulation");
+        Button endSimuButton = new Button("End Simulation");
+        endSimuButton.setDisable(true);
+
+        abortSimuButton.setOnAction(event -> {
+            // cancel simulation
+        });
+
+        endSimuButton.setOnAction(event -> {
+            // available when every exercise is complete
+            // ends simulation by registering feedback into session
+            // writes everything in a json file
+            // + verbose
+        });
 
         // adding to grid and pane
         simuGrid.addRow(0, modeLabel, modeBox, launchSimulation);
         simuGrid.addRow(1, exerciseLabel, exerciseName, beginning, middle, end, notCompleted);
         simulationPane.setContent(simuGrid);
+        simuGrid.addRow(2, sessionFeedbackLabel, feedbackSpinner);
+        simuGrid.addRow(3, fakeLabel);
+        simuGrid.add(abortSimuButton, 2, 4, 1, 1);
+        simuGrid.add(endSimuButton, 3, 4, 1, 1);
 
         mainGrid.add(startPane, 0, 0, 2, 1);
         mainGrid.add(staticProfileTrace, 0,1, 1, 1);
