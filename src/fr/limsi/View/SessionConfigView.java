@@ -324,6 +324,7 @@ public class SessionConfigView extends Parent {
             }
         });
         Button loadRandSession = new Button("Load Random");
+        loadRandSession.setDisable(true);
         loadRandSession.setOnAction(event -> {
             sessionToConfig = null;
             sessionToConfig = Utils.getRandomSession(programme.getSessionArrayList());

@@ -33,7 +33,7 @@ public class Main extends Application {
         // config UI
         stage.setTitle(Strings.APP_TITLE + Strings.APP_VERSION);
         Group root = new Group();
-        Scene scene = new Scene(root, 1600, 1000, Color.WHITE);
+        Scene scene = new Scene(root, 1500, 900, Color.WHITE);
 
         // config UI components
         TraceView configTrace = new TraceView("Configuration Trace", true, 20, 25);
