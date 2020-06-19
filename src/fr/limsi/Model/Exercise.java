@@ -17,7 +17,7 @@ public class Exercise {
     public Exercise(String name, double duration, double distance){
         this.exerciseID = Utils.calculateUniqueID();
         this.name = name;
-        this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
+        this.duration = Utils.ceilToNInteger(duration,5);
         this.distance = distance;
         this.stepNb = (int)distance;
         this.completed = 0;
@@ -25,7 +25,7 @@ public class Exercise {
     // used when importing from JSON
     public Exercise(String name, double duration, double distance, int stepNb, double completed, long exerciseID){
         this.name = name;
-        this.duration = Utils.setDurationToClosestUpperNMinutes(duration,5);
+        this.duration = Utils.ceilToNInteger(duration,5);
         this.distance = distance;
         this.stepNb = stepNb;
         this.completed = completed;

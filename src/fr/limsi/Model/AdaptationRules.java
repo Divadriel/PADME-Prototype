@@ -37,7 +37,7 @@ public class AdaptationRules {
         // assess new value
         double newValue = initialValue * assessPALevelInfluence(); // * mean(completed) -- not already done
         // set it to closest 5 minutes, to avoid weird durations like 27.5 minutes
-        return Utils.setDurationToClosestUpperNMinutes(newValue, 5);
+        return Utils.ceilToNInteger(newValue, 5);
     }
 
     public double adaptExerciseDistance(double initialValue){

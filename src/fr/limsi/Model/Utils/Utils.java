@@ -42,6 +42,8 @@ public class Utils {
         return System.currentTimeMillis(); // 13 digits
     }
 
+    public static double ceilToNInteger(double number, int N){ return (Math.floor(number / N) + 1) * N; }
+
     public static void commitSpinnerValueOnLostFocus(Spinner<?> spinner) {
         spinner.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue){
@@ -50,7 +52,7 @@ public class Utils {
         }));
     }
 
-    // upperTolerance and lowerTolerance are numbers between 0 and 1
+    // upperTolerance and lowerTolerance are numbers between 0 and 1 (percentages)
     public static int considerCorrection(int precision, double lowerTolerance, double upperTolerance,
                                          int currSteps, int prevSteps, int steps){
         int upperLimit = steps + (int)(Math.floor(steps * upperTolerance));
@@ -149,6 +151,7 @@ public class Utils {
         String result = "";
 
         int nextObj = generateNextStepsObjective(stepsRecord, wantedPercentile); // returns the next objective (steps nb)
+        nextObj = (int) ceilToNInteger(nextObj, 100); // correction to closest upper N = 100 steps
         ArrayList<Integer> temp = new ArrayList<>(stepsRecord);// temp list to show ordered elements
         temp.sort(Comparator.naturalOrder());
 
@@ -196,12 +199,4 @@ public class Utils {
         return result;
     }
 
-    public static double setDurationToClosestUpperNMinutes(double duration, int N){
-        if (duration % N == 0){
-            return duration;
-        }
-        else{
-            return (Math.floor(duration / N) + 1) * N;
-        }
-    }
 }
