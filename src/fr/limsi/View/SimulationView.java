@@ -17,6 +17,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulationView extends Parent {
 
@@ -26,6 +28,18 @@ public class SimulationView extends Parent {
     private TraceView dynamicProfileTrace;
     private TraceView simulationTrace;
     private boolean autoMode;
+    private boolean toggleAR;
+
+    // buttons
+    private Button beginning;
+    private Button middle;
+    private Button end;
+    private Button notCompleted;
+    private Button launchSimulation;
+    private Button abortSimuButton;
+    private Button endSimuButton;
+
+    private Label exerciseName;
 
     public SimulationView(Programme prog){
 
@@ -65,7 +79,7 @@ public class SimulationView extends Parent {
         Separator vertSep2 = new Separator();
         vertSep2.setOrientation(Orientation.VERTICAL);
 
-        Label toggleAR = new Label("Adaptation Rules");
+        Label toggleARLabel = new Label("Adaptation Rules");
         HBox toggleARBox = new HBox();
         toggleARBox.setSpacing(5);
         toggleARBox.setAlignment(Pos.CENTER);
@@ -87,7 +101,7 @@ public class SimulationView extends Parent {
 
         // adding to grid and pane
         startGrid.addRow(0, displayUserProfile, vertSep1, loadSessionLabel, loadSessionTF,
-                loadIDSessionButton, vertSep2, toggleAR, toggleARBox, vertSep3);
+                loadIDSessionButton, vertSep2, toggleARLabel, toggleARBox, vertSep3);
 
         startPane.setContent(startGrid);
 
@@ -116,15 +130,15 @@ public class SimulationView extends Parent {
         manualRB.setFocusTraversable(false);
 
         modeBox.getChildren().addAll(autoRB, manualRB);
-        Button launchSimulation = new Button("Launch");
+        launchSimulation = new Button("Launch");
 
         // row 1: Exercise controls
         Label exerciseLabel = new Label("Exercise");
-        Label exerciseName = new Label(""); // we place the name of the exercise here and change it when appropriate
-        Button beginning = new Button("Beginning");
-        Button middle = new Button("Middle");
-        Button end = new Button("End");
-        Button notCompleted = new Button("Not Completed");
+        exerciseName = new Label(""); // we place the name of the exercise here and change it when appropriate
+        beginning = new Button("Beginning");
+        middle = new Button("Middle");
+        end = new Button("End");
+        notCompleted = new Button("Not Completed");
 
         // row 2: session user feedback
         Label sessionFeedbackLabel = new Label("Session User Feedback");
@@ -136,8 +150,8 @@ public class SimulationView extends Parent {
         fakeLabel.setVisible(false);
 
         // row 4: stop and end buttons
-        Button abortSimuButton = new Button("Abort Simulation");
-        Button endSimuButton = new Button("End Simulation");
+        abortSimuButton = new Button("Abort Simulation");
+        endSimuButton = new Button("End Simulation");
         endSimuButton.setDisable(true);
 
         // adding to grid and pane
@@ -180,23 +194,36 @@ public class SimulationView extends Parent {
             }
         });
 
+        toggleARGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            toggleAR = newValue.equals(ARYes);
+        }));
+
         // behaviour - simulation pane
         // row 0: mode auto / manual + launch button
         modeGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             autoMode = newValue.equals(autoRB);
         }));
 
-        launchSimulation.setOnAction(event -> {
-            // launch simulation
+        launchSimulation.setOnAction(event -> { // launch simulation
+            // apply adaptation rules
+            if(toggleAR){
+                programme.setMessagesFromUserModel();
+                programme.setColorsFromUserModel();
+            }
+            // manual or auto mode
             if(autoMode){
-                // auto mode
                 simulationTrace.getMainDisplay().appendText("--- Auto Mode Activated ---\n");
             }
             else {
-                // manual mode
                 simulationTrace.getMainDisplay().appendText("--- Manual Mode Activated ---\n");
                 beginning.setDisable(false);
             }
+            launchSimulation.setDisable(true); // only 1 simulation active at a time
+
+            // begin first exercise
+            programme.getCurrentSession().setFirstExercise();
+            exerciseName.setText(programme.getCurrentSession().getCurrentExercise().getName());
+
         });
 
         // row 1: Exercise controls
@@ -208,21 +235,47 @@ public class SimulationView extends Parent {
 
         beginning.setOnAction(event -> {
             middle.setDisable(false);
+            beginning.setDisable(true);
+
+            double comp = ThreadLocalRandom.current().nextDouble(1, 34);
+            programme.getCurrentSession().getCurrentExercise().setCompleted(comp);
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_EX_BEG"));
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("ASCII_EX_BEG"));
         });
         middle.setOnAction(event -> {
             end.setDisable(false);
             notCompleted.setDisable(false);
+            middle.setDisable(true);
+
+            double comp = ThreadLocalRandom.current().nextDouble(34, 67);
+            programme.getCurrentSession().getCurrentExercise().setCompleted(comp);
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_EX_MID1"));
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("ASCII_EX_MID"));
         });
         end.setOnAction(event -> {
             // end exercise
+            programme.getCurrentSession().getCurrentExercise().setCompleted(100);
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_EX_END"));
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("ASCII_EX_END"));
+
+            // load next exercise
+            loadNextExercise();
         });
         notCompleted.setOnAction(event -> {
             // exercise not completed
+            double comp = ThreadLocalRandom.current().nextDouble(67, 100);
+            programme.getCurrentSession().getCurrentExercise().setCompleted(comp);
+
+            // load next exercise
+            loadNextExercise();
         });
 
         // row 4: stop and end buttons
         abortSimuButton.setOnAction(event -> {
             // cancel simulation
+
+            // reset simulation
+            resetSimulation();
         });
 
         endSimuButton.setOnAction(event -> {
@@ -230,6 +283,9 @@ public class SimulationView extends Parent {
             // ends simulation by registering feedback into session
             // writes everything in a json file
             // + verbose
+
+            // reset simulation
+            resetSimulation();
         });
 
         // ----------------------------------
@@ -237,5 +293,36 @@ public class SimulationView extends Parent {
         this.getChildren().add(mainGrid);
     }
 
+    private void loadNextExercise(){
+        end.setDisable(true);
+        notCompleted.setDisable(true);
+        if(programme.getCurrentSession().nextExercise()){
+            exerciseName.setText(programme.getCurrentSession().getCurrentExercise().getName());
+            resetExerciseButtons();
+        }
+        else{
+            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_SESSION_END"));
+            endSimuButton.setDisable(false);
+        }
+    }
+
+    private void resetSimulation(){
+        launchSimulation.setDisable(false);
+        beginning.setDisable(true);
+        middle.setDisable(true);
+        end.setDisable(true);
+        notCompleted.setDisable(true);
+        simulationTrace.resetTraceView();
+        staticProfileTrace.resetTraceView();
+        dynamicProfileTrace.resetTraceView();
+        exerciseName.setText("");
+    }
+
+    private void resetExerciseButtons(){
+        beginning.setDisable(false);
+        middle.setDisable(true);
+        end.setDisable(true);
+        notCompleted.setDisable(true);
+    }
 
 }

@@ -13,6 +13,7 @@ public class Session {
     private int userFeedback;
     private long userID;
     private Exercise currentExercise;
+    private double completed;
 
     public Session(ArrayList<Exercise> exerciseList, long userID, int userFeedback){
         this.sessionID = Utils.calculateUniqueID();
@@ -82,6 +83,22 @@ public class Session {
 
     public void setCurrentExercise(Exercise currentExercise) {
         this.currentExercise = currentExercise;
+    }
+
+    public void setFirstExercise(){
+        if(exerciseList.size() > 0){
+            currentExercise = exerciseList.get(0);
+        }
+    }
+
+    public boolean nextExercise(){
+        for (Exercise exercise : exerciseList) {
+            if(exercise.getCompleted() == 0){
+                currentExercise = exercise;
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

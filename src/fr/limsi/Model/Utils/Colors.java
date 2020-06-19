@@ -21,8 +21,9 @@ public class Colors {
     public static final Color NEUT_COL_BRIGHTER = Color.rgb(133,133,133);
     public static final Color NEUT_COL_DARK = Color.rgb(31,31,31);
     public static final Color NEUT_COL_DARKER = Color.rgb(20,20,20);
-    public static final Color NEUTRAL_COL_DARKEST = Color.rgb(0,0,0);
-    public static final Color NEUTRAL_COL_BRIGHTEST = Color.rgb(255,255,255);
+    public static final Color NEUT_COL_DARKEST = Color.rgb(0,0,0);
+
+    public static final Color NEUT_COL_BRIGHTEST = Color.rgb(255,255,255);
 
 
 

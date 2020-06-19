@@ -44,7 +44,7 @@ public class TraceView extends Parent {
         flowPane.setPadding(new Insets(5));
 
         resetButton = new Button("Reset");
-        resetButton.setOnAction(event -> mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n\n"));
+        resetButton.setOnAction(event -> resetTraceView());
 
         if(buttons){
             exportButton = new Button("Export");
@@ -69,5 +69,9 @@ public class TraceView extends Parent {
 
     public TextArea getMainDisplay() {
         return mainDisplay;
+    }
+
+    public void resetTraceView(){
+        mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n\n");
     }
 }

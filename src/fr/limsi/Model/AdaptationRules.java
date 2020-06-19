@@ -23,6 +23,9 @@ public class AdaptationRules {
         adaptationVariables.set("initVal", this.session.getExerciseList().get(0).getDuration());
     }
 
+    public AdaptationRules(){
+
+    }
 
     public double defineRuleForExerciseDurationAdaptation(String expression, Exercise exercise){
 
@@ -67,8 +70,8 @@ public class AdaptationRules {
      *
      */
 
-    public JSONObject loadMotivationalMessages(){
-        if(this.user.getPromotion() < this.user.getPrevention()){
+    public static JSONObject loadMotivationalMessages(UserModel user){
+        if(user.getPromotion() < user.getPrevention()){
             return loadPreventionMessages();
         }
         else{
@@ -76,23 +79,8 @@ public class AdaptationRules {
         }
     }
 
-    public JSONObject loadAscii(){
-        JSONObject ascii = new JSONObject();
-        if(this.user.getPromotion() < this.user.getPrevention()){
-            ascii.put("ASCII_EX_BEG", Strings.PROM_ASCII_EX_BEG);
-            ascii.put("ASCII_EX_MID", Strings.PROM_ASCII_EX_MID);
-            ascii.put("ASCII_EX_END", Strings.PROM_ASCII_EX_END);
-        }
-        else{
-            ascii.put("ASCII_EX_BEG", Strings.PREV_ASCII_EX_BEG);
-            ascii.put("ASCII_EX_MID", Strings.PREV_ASCII_EX_MID);
-            ascii.put("ASCII_EX_END", Strings.PREV_ASCII_EX_END);
-        }
-        return ascii;
-    }
-
-    public JSONObject loadColors(){
-        if(this.user.getPromotion() < this.user.getPrevention()){
+    public static JSONObject loadColors(UserModel user){
+        if(user.getPromotion() < user.getPrevention()){
             return loadPreventionColors();
         }
         else{
@@ -100,7 +88,7 @@ public class AdaptationRules {
         }
     }
 
-    private JSONObject loadPromotionMessages(){
+    private static JSONObject loadPromotionMessages(){
         JSONObject messages = new JSONObject();
         messages.put("MESS_EX_BEG", Strings.PROM_MESS_EX_BEG);
         messages.put("MESS_EX_MID1", Strings.PROM_MESS_EX_MID1);
@@ -108,9 +96,12 @@ public class AdaptationRules {
         messages.put("MESS_EX_END", Strings.PROM_MESS_EX_END);
         messages.put("MESS_PROFILE_CREATED", Strings.PROM_MESS_PROFILE_CREATED);
         messages.put("MESS_SESSION_END", Strings.PROM_MESS_SESSION_END);
+        messages.put("ASCII_EX_BEG", Strings.PROM_ASCII_EX_BEG);
+        messages.put("ASCII_EX_MID", Strings.PROM_ASCII_EX_MID);
+        messages.put("ASCII_EX_END", Strings.PROM_ASCII_EX_END);
         return messages;
     }
-    private JSONObject loadPreventionMessages(){
+    private static JSONObject loadPreventionMessages(){
         JSONObject messages = new JSONObject();
         messages.put("MESS_EX_BEG", Strings.PREV_MESS_EX_BEG);
         messages.put("MESS_EX_MID1", Strings.PREV_MESS_EX_MID1);
@@ -118,26 +109,29 @@ public class AdaptationRules {
         messages.put("MESS_EX_END", Strings.PREV_MESS_EX_END);
         messages.put("MESS_PROFILE_CREATED", Strings.PREV_MESS_PROFILE_CREATED);
         messages.put("MESS_SESSION_END", Strings.PREV_MESS_SESSION_END);
+        messages.put("ASCII_EX_BEG", Strings.PREV_ASCII_EX_BEG);
+        messages.put("ASCII_EX_MID", Strings.PREV_ASCII_EX_MID);
+        messages.put("ASCII_EX_END", Strings.PREV_ASCII_EX_END);
         return messages;
     }
 
-    private JSONObject loadPromotionColors(){
+    private static JSONObject loadPromotionColors(){
         JSONObject colors = new JSONObject();
         colors.put("COL_BRIGHTER", Colors.PROM_COL_BRIGHTER);
-        colors.put("DARK", Colors.PROM_COL_DARK);
-        colors.put("DARKER", Colors.PROM_COL_DARKER);
-        colors.put("DARKEST", Colors.PROM_COL_DARKEST);
-        colors.put("MAIN", Colors.PROM_COL_MAIN);
+        colors.put("COL_DARK", Colors.PROM_COL_DARK);
+        colors.put("COL_DARKER", Colors.PROM_COL_DARKER);
+        colors.put("COL_DARKEST", Colors.PROM_COL_DARKEST);
+        colors.put("COL_MAIN", Colors.PROM_COL_MAIN);
         return colors;
     }
 
-    private JSONObject loadPreventionColors(){
+    private static JSONObject loadPreventionColors(){
         JSONObject colors = new JSONObject();
         colors.put("COL_BRIGHTER", Colors.PREV_COL_BRIGHTER);
-        colors.put("DARK", Colors.PREV_COL_DARK);
-        colors.put("DARKER", Colors.PREV_COL_DARKER);
-        colors.put("DARKEST", Colors.PREV_COL_DARKEST);
-        colors.put("MAIN", Colors.PREV_COL_MAIN);
+        colors.put("COL_DARK", Colors.PREV_COL_DARK);
+        colors.put("COL_DARKER", Colors.PREV_COL_DARKER);
+        colors.put("COL_DARKEST", Colors.PREV_COL_DARKEST);
+        colors.put("COL_MAIN", Colors.PREV_COL_MAIN);
         return colors;
     }
 

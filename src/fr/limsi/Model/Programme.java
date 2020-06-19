@@ -1,5 +1,7 @@
 package fr.limsi.Model;
 
+import fr.limsi.Model.Utils.Colors;
+import fr.limsi.Model.Utils.Strings;
 import fr.limsi.Model.Utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,18 +20,46 @@ public class Programme {
     private UserModel user;
     private AdaptationRules adaptationRules;
     private Session currentSession;
+    private Exercise currentExercise;
+
+    // system related
+    private JSONObject messages;
+    private JSONObject colors;
 
     public Programme() throws IOException{
 
         // config components
         user = new UserModel();
+        messages = loadNeutralMessages();
+        colors = loadNeutralColors();
 
         // load init data from init.json -- User John Doe + sample exercises and session
         initProgramme();
         //adaptationRules = new AdaptationRules(user, sessionArrayList.get(0));
     }
 
-    public void initProgramme() throws IOException {
+    private JSONObject loadNeutralMessages(){
+        JSONObject messages = new JSONObject();
+        messages.put("MESS_PROFILE_CREATED", Strings.NEUT_MESS_PROFILE_CREATED);
+        messages.put("MESS_EX_BEG", Strings.NEUT_MESS_EX_BEG);
+        messages.put("MESS_EX_MID1", Strings.NEUT_MESS_EX_MID1);
+        messages.put("MESS_EX_MID2", Strings.NEUT_MESS_EX_MID2);
+        messages.put("MESS_EX_END", Strings.NEUT_MESS_EX_END);
+        messages.put("MESS_SESSION_END", Strings.NEUT_MESS_SESSION_END);
+        return messages;
+    }
+
+    private JSONObject loadNeutralColors(){
+        JSONObject colors = new JSONObject();
+        colors.put("COL_BRIGHTER", Colors.NEUT_COL_BRIGHTER);
+        colors.put("COL_DARK", Colors.NEUT_COL_DARK);
+        colors.put("COL_DARKER", Colors.NEUT_COL_DARKER);
+        colors.put("COL_DARKEST", Colors.NEUT_COL_DARKEST);
+        colors.put("COL_MAIN", Colors.NEUT_COL_MAIN);
+        return colors;
+    }
+
+    private void initProgramme() throws IOException {
         // load init.json
         String initJSON = Utils.loadInitJSONFile();
         // parse UserModel
@@ -285,4 +315,32 @@ public class Programme {
     public Session getCurrentSession(){ return currentSession; }
 
     public void setCurrentSession(Session currentSession){ this.currentSession = currentSession; }
+
+    public Exercise getCurrentExercise(){ return currentExercise; }
+
+    public void setCurrentExercise(Exercise currentExercise){ this.currentExercise = currentExercise; }
+
+    public JSONObject getMessages() {
+        return messages;
+    }
+
+    public void setMessages(JSONObject messages) {
+        this.messages = messages;
+    }
+
+    public void setMessagesFromUserModel(){
+        this.messages = AdaptationRules.loadMotivationalMessages(this.user);
+    }
+
+    public JSONObject getColors() {
+        return colors;
+    }
+
+    public void setColors(JSONObject colors) {
+        this.colors = colors;
+    }
+
+    public void setColorsFromUserModel(){
+        this.colors = AdaptationRules.loadColors(this.user);
+    }
 }
