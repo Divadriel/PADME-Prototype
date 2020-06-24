@@ -1,23 +1,16 @@
 package fr.limsi.View;
 
-
-import fr.limsi.Model.Exercise;
 import fr.limsi.Model.Programme;
 import fr.limsi.Model.Session;
-import fr.limsi.Model.UserModel;
-import fr.limsi.Model.Utils.Strings;
 import fr.limsi.Model.Utils.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulationView extends Parent {
@@ -38,6 +31,7 @@ public class SimulationView extends Parent {
     private Button launchSimulation;
     private Button abortSimuButton;
     private Button endSimuButton;
+    private Button updateProfileButton;
 
     private Label exerciseName;
 
@@ -149,10 +143,13 @@ public class SimulationView extends Parent {
         Label fakeLabel = new Label("fakeLabel");
         fakeLabel.setVisible(false);
 
-        // row 4: stop and end buttons
+        // row 4: stop and end buttons + update user profile
         abortSimuButton = new Button("Abort Simulation");
         endSimuButton = new Button("End Simulation");
         endSimuButton.setDisable(true);
+        updateProfileButton = new Button("Update Profile");
+        updateProfileButton.setDisable(true);
+
 
         // adding to grid and pane
         simuGrid.addRow(0, modeLabel, modeBox, launchSimulation);
@@ -162,6 +159,7 @@ public class SimulationView extends Parent {
         simuGrid.addRow(3, fakeLabel);
         simuGrid.add(abortSimuButton, 2, 4, 2, 1);
         simuGrid.add(endSimuButton, 4, 4, 2, 1);
+        simuGrid.add(updateProfileButton,6,4,1,1);
 
         mainGrid.add(startPane, 0, 0, 2, 1);
         mainGrid.add(staticProfileTrace, 0,1, 1, 1);
@@ -175,8 +173,8 @@ public class SimulationView extends Parent {
 
         // behaviour - start pane content
         displayUserProfile.setOnAction(event -> {
-            staticProfileTrace.getMainDisplay().setText(programme.getUser().displayStaticProfile());
-            dynamicProfileTrace.getMainDisplay().setText(programme.getUser().displayDynamicProfile());
+            staticProfileTrace.setMainDisplayText(programme.getUser().displayStaticProfile());
+            dynamicProfileTrace.setMainDisplayText(programme.getUser().displayDynamicProfile());
         });
 
         loadIDSessionButton.setOnAction(event -> {
@@ -185,12 +183,12 @@ public class SimulationView extends Parent {
 
             Session session = Utils.findSession(sessionID, programme.getSessionArrayList());
             if(session == null){ // not found
-                simulationTrace.getMainDisplay().appendText("Session ID " + sessionID + " not found in Programme Session List.\n");
+                simulationTrace.appendMainDisplayText("Session ID " + sessionID + " not found in Programme Session List.\n");
             }
             else{
                 programme.setCurrentSession(null);
                 programme.setCurrentSession(session);
-                simulationTrace.getMainDisplay().appendText("Session with ID " + sessionID + " successfully loaded.\n");
+                simulationTrace.appendMainDisplayText("Session with ID " + sessionID + " successfully loaded.\n");
             }
         });
 
@@ -207,23 +205,34 @@ public class SimulationView extends Parent {
         launchSimulation.setOnAction(event -> { // launch simulation
             // apply adaptation rules
             if(toggleAR){
+                simulationTrace.appendMainDisplayText("--- Adaptation Rules applied ---\n");
                 programme.setMessagesFromUserModel();
                 programme.setColorsFromUserModel();
             }
+            else{
+                simulationTrace.appendMainDisplayText("--- Adaptation Rules ignored ---\n");
+            }
             // manual or auto mode
             if(autoMode){
-                simulationTrace.getMainDisplay().appendText("--- Auto Mode Activated ---\n");
+                simulationTrace.appendMainDisplayText("--- Auto Mode Activated ---\n");
             }
             else {
-                simulationTrace.getMainDisplay().appendText("--- Manual Mode Activated ---\n");
+                simulationTrace.appendMainDisplayText("--- Manual Mode Activated ---\n");
                 beginning.setDisable(false);
             }
             launchSimulation.setDisable(true); // only 1 simulation active at a time
 
+            if(programme.getUser().getStartedSessions() < 1){
+                simulationTrace.appendMainDisplayText(programme.getMessages().getString("MESS_PROFILE_CREATED"));
+            }
+
             // begin first exercise
             programme.getCurrentSession().setFirstExercise();
             exerciseName.setText(programme.getCurrentSession().getCurrentExercise().getName());
-
+            simulationTrace.appendMainDisplayText("\nExercise " + exerciseName.getText() + " has begun.\n\n");
+            // update UserModel
+            programme.getUser().incrementStartedExercises(1);
+            programme.getUser().incrementStartedSessions(1);
         });
 
         // row 1: Exercise controls
@@ -237,34 +246,49 @@ public class SimulationView extends Parent {
             middle.setDisable(false);
             beginning.setDisable(true);
 
-            double comp = ThreadLocalRandom.current().nextDouble(1, 34);
+            double comp = Utils.roundToNDecimals(ThreadLocalRandom.current().nextDouble(1, 34),2);
             programme.getCurrentSession().getCurrentExercise().setCompleted(comp);
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_EX_BEG"));
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("ASCII_EX_BEG"));
+
+            simulationTrace.appendMainDisplayText("Completed at: " + comp + "\n");
+            simulationTrace.appendMainDisplayText(programme.getMessages().getString("MESS_EX_BEG"));
+            simulationTrace.appendMainDisplayText(programme.getMessages().getString("ASCII_EX_BEG"));
         });
         middle.setOnAction(event -> {
             end.setDisable(false);
             notCompleted.setDisable(false);
             middle.setDisable(true);
 
-            double comp = ThreadLocalRandom.current().nextDouble(34, 67);
+            double comp = Utils.roundToNDecimals(ThreadLocalRandom.current().nextDouble(45, 55),2);
             programme.getCurrentSession().getCurrentExercise().setCompleted(comp);
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_EX_MID1"));
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("ASCII_EX_MID"));
+
+            simulationTrace.appendMainDisplayText("Completed at: " + comp + "\n");
+            simulationTrace.appendMainDisplayText(programme.getMessages().getString("MESS_EX_MID1"));
+            simulationTrace.appendMainDisplayText(programme.getMessages().getString("ASCII_EX_MID"));
         });
         end.setOnAction(event -> {
             // end exercise
             programme.getCurrentSession().getCurrentExercise().setCompleted(100);
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_EX_END"));
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("ASCII_EX_END"));
+            programme.getUser().incrementCompletedExercises(1);
+            programme.getUser().incrementTotalMinutesActivity((int)(programme.getCurrentSession().getCurrentExercise().getDuration()));
+            programme.getUser().incrementTotalSteps(programme.getCurrentSession().getCurrentExercise().getStepNb());
+
+            dynamicProfileTrace.setMainDisplayText(programme.getUser().displayDynamicProfile());
+            simulationTrace.appendMainDisplayText("Exercise completed.\n");
+            simulationTrace.appendMainDisplayText(programme.getMessages().getString("MESS_EX_END"));
+            simulationTrace.appendMainDisplayText(programme.getMessages().getString("ASCII_EX_END"));
 
             // load next exercise
             loadNextExercise();
         });
         notCompleted.setOnAction(event -> {
             // exercise not completed
-            double comp = ThreadLocalRandom.current().nextDouble(67, 100);
+            double comp = Utils.roundToNDecimals(ThreadLocalRandom.current().nextDouble(67, 100),2);
             programme.getCurrentSession().getCurrentExercise().setCompleted(comp);
+            programme.getUser().incrementTotalMinutesActivity((int)((comp / 100) * programme.getCurrentSession().getCurrentExercise().getDuration()));
+            programme.getUser().incrementTotalSteps(programme.getCurrentSession().getCurrentExercise().getStepNb());
+
+            dynamicProfileTrace.setMainDisplayText(programme.getUser().displayDynamicProfile());
+            simulationTrace.appendMainDisplayText("Completed at: " + comp + "\n");
 
             // load next exercise
             loadNextExercise();
@@ -283,9 +307,16 @@ public class SimulationView extends Parent {
             // ends simulation by registering feedback into session
             // writes everything in a json file
             // + verbose
+            // + display session summary
+            // + update programme arraylist of sessions with current (ended) session
 
             // reset simulation
-            resetSimulation();
+            //resetSimulation();
+        });
+
+        updateProfileButton.setOnAction(event -> {
+            // available when session has ended
+            // registers in JSON the updated profile -- app profile has been updated along session progress
         });
 
         // ----------------------------------
@@ -298,12 +329,19 @@ public class SimulationView extends Parent {
         notCompleted.setDisable(true);
         if(programme.getCurrentSession().nextExercise()){
             exerciseName.setText(programme.getCurrentSession().getCurrentExercise().getName());
+            programme.getUser().incrementStartedExercises(1);
+
+            simulationTrace.appendMainDisplayText("\nExercise " + exerciseName.getText() + " has begun.\n\n");
             resetExerciseButtons();
         }
         else{
-            simulationTrace.getMainDisplay().appendText(programme.getMessages().getString("MESS_SESSION_END"));
+            simulationTrace.appendMainDisplayText(
+                    "Session has ended.\n"
+                    + programme.getMessages().getString("MESS_SESSION_END"));
+            programme.getUser().incrementCompletedSessions(1);
             endSimuButton.setDisable(false);
         }
+        dynamicProfileTrace.setMainDisplayText(programme.getUser().displayDynamicProfile());
     }
 
     private void resetSimulation(){

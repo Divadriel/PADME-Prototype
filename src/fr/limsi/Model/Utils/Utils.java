@@ -199,4 +199,9 @@ public class Utils {
         return result;
     }
 
+    public static double roundToNDecimals(double number, int decimals){
+        double divide = Math.pow(10, decimals);
+        return (double)(Math.round(number * divide) / divide);
+    }
+
 }

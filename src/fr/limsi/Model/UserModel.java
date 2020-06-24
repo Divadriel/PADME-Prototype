@@ -38,6 +38,7 @@ public class UserModel {
     private int startedSessions = 0;
     private int completedSessions = 0;
     private int totalMinutesActivity = 0;
+    private int totalSteps = 0;
     private double feedbackMean = 0;
     private double minutesActivityPerExerciseMean = 0;
     private double minutesActivityPerSessionMean = 0;
@@ -98,6 +99,7 @@ public class UserModel {
         profile += "Started sessions \t" + startedSessions + "\n";
         profile += "Completed sessions \t" + completedSessions + "\n";
         profile += "Total minutes of activity \t" + totalMinutesActivity + "\n";
+        profile += "Total steps walked \t" + totalSteps + "\n";
         profile += "Mean of minutes per exercise \t" + minutesActivityPerExerciseMean + "\n";
         profile += "Mean of minutes per session \t" + minutesActivityPerSessionMean + "\n";
         profile += "KM travelled \t" + kmTravelled + "\n";
@@ -128,6 +130,7 @@ public class UserModel {
         jsonUserObject.put("startedSessions", startedSessions);
         jsonUserObject.put("completedSessions", completedSessions);
         jsonUserObject.put("totalMinutesActivity", totalMinutesActivity);
+        jsonUserObject.put("totalSteps", totalSteps);
         jsonUserObject.put("minutesActivityPerExerciseMean", minutesActivityPerExerciseMean);
         jsonUserObject.put("minutesActivityPerSessionMean", minutesActivityPerSessionMean);
         jsonUserObject.put("kmTravelled", kmTravelled);
@@ -200,6 +203,7 @@ public class UserModel {
         startedSessions = jsonObject.getInt("startedSessions");
         completedSessions = jsonObject.getInt("completedSessions");
         totalMinutesActivity = jsonObject.getInt("totalMinutesActivity");
+        totalSteps = jsonObject.getInt("totalSteps");
         minutesActivityPerExerciseMean = jsonObject.getInt("minutesActivityPerExerciseMean");
         minutesActivityPerSessionMean = jsonObject.getInt("minutesActivityPerSessionMean");
         kmTravelled = jsonObject.getDouble("kmTravelled");
@@ -211,6 +215,18 @@ public class UserModel {
     public void loadUserModelFromJSON() throws IOException{
         String content = Utils.getJSONContentFromFile();
         parseUserModelFromString(content);
+    }
+
+    public void updateDynamicUserModel(int startedExercises, int completedExercises, int startedSessions,
+                                       int completedSessions, int totalMinutesActivity, int totalSteps,
+                                       int newFeedback){
+        this.startedExercises += startedExercises;
+        this.completedExercises += completedExercises;
+        this.startedSessions += startedSessions;
+        this.completedSessions += completedSessions;
+        this.totalMinutesActivity += totalMinutesActivity;
+        this.totalSteps += totalSteps;
+        this.feedbackMean = (this.feedbackMean + newFeedback) / 2;
     }
 
     public long getUserID() { return userID; }
@@ -333,12 +349,20 @@ public class UserModel {
         this.startedExercises = startedExercises;
     }
 
+    public void incrementStartedExercises(int increment){
+        this.startedExercises += increment;
+    }
+
     public int getCompletedExercises() {
         return completedExercises;
     }
 
     public void setCompletedExercises(int completedExercises) {
         this.completedExercises = completedExercises;
+    }
+
+    public void incrementCompletedExercises(int increment){
+        this.completedExercises += increment;
     }
 
     public int getStartedSessions() {
@@ -349,12 +373,20 @@ public class UserModel {
         this.startedSessions = startedSessions;
     }
 
+    public void incrementStartedSessions(int increment){
+        this.startedSessions += increment;
+    }
+
     public int getCompletedSessions() {
         return completedSessions;
     }
 
     public void setCompletedSessions(int completedSessions) {
         this.completedSessions = completedSessions;
+    }
+
+    public void incrementCompletedSessions(int increment){
+        this.completedSessions += increment;
     }
 
     public int getTotalMinutesActivity() {
@@ -365,12 +397,26 @@ public class UserModel {
         this.totalMinutesActivity = totalMinutesActivity;
     }
 
+    public void incrementTotalMinutesActivity(int increment){
+        this.totalMinutesActivity += increment;
+    }
+
+    public int getTotalSteps(){ return totalSteps; }
+
+    public void incrementTotalSteps(int increment){
+        this.totalSteps += increment;
+    }
+
     public double getFeedbackMean() {
         return feedbackMean;
     }
 
     public void setFeedbackMean(double feedbackMean) {
         this.feedbackMean = feedbackMean;
+    }
+
+    public void updateFeedbackMean(int newFeedback){
+        this.feedbackMean = (this.feedbackMean + newFeedback) / 2;
     }
 
     public double getMinutesActivityPerExerciseMean() {

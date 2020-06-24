@@ -300,6 +300,14 @@ public class Programme {
         return user;
     }
 
+    public UserModel getUserByID(long userID){
+
+        if(user.getUserID() == userID){
+            return user;
+        }
+        return null;
+    }
+
     public void setUser(UserModel user) {
         this.user = user;
     }

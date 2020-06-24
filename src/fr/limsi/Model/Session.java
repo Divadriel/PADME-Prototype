@@ -12,6 +12,7 @@ public class Session {
     private ArrayList<Exercise> exerciseList;
     private int userFeedback;
     private long userID;
+    private UserModel user; // not stored in json, just used during app execution for simpler handling
     private Exercise currentExercise;
     private double completed;
 
@@ -23,7 +24,6 @@ public class Session {
     }
 
     public Session(){
-
         this.sessionID = Utils.calculateUniqueID();
         this.exerciseList = new ArrayList<>();
     }

@@ -71,6 +71,14 @@ public class TraceView extends Parent {
         return mainDisplay;
     }
 
+    public void setMainDisplayText(String text){
+        mainDisplay.setText(text);
+    }
+
+    public void appendMainDisplayText(String text){
+        mainDisplay.appendText(text);
+    }
+
     public void resetTraceView(){
         mainDisplay.setText(Strings.APP_TITLE + Strings.APP_VERSION + "\n\n");
     }
