@@ -7,7 +7,7 @@ Last date of modification: May, 15, 2020
 
 No further development is planned.
 
-As my Phd thesis ended, I decided to make this piece of research software public. Apart from my thesis subject, it doesn't have any purpose other than showing what I did during the first year of my PhD. 
+As my Phd thesis ended, I decided to make this piece of research software public. Apart from my thesis subject, it doesn't have any purpose other than showing what I did during the first year of my PhD (2019-2020). 
 
 ## License
 CeCILL-B Free Software License Agreement:
