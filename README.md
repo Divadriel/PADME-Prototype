@@ -9,6 +9,10 @@ No further development is planned.
 
 As my Phd thesis ended, I decided to make this piece of research software public. Apart from my thesis subject, it doesn't have any purpose other than showing what I did during the first year of my PhD. 
 
+## License
+CeCILL-B Free Software License Agreement:
+http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
+
 ## Current features
 * Configuration tab
   * User Profile pane: static and dynamic profile, load from and save to json files, display to trace
