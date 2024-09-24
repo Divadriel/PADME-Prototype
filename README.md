@@ -1,10 +1,13 @@
 # PADMEH_Prototype
 Author: David REI @Divadriel
+
 Current version: v1.0
 
-Link to trello board:
-https://trello.com/b/07sG5bgv
-(only members can access it)
+Last date of modification: May, 15, 2020
+
+No further development is planned.
+
+As my Phd thesis ended, I decided to make this piece of research software public. Apart from my thesis subject, it doesn't have any purpose other than showing what I did during the first year of my PhD. 
 
 ## Current features
 * Configuration tab
@@ -14,7 +17,7 @@ https://trello.com/b/07sG5bgv
 * Simulation pane
   * Session configuration
 
-## Coming features
+## ~~Coming features~~ Obsolete
 * Adaptation rules pane
   * Specific rules and modifiers will be editable
   * Compute adaptation rules to exercises and user profile
