@@ -1,4 +1,4 @@
-# PADMEH_Prototype
+# PADME Prototype
 Author: David REI @Divadriel
 
 Current version: v1.0
